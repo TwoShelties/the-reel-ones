@@ -1,0 +1,55 @@
+endpoints:
+
+users:
+
+POST /users/register
+- sending a request to insert a new user into the users table
+POST /users/login
+- sending a request to verify user from table and log user in
+GET /users/me
+- returns users current rentals
+- returns users previous rentals
+- shows recommended films by genre, based on previous rentals
+(admin) GET /users
+- return a list of all users (id, username)
+- includes data from endpoint /users/me
+(admin) DELETE /users/:userId
+- sends a request to DELETE user from users table
+
+films:
+
+GET /films
+- returns a list of all films, with title, image, and price
+GET /films/:title
+- sends request to GET film(s) by title parameter
+GET /films/:genre
+- sends request to GET film(s) by genre parameter
+GET /films/:filmId
+- sends request to GET film(s) by id parameter
+(admin) POST /films
+- sends request to add a film to the films table
+(admin) PATCH /films/:filmId
+- sends request to patch a film on the films table
+(admin) DELETE /films/:filmId
+- sends a request to DELETE a film from the films table
+
+tables:
+
+users
+ - one to many relationship with films (the user can have many films in their history, and many films currently rented)
+ - one to many with favorites - one user can have many favorites
+
+films
+- many to many - many films can share being rented/previously watched by many users
+- many to one - many films can be rented by one user
+
+*favorites
+- many to one - many favorites can be had by one user
+ 
+ user_films
+ - a table that stores which films are watched by which user
+ - stores which films were previously watched by which user
+ - (userId column)
+
+
+
