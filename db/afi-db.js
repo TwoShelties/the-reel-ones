@@ -500,3 +500,5 @@ const films = [
     year: 1959,
   },
 ];
+
+module.exports = films;
