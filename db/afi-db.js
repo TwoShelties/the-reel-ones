@@ -901,3 +901,5 @@ const films = [
     price: 1.99,
   },
 ];
+
+module.exports = films;
