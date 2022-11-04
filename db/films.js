@@ -19,7 +19,7 @@ async function createFilm({
   try {
     const result = await client.query(
       `
-  INSERT INTO films(title, director, year, genre, img, description)
+  INSERT INTO films(title, director, year, genre, img, description, price)
   VALUES($1,$2,$3,$4,$5,$6,$7)
   RETURNING *;
   `,
