@@ -1,6 +1,7 @@
 const client = require(".");
 const films = require("./afi-db");
 
+
 async function dropTables() {
   try {
     console.log(films);
@@ -40,6 +41,16 @@ async function createTables() {
         genre VARCHAR(255) UNIQUE NOT NULL,
         boxArt TEXT NOT NULL
       );
+
+const seedDB = async () => {
+  // before we insert a book what do we need to build?
+  await client.query(`
+    DROP TABLE IF EXISTS films;
+
+    CREATE TABLE films (id SERIAL PRIMARY KEY, title VARCHAR(255) UNIQUE NOT NULL);
+
+    INSERT INTO films (title) VALUES ('Shawshank Redemption');
+
 
       CREATE TABLE user_films(
         id SERIAL PRIMARY KEY,

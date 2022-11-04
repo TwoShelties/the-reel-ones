@@ -1,5 +1,5 @@
 {
-  "name": "grace-starter",
+  "name": "the-reel-ones",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,6 +14,7 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "node": "^14.21.0",
     "pg": "^8.8.0"
   }
 }
