@@ -2,7 +2,7 @@ const client = require("./index");
 
 async function createUser({ username, password }) {
   try {
-    const result = client.query(
+    const result = await client.query(
       `
        INSERT INTO users (username, password)
        VALUES ($1, $2)

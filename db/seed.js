@@ -1,8 +1,10 @@
 const client = require(".");
 const films = require("./afi-db");
+const { createUser } = require("./users");
+const { createFilm } = require("./films");
+
 async function dropTables() {
   try {
-    console.log(films);
     console.log("Dropping All Tables...");
     client.query(`
       DROP TABLE IF EXISTS user_films;
@@ -28,11 +30,12 @@ async function createTables() {
       CREATE TABLE films(
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) UNIQUE NOT NULL,
-        director VARCHAR(255) UNIQUE NOT NULL,
-        year VARCHAR(255) UNIQUE NOT NULL,
-        genre VARCHAR(255) UNIQUE NOT NULL,
-        boxArt TEXT NOT NULL,
-        description TEXT NOT NULL
+        director VARCHAR(255) NOT NULL,
+        year INTEGER NOT NULL,
+        genre VARCHAR(255) NOT NULL,
+        img VARCHAR NOT NULL,
+        description TEXT NOT NULL, 
+        price FLOAT NOT NULL
       );
       CREATE TABLE user_films(
         id SERIAL PRIMARY KEY,
@@ -48,12 +51,49 @@ async function createTables() {
     throw error;
   }
 }
+
+// ADDING INITIAL DATA
+async function createInitialUsers() {
+  console.log("Starting to create users...");
+  try {
+    const usersToCreate = [
+      { username: "adam", password: "secretpass99" },
+      { username: "sandy", password: "sandy123" },
+      { username: "henry", password: "henry123" },
+      { username: "sam", password: "password111" },
+      { username: "user1", password: "123456" },
+    ];
+    const users = await Promise.all(usersToCreate.map(createUser));
+
+    console.log("Users created:");
+    console.log(users);
+    console.log("Finished creating users!");
+  } catch (error) {
+    console.error("Error creating users!");
+    throw error;
+  }
+}
+
+async function createInitialFilms() {
+  console.log("Starting to create films...");
+  try {
+    const createdFilms = await Promise.all(films.map(createFilm));
+
+    console.log("Films created:");
+    console.log(createdFilms);
+    console.log("Finished creating films!");
+  } catch (error) {
+    console.error("Error creating films!");
+    throw error;
+  }
+}
+
 async function rebuildDB() {
   try {
     await dropTables();
     await createTables();
-    //await createInitialUsers();
-    //await createInitialFilms();
+    await createInitialUsers();
+    await createInitialFilms();
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error;
