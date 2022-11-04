@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Books from "./components/Books";
+import Films from "./components/Films";
 
 function App() {
-  const [books, setBooks] = useState([]);
+  const [films, setFilms] = useState([]);
   // i want to fetch the actual books and save them in state
-  const fetchBooks = async () => {
-    const response = await fetch("/api/books");
+  const fetchFilms = async () => {
+    const response = await fetch("/api/films");
     const data = await response.json();
-    setBooks(data.books);
+    setFilms(data.films);
   };
 
-  console.log(books);
+  console.log(films);
 
   useEffect(() => {
-    fetchBooks();
+    fetchFilms();
   }, []);
 
   return (
     <div>
-      <Link to="/books">Books</Link>
+      <Link to="/films">Films</Link>
       <Routes>
-        <Route path="/books" element={<Books />} />
+        <Route path="/films" element={<Films />} />
       </Routes>
     </div>
   );

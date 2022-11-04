@@ -1,9 +1,9 @@
 const express = require("express");
-const bookRouter = require("./bookRouter");
+const filmRouter = require("./filmsRouter");
 
 const apiRouter = express.Router();
 
-apiRouter.use("/books", bookRouter);
+apiRouter.use("/fils", filmRouter);
 
 apiRouter.get("/", (req, res, next) => {
   res.send("api router working");
