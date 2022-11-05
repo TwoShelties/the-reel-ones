@@ -1,12 +1,13 @@
 const express = require("express");
 
-const { getUser, getUserByUsername, getAllUsers } = require("../db/users");
+const {
+  getUser,
+  getUserByUsername,
+  getAllUsers,
+  deleteUser,
+} = require("../db/users");
+const { requireUser } = require("./utils");
 
-<<<<<<< HEAD
-const { getUser, getUserByUsername } = require("../db/users");
-
-=======
->>>>>>> 01a342b2c46b8fcebe9d35017c9e86784eecb4ad
 const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
@@ -95,6 +96,27 @@ usersRouter.get("/me", requireUser, async (req, res) => {
   // console.log(req.user);
   const result = await getUserByUsername(req.user.username);
   res.send(result);
+});
+
+usersRouter.get("/", async (req, res, next) => {
+  try {
+    const allUsers = await getAllUsers();
+    res.send(allUsers);
+  } catch (error) {
+    console.log("error geting all users");
+    throw error;
+  }
+});
+
+usersRouter.delete("/userId", requireUser, async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const deleteSingleUser = await deleteUser(userId);
+    res.send(deleteSingleUser);
+  } catch (error) {
+    console.log("error deleting user");
+    throw error;
+  }
 });
 
 module.exports = usersRouter;
