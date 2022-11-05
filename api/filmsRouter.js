@@ -7,9 +7,10 @@ const {
   getFilmByYear,
 } = require("../db/films");
 
-const filmRouter = express.Router();
+const filmsRouter = express.Router();
 
-filmRouter.get("/", async (req, res, next) => {
+
+filmsRouter.get("/", async (req, res, next) => {
   try {
     const films = await fetchFilms();
     res.send({ success: true, films });
@@ -21,7 +22,7 @@ filmRouter.get("/", async (req, res, next) => {
   }
 });
 
-filmRouter.get("/:title", async (req, res, next) => {
+filmsRouter.get("/:title", async (req, res, next) => {
   try {
     const title = req.params.title;
     const films = await getFilmByTitle(title);
@@ -33,7 +34,7 @@ filmRouter.get("/:title", async (req, res, next) => {
   }
 });
 
-filmRouter.get("/:director", async (req, res, next) => {
+filmsRouter.get("/:director", async (req, res, next) => {
   try {
     const director = req.params.director;
     const films = await getFilmByDirector(director);
@@ -48,7 +49,7 @@ filmRouter.get("/:director", async (req, res, next) => {
   }
 });
 
-filmRouter.get("/:year", async (req, res, next) => {
+filmsRouter.get("/:year", async (req, res, next) => {
   try {
     const year = req.params.year;
     const films = await getFilmByYear(year);
@@ -63,7 +64,7 @@ filmRouter.get("/:year", async (req, res, next) => {
   }
 });
 
-filmRouter.get("/:genre", async (req, res, next) => {
+filmsRouter.get("/:genre", async (req, res, next) => {
   try {
     const genre = req.params.genre;
     const films = await getFilmByGenre(genre);
@@ -76,6 +77,11 @@ filmRouter.get("/:genre", async (req, res, next) => {
     });
     return;
   }
+
+filmsRouter.get("/", async (req, res, next) => {
+  const films = await fetchFilms();
+  res.send({ success: true, films });
+
 });
 
-module.exports = filmRouter;
+module.exports = filmsRouter;
