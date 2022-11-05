@@ -9,7 +9,6 @@ const {
 
 const filmsRouter = express.Router();
 
-
 filmsRouter.get("/", async (req, res, next) => {
   try {
     const films = await fetchFilms();
@@ -77,11 +76,11 @@ filmsRouter.get("/:genre", async (req, res, next) => {
     });
     return;
   }
+});
 
 filmsRouter.get("/", async (req, res, next) => {
   const films = await fetchFilms();
   res.send({ success: true, films });
-
 });
 
 module.exports = filmsRouter;
