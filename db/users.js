@@ -125,6 +125,12 @@ async function deleteUser(username) {
 }
 
 // TEST FOR deleteUser:
+// async function testDeleteUser() {
+//   const user = "zak2";
+//   const response = await deleteUser(user);
+//   console.log(response);
+// }
+// testDeleteUser();
 
 module.exports = {
   createUser,
