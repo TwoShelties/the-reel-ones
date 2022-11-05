@@ -726,7 +726,7 @@ const films = [
     year: 1960,
     genre: ["epic", "historical"],
     img: `https://media-cache.cinematerial.com/p/500x/brtqkzku/spartacus-movie-poster.jpg?v=1456832910`,
-    description: `Spartacus (Greek: Σπάρτακος Spártakos; Latin: Spartacus; c. 103-71 BC) was a Thracian gladiator who, along with Crixus, Gannicus, Castus, and Oenomaus, was one of the escaped slave leaders in the Third Servile War, a major slave uprising against the Roman Republic. Little is known about him beyond the events of the war, and surviving historical accounts are sometimes contradictory. All sources agree that he was a former gladiator and an accomplished military leader.`,
+    description: `Spartacus was a Thracian gladiator who, along with Crixus, Gannicus, Castus, and Oenomaus, was one of the escaped slave leaders in the Third Servile War, a major slave uprising against the Roman Republic. Little is known about him beyond the events of the war, and surviving historical accounts are sometimes contradictory. All sources agree that he was a former gladiator and an accomplished military leader.`,
     price: 1.99,
   },
   {
