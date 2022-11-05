@@ -1,4 +1,5 @@
-const client = require(".");
+const { response } = require("express");
+const client = require("./index");
 
 const fetchFilms = async () => {
   const response = await client.query(`
@@ -6,6 +7,13 @@ const fetchFilms = async () => {
     `);
   return response.rows;
 };
+
+// TEST FOR fetchFilms:
+// async function testFetchFilms() {
+//   const response = await fetchFilms();
+//   console.log(response[100]);
+// }
+// testFetchFilms();
 
 async function createFilm({
   title,
@@ -32,6 +40,22 @@ async function createFilm({
   }
 }
 
+// TEST FOR createFilm:
+// async function testCreateFilm() {
+//   const newFilmObj = {
+//     title: "Test Title 2",
+//     director: "Test Director",
+//     year: 1999,
+//     genre: "Test Genre",
+//     img: "test.com",
+//     description: "Test description",
+//     price: 1.99,
+//   };
+//   const response = await createFilm(newFilmObj);
+//   console.log(response);
+// }
+// testCreateFilm();
+
 async function getFilmByTitle(title) {
   try {
     const {
@@ -50,11 +74,18 @@ async function getFilmByTitle(title) {
     throw error;
   }
 }
+
+// TEST FOR getFilmByTitle:
+// async function testGetFilmByTitle() {
+//   const film = "Test sadfsdf 2";
+//   const response = await getFilmByTitle(film);
+//   console.log(response);
+// }
+// testGetFilmByTitle();
+
 async function getFilmByDirector(director) {
   try {
-    const {
-      rows: [film],
-    } = await client.query(
+    const response = await client.query(
       `
     SELECT *
     FROM films
@@ -62,17 +93,24 @@ async function getFilmByDirector(director) {
     `,
       [director]
     );
-    return film;
+    return response.rows;
   } catch (error) {
     console.log("error getting film director");
     throw error;
   }
 }
+
+// TEST FOR getFilmByDirector
+// async function testGetFilmByDirector() {
+//   const director = "Steven Spielberg";
+//   const response = await getFilmByDirector(director);
+//   console.log(response);
+// }
+// testGetFilmByDirector();
+
 async function getFilmByYear(year) {
   try {
-    const {
-      rows: [film],
-    } = await client.query(
+    const response = await client.query(
       `
     SELECT *
     FROM films
@@ -80,17 +118,24 @@ async function getFilmByYear(year) {
     `,
       [year]
     );
-    return film;
+    return response.rows;
   } catch (error) {
     console.log("error getting film year");
     throw error;
   }
 }
+
+// TEST FOR getFilmByYear
+// async function testGetFilmByYear() {
+//   const year = 1979;
+//   const response = await getFilmByYear(year);
+//   console.log(response);
+// }
+// testGetFilmByYear();
+
 async function getFilmByGenre(genre) {
   try {
-    const {
-      rows: [film],
-    } = await client.query(
+    const response = await client.query(
       `
     SELECT *
     FROM films
@@ -98,12 +143,19 @@ async function getFilmByGenre(genre) {
     `,
       [genre]
     );
-    return film;
+    return response.rows;
   } catch (error) {
     console.log("error getting film genre");
     throw error;
   }
 }
+
+// async function testGetFilmByGenre() {
+//   const genre = "war";
+//   const response = await getFilmByGenre(genre);
+//   console.log(response);
+// }
+// testGetFilmByGenre();
 
 async function updateFilm({ id, ...fields }) {
   console.log(fields);
@@ -129,6 +181,13 @@ async function updateFilm({ id, ...fields }) {
   }
 }
 
+// TEST updateFilm:
+// async function testUpdateFilm() {
+//   const response = await updateFilm({ id: 103, img: "NEW IMG" });
+//   console.log(response);
+// }
+// testUpdateFilm();
+
 async function deleteFilm(id) {
   try {
     const result = await client.query(
@@ -140,12 +199,42 @@ async function deleteFilm(id) {
         `,
       [id]
     );
-    return result.rows[0];
+    return result;
   } catch (error) {
     console.log("error deleting film");
     throw error;
   }
 }
+
+// TEST deleteFilm:
+// async function testDeleteFilm() {
+//   const response = await deleteFilm(104);
+//   console.log(response);
+// }
+// testDeleteFilm();
+
+async function getFilmById(id) {
+  try {
+    const response = await client.query(
+      `
+      SELECT * FROM films
+      WHERE id=$1
+      `,
+      [id]
+    );
+
+    return response.rows;
+  } catch (error) {
+    console.error("an error occurred during getFilmById");
+    throw error;
+  }
+}
+
+// async function x() {
+//   const f = await getFilmById(101);
+//   console.log(f);
+// }
+// x();
 
 module.exports = {
   fetchFilms,
@@ -156,4 +245,5 @@ module.exports = {
   getFilmByYear,
   updateFilm,
   deleteFilm,
+  getFilmById,
 };
