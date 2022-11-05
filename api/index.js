@@ -1,6 +1,5 @@
 const express = require("express");
 const filmRouter = require("./filmsRouter");
-const userRouter = require("./usersRouter");
 
 const apiRouter = express.Router();
 

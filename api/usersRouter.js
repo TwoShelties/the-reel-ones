@@ -1,10 +1,10 @@
 const express = require("express");
 const { getUser, getUserByUsername } = require("../db/users");
-const userRouter = express.Router();
+const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 
-userRouter.get("/", async (req, res, next) => {
+usersRouter.get("/", async (req, res, next) => {
   const users = await getUser();
   res.send({ success: true, users });
 });
@@ -89,4 +89,4 @@ usersRouter.get("/me", requireUser, async (req, res) => {
   res.send(result);
 });
 
-module.exports = userRouter;
+module.exports = usersRouter;
