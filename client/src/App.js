@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, BrowserRouter } from "react-router-dom";
 import "./App.css";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
+import Login from "./components/Login";
 import Films from "./components/Films";
+import Profile from "./components/Profile";
+import Register from "./components/Register";
+import Cart from "./components/Cart";
+import Docs from "./components/Docs";
 
-function App() {
+const App = () => {
+  const [userData, setUserData] = useState(false);
+  const [token, setToken] = useState(0);
+
   const [films, setFilms] = useState([]);
-  // i want to fetch the actual books and save them in state
+
   const fetchFilms = async () => {
     const response = await fetch("/api/films");
     const data = await response.json();
+    // console.log(data);
     setFilms(data.films);
   };
-
-  console.log(films);
 
   useEffect(() => {
     fetchFilms();
@@ -20,12 +29,18 @@ function App() {
 
   return (
     <div>
-      <Link to="/films">Films</Link>
+      <Navbar userData={userData} setToken={setToken} />
       <Routes>
-        <Route path="/films" element={<Films />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/films" element={<Films films={films} />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/api/docs" element={<Docs />} />
       </Routes>
     </div>
   );
-}
+};
 
 export default App;

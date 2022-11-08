@@ -55,4 +55,6 @@ films
 
 BUGS:
 
-1. Error - title column has a unique constraint, we should be able to have films with the same title in the films table
+1. Error - title column has a unique constraint, we should be able to have films with the same title in the films table.
+
+    - removed UNIQUE constraint on the title column of films table

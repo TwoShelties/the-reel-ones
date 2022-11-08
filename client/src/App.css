@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/*===========================
+NAVBAR
+===========================*/
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#site-title {
+}
+
+.site-nav-links {
+  margin: 1rem;
+}
+
+.site-nav-links * {
+  margin: 1rem;
+}
+
+/*===========================
+FILMS
+===========================*/
+
+.films-card-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.film-card {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem;
+  /* border: 1px solid #000; */
+  padding: 1rem;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.film-card img {
+  width: 15rem;
+  height: 22rem;
+}
+
+.film-card div {
+  margin: 1rem;
+}
+
+.film-data-tag {
+  text-decoration: underline;
+  color: #0645ad;
+  cursor: pointer;
+}
+
+.film-description {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.film-add-to-cart-btn {
+  cursor: pointer;
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+}
+
+/*===========================
+API-DOCS
+===========================*/
+
+.api-docs-list * {
+  margin-left: 2rem;
+}
+
+.bold {
+  margin: 0;
+  font-weight: bold;
+}
+
+.sample-code {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 1rem;
+  padding-bottom: 2rem;
+  background-color: #111111;
+  color: #b2bdbe;
+  font-size: 1.125rem;
+  display: block;
+  white-space: nowrap;
+  overflow-x: overlay;
+}
+
+.sample-code-error {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 1rem;
+  padding-bottom: 2rem;
+  background-color: #111111;
+  color: #1fbeb6;
+  font-size: 1.125rem;
+  display: block;
+  white-space: nowrap;
+  overflow-x: overlay;
+}
+
+.code-line {
+  margin: 0;
+  margin-left: 1rem;
+}
+
+.code-line-2 {
+  margin: 0;
+  margin-left: 2rem;
+}
+
+.code-ex {
+  color: #b2bdbe;
+}
+
+.code-ex-string {
+  color: #1fbeb6;
+}
+
+.code-ex-header {
+  color: #cf8e00;
+}
+
+.code-ex-red {
+  color: #ff2323;
+}
+
+.code-ex-comment {
+  color: #8a8a8a;
+}
+
+.endpoint-ex {
+  font-size: larger;
+  background-color: #f3f3f3;
+  font-weight: bold;
+  width: fit-content;
+  padding: 0.25rem;
+}
+
+.circle-li {
+  list-style: circle;
+}
