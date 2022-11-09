@@ -8,7 +8,17 @@ const Films = ({ films }) => {
 
   useEffect(() => {
     search();
+    directorOptionFilter();
   }, [query, films]);
+
+  function directorOptionFilter(director) {
+    if (!filteredFilms) {
+      return;
+    }
+    filteredFilms.map((film) => {
+      console.log(film.director);
+    });
+  }
 
   const filmSearchInputHandler = (event) => {
     setQuery(event.target.value);

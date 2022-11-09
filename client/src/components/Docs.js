@@ -107,17 +107,38 @@ const Docs = () => {
         <code>
           {`{`}
           <br />
-          <span className="code-line">{`"success": false,`}</span>
+          <span className="code-line">
+            <span className="code-ex-string">{`"success"`}</span>
+            {`: `}
+            <span className="code-ex-string">{`false`}</span>
+            {`,`}
+          </span>
           <br />
-          <span className="code-line">{`"error": {`}</span>
+          <span className="code-line">
+            <span className="code-ex-string">{`"error"`}</span>
+            {`: {`}
+          </span>
           <br />
-          <span className="code-line-2">{`"type": "InvalidToken",`}</span>
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"type"`}</span>
+            {`: `}
+            <span className="code-ex-string">{`"InvalidToken"`}</span>
+            {`,`}
+          </span>
           <br />
-          <span className="code-line-2">{`"message": "Invalid token, please register or log in"`}</span>
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"message"`}</span>
+            {`: `}
+            <span className="code-ex-string">{`"Invalid token, please register or log in"`}</span>
+          </span>
           <br />
           <span className="code-line">{`},`}</span>
           <br />
-          <span className="code-line">{`"data": null`}</span>
+          <span className="code-line">
+            <span className="code-ex-string">{`"data"`}</span>
+            {`: `}
+            <span className="code-ex-string">{`null`}</span>
+          </span>
           <br />
           {`}`}
         </code>
@@ -191,6 +212,7 @@ const Docs = () => {
         </code>
       </div>
       <h2>User Endpoints</h2>
+      {/*USERS/REGISTER */}
       <p className="endpoint-ex">
         <code>POST /api/users/register</code>
       </p>
@@ -225,6 +247,287 @@ const Docs = () => {
         </li>
       </ul>
       <h3>Sample Call</h3>
+      <div className="sample-code">
+        <code>
+          {`fetch(`}
+          <span className="code-ex-string">{`"https://the-reel-ones.example.com/api/users/register"`}</span>
+          {`, {`}
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">{`
+            method`}</span>
+            {`: "POST",`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">{`
+            headers`}</span>
+            {`: {
+              "Content-Type": "application/json"
+            },`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">
+              {`
+            body`}
+            </span>
+            {`: `}
+            <span className="code-ex-red">{`JSON`}</span>
+            {`.stringify({`}
+            <br />
+            <span className="code-line-2">
+              <span className="code-ex-header">{`
+              user`}</span>
+              {`: { `}
+              <br />
+              <span className="code-line-3">
+                <span className="code-ex-header">{`username`}</span>
+                {`: `}
+                <span className="code-ex-string">{`"JohnDoe200"`}</span>
+              </span>
+              {`,`}
+            </span>
+            <br />
+            <span className="code-line-3">
+              <span className="code-ex-header">{`password`}</span>
+              {`: `}
+              <span className="code-ex-string">{`"password123"`}</span>
+            </span>
+            <br />
+            <span className="code-line-2">{`}`}</span>
+            <br />
+            <span className="code-line">{`
+            }),`}</span>
+          </span>
+          <br />
+          {`}).then(response => response.json())`}
+          <br />
+          <span className="code-line">{`.then(result => {`}</span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-red">{`console`}</span>
+            {`.log(result);`}
+          </span>
+          <br />
+          <span className="code-line">{`})`}</span>
+          <br />
+          <span className="code-line">
+            {`.catch(`}
+            <span className="code-ex-red">{`console`}</span>
+            {`.error);`}
+          </span>
+        </code>
+      </div>
+      <h3>Sample Response</h3>
+      <div className="sample-code">
+        <code>
+          {`{`}
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"success"`}</span>:{" "}
+            <span className="code-ex-string">{`true`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"error"`}</span>:{" "}
+            <span className="code-ex-string">{`null`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"data"`}</span>
+            {`: {`}
+          </span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"token`}</span>
+            {`: `}
+            <span className="code-ex-string">{`"xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTg5MDY2ZGQ0MzkxNjAwTc1NTNlMDUiLCJ1c2VybmFtZSI6Im1hdHQiLCJpYXQiOjE1ODYwMzgzODF9.CTj4owBl0PB-G6G4E_1l6DS6_cVc0iKcMzBIWFUYM1p"`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"message`}</span>
+            {`: `}
+            <span className="code-ex-string">{`"Thanks for registering for the-reel-ones."`}</span>
+          </span>
+          <br />
+          <span className="code-line">{`}`}</span>
+          <br />
+          {`}`}
+        </code>
+      </div>
+
+      {/*USERS/LOGIN **/}
+      <p className="endpoint-ex">
+        <code>POST /api/users/login</code>
+      </p>
+      <p>
+        This route is for existing users to login with their account
+        information. On success, you will be given a JSON Web Token to be passed
+        to the server for requests requiring authentication.
+      </p>
+      <h3>Request Parameters</h3>
+      <ul className="api-docs-list">
+        <li>
+          <span className="bold">user</span> (
+          <span className="bold">object</span>, required)
+          <li className="circle-li">
+            <span className="bold">username</span> (
+            <span className="bold">string</span>, required): the user's username
+          </li>
+          <li className="circle-li">
+            <span className="bold">password</span> (
+            <span className="bold">string</span>, required): the user's password
+          </li>
+        </li>
+      </ul>
+      <h3>Return Parameters</h3>
+      <ul className="api-docs-list">
+        <li>
+          <span className="bold">token</span> (
+          <span className="bold">string</span>): the JSON Web Token which is
+          used to authenticate the user with any future calls
+        </li>
+      </ul>
+      <h3>Sample Call</h3>
+      <div className="sample-code">
+        <code>
+          {`fetch(`}
+          <span className="code-ex-string">{`"https://the-reel-ones.example.com/api/users/login"`}</span>
+          {`, {`}
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">{`
+            method`}</span>
+            {`: "POST",`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">{`
+            headers`}</span>
+            {`: {
+              "Content-Type": "application/json"
+            },`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">
+              {`
+            body`}
+            </span>
+            {`: `}
+            <span className="code-ex-red">{`JSON`}</span>
+            {`.stringify({`}
+            <br />
+            <span className="code-line-2">
+              <span className="code-ex-header">{`
+              user`}</span>
+              {`: { `}
+              <br />
+              <span className="code-line-3">
+                <span className="code-ex-header">{`username`}</span>
+                {`: `}
+                <span className="code-ex-string">{`"JohnDoe200"`}</span>
+              </span>
+              {`,`}
+            </span>
+            <br />
+            <span className="code-line-3">
+              <span className="code-ex-header">{`password`}</span>
+              {`: `}
+              <span className="code-ex-string">{`"password123"`}</span>
+            </span>
+            <br />
+            <span className="code-line-2">{`}`}</span>
+            <br />
+            <span className="code-line">{`
+            }),`}</span>
+          </span>
+          <br />
+          {`}).then(response => response.json())`}
+          <br />
+          <span className="code-line">{`.then(result => {`}</span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-red">{`console`}</span>
+            {`.log(result);`}
+          </span>
+          <br />
+          <span className="code-line">{`})`}</span>
+          <br />
+          <span className="code-line">
+            {`.catch(`}
+            <span className="code-ex-red">{`console`}</span>
+            {`.error);`}
+          </span>
+        </code>
+      </div>
+
+      <h3>Sample Response</h3>
+      <div className="sample-code">
+        <code>
+          {`{`}
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"success"`}</span>:{" "}
+            <span className="code-ex-string">{`true`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"error"`}</span>:{" "}
+            <span className="code-ex-string">{`null`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"data"`}</span>
+            {`: {`}
+          </span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"token`}</span>
+            {`: `}
+            <span className="code-ex-string">{`"xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTg5MDY2ZGQ0MzkxNjAwTc1NTNlMDUiLCJ1c2VybmFtZSI6Im1hdHQiLCJpYXQiOjE1ODYwMzgzODF9.CTj4owBl0PB-G6G4E_1l6DS6_cVc0iKcMzBIWFUYM1p"`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"message`}</span>
+            {`: `}
+            <span className="code-ex-string">{`"You are logged into the-reel-ones."`}</span>
+          </span>
+          <br />
+          <span className="code-line">{`}`}</span>
+          <br />
+          {`}`}
+        </code>
+      </div>
+
+      {/*USERS/ME **/}
+      <p className="endpoint-ex">
+        <code>POST /api/users/me</code>
+      </p>
+      <p>
+        This route returns certain relevant information to the end user about
+        their account.
+      </p>
+      <h3>Request Parameters</h3>
+      <ul className="api-docs-list">
+        <li>There are no required request parameters</li>
+      </ul>
+      <h3>Return Parameters</h3>
+      <ul className="api-docs-list">
+        <li>
+          <span className="bold">user (object)</span>
+          <ul>
+            <li className="circle">add user objects HERE</li>
+          </ul>
+        </li>
+      </ul>
     </div>
   );
 };

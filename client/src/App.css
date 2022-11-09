@@ -125,6 +125,10 @@ API-DOCS
   margin-left: 2rem;
 }
 
+.code-line-3 {
+  margin-left: 4rem;
+}
+
 .code-ex {
   color: #b2bdbe;
 }
@@ -146,7 +150,7 @@ API-DOCS
 }
 
 .endpoint-ex {
-  font-size: larger;
+  font-size: 1.33rem;
   background-color: #f3f3f3;
   font-weight: bold;
   width: fit-content;

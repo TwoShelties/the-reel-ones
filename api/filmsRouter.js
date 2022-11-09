@@ -88,7 +88,7 @@ filmsRouter.get("/:genre", async (req, res, next) => {
   }
 });
 
-filmsRouter.post("/", requireUser, async (res, res, next) => {
+filmsRouter.post("/", requireUser, async (req, res, next) => {
   const { title, director, year, genre, img, description, price } = req.body;
   console.log(req.body);
   const filmData = {
