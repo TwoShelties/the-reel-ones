@@ -80,7 +80,7 @@ async function createInitialFilms() {
     const createdFilms = await Promise.all(films.map(createFilm));
 
     console.log("Films created:");
-    //console.log(createdFilms);
+    console.log(createdFilms);
     console.log("Finished creating films!");
   } catch (error) {
     console.error("Error creating films!");
