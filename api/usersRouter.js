@@ -30,9 +30,9 @@ usersRouter.post("/login", async (req, res, next) => {
   }
 
   try {
-    const user = await getUserByUsername(username);
+    const user = await getUser({ username, password });
 
-    if (user && user.password === password) {
+    if (user) {
       const token = jwt.sign(user, JWT_SECRET);
       res.send({
         user: {
@@ -98,15 +98,18 @@ usersRouter.get("/me", requireUser, async (req, res) => {
   res.send(result);
 });
 
+/*
 usersRouter.get("/", async (req, res, next) => {
   try {
     const allUsers = await getAllUsers();
+    console.log(allUsers);
     res.send(allUsers);
   } catch (error) {
     console.log("error geting all users");
     throw error;
   }
 });
+*/
 
 usersRouter.delete("/userId", requireUser, async (req, res, next) => {
   try {
