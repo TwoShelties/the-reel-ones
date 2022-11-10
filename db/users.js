@@ -116,6 +116,34 @@ async function getUserByUsername(username) {
 // }
 // testGetUserByUsername();
 
+async function getUserById(userId) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+      SELECT id, username
+      FROM users
+      WHERE id=$1;
+    `,
+      [userId]
+    );
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/*
+async function testGetUserById() {
+  const testId = 1;
+  const response = await getUserById(testId);
+  console.log(response);
+}
+testGetUserById();
+*/
+
 async function deleteUser(username) {
   try {
     const result = await client.query(
@@ -148,4 +176,5 @@ module.exports = {
   getUserByUsername,
   deleteUser,
   getAllUsers,
+  getUserById,
 };
