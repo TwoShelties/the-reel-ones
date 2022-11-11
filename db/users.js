@@ -63,6 +63,7 @@ getUsers();
 async function getUser({ username, password }) {
   try {
     const user = await getUserByUsername(username);
+    console.log(username);
     const hashedPassword = user.password;
     const isValid = await bcrypt.compare(password, hashedPassword);
 
