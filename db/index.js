@@ -12,7 +12,7 @@ const client = new Pool(
     : {
         // password: process.env.DB_PASSWORD,
         user: "postgres",
-        password: "rurufufu97",
+        password: "postgress",
         database: "the-reel-ones",
       }
 );
