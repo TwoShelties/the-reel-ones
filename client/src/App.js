@@ -32,8 +32,8 @@ const App = () => {
       <Navbar userData={userData} setToken={setToken} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/films" element={<Films films={films} />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/cart" element={<Cart />} />
