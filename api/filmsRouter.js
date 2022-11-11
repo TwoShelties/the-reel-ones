@@ -5,9 +5,19 @@ const {
   getFilmByDirector,
   getFilmByGenre,
   getFilmByYear,
+  createFilm,
+  deleteFilm,
+  updateFilm,
 } = require("../db/films");
 
+const { requireUser } = require("./utils");
+
 const filmsRouter = express.Router();
+
+filmsRouter.get("/", async (req, res, next) => {
+  const films = await fetchFilms();
+  res.send({ success: true, films });
+});
 
 filmsRouter.get("/", async (req, res, next) => {
   try {
@@ -78,9 +88,48 @@ filmsRouter.get("/:genre", async (req, res, next) => {
   }
 });
 
-filmsRouter.get("/", async (req, res, next) => {
-  const films = await fetchFilms();
-  res.send({ success: true, films });
+filmsRouter.post("/", requireUser, async (req, res, next) => {
+  const { title, director, year, genre, img, description, price } = req.body;
+  console.log(req.body);
+  const filmData = {
+    authorId: req.user.id,
+    title: title,
+    director: director,
+    year: year,
+    genre: genre,
+    img: img,
+    description: description,
+    price: price,
+  };
+  try {
+    const film = await createFilm(filmData);
+    res.send({ filmData });
+  } catch ({ title, director, year, genre, img, description, price }) {
+    next({ title, director, year, genre, img, description, price });
+  }
+});
+
+filmsRouter.delete("/delete/:filmId", requireUser, async (req, res, next) => {
+  const { filmId } = req.params;
+  try {
+    const deleteMovie = await deleteFilm(filmId);
+    res.send(deleteMovie);
+  } catch (error) {
+    console.log("error deleting film");
+    throw error;
+  }
+});
+
+filmsRouter.patch("/:filmId", requireUser, async (req, res, next) => {
+  const { filmId } = req.params;
+  const fields = req.body;
+  try {
+    const update = await updateFilm({ id: filmId, ...fields });
+    res.send(update);
+  } catch (error) {
+    console.log("error updating film");
+    throw error;
+  }
 });
 
 module.exports = filmsRouter;

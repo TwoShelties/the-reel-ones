@@ -1,19 +1,18 @@
 const express = require("express");
-
-const { getUser, getUserByUsername, getAllUsers } = require("../db/users");
-
-
-const { getUser, getUserByUsername } = require("../db/users");
-
 const usersRouter = express.Router();
+const {
+  getUser,
+  getUserByUsername,
+  getAllUsers,
+  deleteUser,
+  createUser,
+} = require("../db/users");
 const jwt = require("jsonwebtoken");
+const { requireUser } = require("./utils");
 const { JWT_SECRET } = process.env;
 
 usersRouter.get("/", async (req, res, next) => {
-
   const users = await getAllUsers();
-
-  const users = await getUser();
 
   res.send({ success: true, users });
 });
@@ -30,9 +29,9 @@ usersRouter.post("/login", async (req, res, next) => {
   }
 
   try {
-    const user = await getUserByUsername(username);
+    const user = await getUser({ username, password });
 
-    if (user && user.password === password) {
+    if (user) {
       const token = jwt.sign(user, JWT_SECRET);
       res.send({
         user: {
@@ -55,7 +54,14 @@ usersRouter.post("/login", async (req, res, next) => {
 });
 
 usersRouter.post("/register", async (req, res, next) => {
+  if (!req.body.username || !req.body.password) {
+    next({
+      name: "MissingCredentialsError",
+      message: "Please supply both a username and password",
+    });
+  }
   const { username, password } = req.body;
+
   try {
     if (password.length < 8) {
       res.status(500).send({
@@ -65,6 +71,7 @@ usersRouter.post("/register", async (req, res, next) => {
       });
     }
     const checkUsers = await getUserByUsername(username);
+
     if (checkUsers) {
       res.status(500).send({
         error: "error has occured",
@@ -76,7 +83,7 @@ usersRouter.post("/register", async (req, res, next) => {
       const token = jwt.sign(
         {
           id: user.id,
-          username,
+          username: username,
         },
         process.env.JWT_SECRET,
         {
@@ -84,7 +91,7 @@ usersRouter.post("/register", async (req, res, next) => {
         }
       );
       if (user) {
-        res.send({ message: "User is created", token: token, user: user });
+        res.send({ message: "User is created", token, user });
       }
     }
   } catch ({ name, message }) {
@@ -94,8 +101,40 @@ usersRouter.post("/register", async (req, res, next) => {
 
 usersRouter.get("/me", requireUser, async (req, res) => {
   // console.log(req.user);
-  const result = await getUserByUsername(req.user.username);
-  res.send(result);
+  if (!req.user) {
+    res.status(401);
+    res.send({
+      error: "error",
+      message: "You must be logged in to perform this action",
+      name: "name",
+    });
+  }
+  //const result = await getUserByUsername(req.user.username);
+  res.send(req.user);
+});
+
+/*
+usersRouter.get("/", async (req, res, next) => {
+  try {
+    const allUsers = await getAllUsers();
+    console.log(allUsers);
+    res.send(allUsers);
+  } catch (error) {
+    console.log("error geting all users");
+    throw error;
+  }
+});
+*/
+
+usersRouter.delete("/userId", requireUser, async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const deleteSingleUser = await deleteUser(userId);
+    res.send(deleteSingleUser);
+  } catch (error) {
+    console.log("error deleting user");
+    throw error;
+  }
 });
 
 module.exports = usersRouter;

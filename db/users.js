@@ -1,7 +1,11 @@
 const client = require("./index");
+const bcrypt = require("bcrypt");
 
 async function createUser({ username, password }) {
   try {
+    const SALT_COUNT = 10;
+    const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
+
     const {
       rows: [user],
     } = await client.query(
@@ -11,7 +15,7 @@ async function createUser({ username, password }) {
        ON CONFLICT (username) DO NOTHING
        RETURNING *; 
        `,
-      [username, password]
+      [username, hashedPassword]
     );
 
     return user;
@@ -22,13 +26,15 @@ async function createUser({ username, password }) {
 }
 
 // TEST FOR createUser:
-// async function testCreateUser() {
-//   console.log("testing createUser...");
-//   let userObj = { username: "zak2", password: "zakzakzak" };
-//   const newUser = await createUser(userObj);
-//   console.log(newUser);
-// }
-// testCreateUser();
+/*
+async function testCreateUser() {
+  console.log("testing createUser...");
+  let userObj = { username: "zakTest", password: "zakzakzak" };
+  const newUser = await createUser(userObj);
+  console.log(newUser);
+}
+testCreateUser();
+*/
 
 async function getAllUsers() {
   try {
@@ -46,21 +52,23 @@ async function getAllUsers() {
 }
 
 // TEST FOR getAllUsers:
-// getAllUsers();
+/*
+async function getUsers() {
+  const allUsers = await getAllUsers();
+  console.log(allUsers);
+}
+getUsers();
+*/
 
 async function getUser({ username, password }) {
   try {
-    const {
-      rows: [user],
-    } = await client.query(
-      `
-       SELECT *
-       FROM users
-       WHERE username=$1 AND password=$2;
-       `,
-      [username, password]
-    );
-    return user;
+    const user = await getUserByUsername(username);
+    const hashedPassword = user.password;
+    const isValid = await bcrypt.compare(password, hashedPassword);
+
+    if (user && isValid) {
+      return user;
+    }
   } catch (error) {
     console.log("error getting user");
     throw error;
@@ -68,13 +76,15 @@ async function getUser({ username, password }) {
 }
 
 // TEST FOR getUser:
-// async function testGetUser() {
-//   console.log("testing getUser...");
-//   const userObj = { username: "adam", password: "secretpass99" };
-//   const response = await getUser(userObj);
-//   console.log("retrieved user:", response);
-// }
-// testGetUser();
+/*
+async function testGetUser() {
+  console.log("testing getUser...");
+  const userObj = { username: "adam", password: "secretpass99" };
+  const response = await getUser(userObj);
+  console.log("retrieved user:", response);
+}
+testGetUser();
+*/
 
 async function getUserByUsername(username) {
   try {
@@ -105,6 +115,34 @@ async function getUserByUsername(username) {
 //   console.log(response);
 // }
 // testGetUserByUsername();
+
+async function getUserById(userId) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+      SELECT id, username
+      FROM users
+      WHERE id=$1;
+    `,
+      [userId]
+    );
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+/*
+async function testGetUserById() {
+  const testId = 1;
+  const response = await getUserById(testId);
+  console.log(response);
+}
+testGetUserById();
+*/
 
 async function deleteUser(username) {
   try {
@@ -138,4 +176,5 @@ module.exports = {
   getUserByUsername,
   deleteUser,
   getAllUsers,
+  getUserById,
 };

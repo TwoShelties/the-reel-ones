@@ -1,5 +1,21 @@
 const client = require(".");
 
+async function getAllUserFilms() {
+  try {
+    const {
+      result: [film],
+    } = await client.query(
+      `
+            SELECT * FROM user_films;
+      `
+    );
+    return film;
+  } catch (error) {
+    console.log("Error with getting user films");
+    throw error;
+  }
+}
+
 async function getFilmByUserId(userId) {
   try {
     const {
@@ -37,6 +53,7 @@ async function addFilmToUserId(userId, filmId, purchaseDate, expiryDate) {
 }
 
 module.exports = {
+  getAllUserFilms,
   getFilmByUserId,
   addFilmToUserId,
 };
