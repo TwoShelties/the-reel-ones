@@ -1,39 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Register = ({ setToken, setUserData }) => {
-  const navigate = useNavigate();
+const Register = ({ setToken }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const usernameInputHandler = (event) => {
-    event.preventDefault();
-    setUsername(event.target.value);
-  };
+  const navigate = useNavigate();
 
-  const passwordInputHandler = (event) => {
-    event.preventDefault();
-    setPassword(event.target.value);
-  };
-
-  const registerHandler = async (event) => {
+  const userRegister = async (event) => {
     event.preventDefault();
 
-    if (!username || !password) {
-      alert("You must enter a username and password");
-      return;
-    }
-
-    if (password.length < 8) {
-      alert("Your password must be 8 characters or longer");
-      return;
-    }
-
-    console.log(
-      `user attempting to register account: ${username}, password: ${password}`
-    );
-
-    await fetch("/api/users/register", {
+    const response = await fetch(`api/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,33 +19,30 @@ const Register = ({ setToken, setUserData }) => {
         username: username,
         password: password,
       }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-        if (!result.error) {
-          setToken(result.token);
-          localStorage.setItem("token", result.token);
-          setUserData(result.user);
-          navigate("/profile");
-        }
-      });
-  };
+    });
+    const info = await response.json();
 
+    if (info) {
+      setToken(info.token);
+      localStorage.setItem("token", info.token);
+      navigate("/profile");
+    }
+  };
   return (
     <div>
-      <form onSubmit={registerHandler}>
+      <form onSubmit={userRegister}>
         <input
-          type="text"
-          placeholder="Username"
-          onChange={usernameInputHandler}
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+          placeholder="username"
         />
         <input
-          type="password"
-          placeholder="Password"
-          onChange={passwordInputHandler}
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          placeholder={"password"}
+          type={"password"}
         />
-        <button>Submit</button>
+        <button>Register</button>
         <p>
           <Link to="/login">Already have an account?</Link>
         </p>
