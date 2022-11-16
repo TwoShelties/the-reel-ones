@@ -1,13 +1,21 @@
 const client = require(".");
 const films = require("./afi-db");
 const { createUser } = require("./users");
-const { createFilm } = require("./films");
+const {
+  createFilm,
+  getFilmById,
+  getFilmByTitle,
+  fetchFilms,
+} = require("./films");
+const { addGenreToFilm } = require("./genres");
 
 async function dropTables() {
   try {
     console.log("Dropping All Tables...");
     client.query(`
       DROP TABLE IF EXISTS user_films;
+      DROP TABLE IF EXISTS genres;
+      DROP TABLE IF EXISTS directors;
       DROP TABLE IF EXISTS films;
       DROP TABLE IF EXISTS users;
     `);
@@ -27,9 +35,10 @@ async function createTables() {
         username VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL
       );
+
       CREATE TABLE films(
         id SERIAL PRIMARY KEY,
-        title VARCHAR(255) NOT NULL,
+        title VARCHAR(255) UNIQUE NOT NULL,
         director VARCHAR(255) NOT NULL,
         year INTEGER NOT NULL,
         genre VARCHAR(255) NOT NULL,
@@ -37,6 +46,7 @@ async function createTables() {
         description TEXT NOT NULL, 
         price FLOAT NOT NULL
       );
+      
       CREATE TABLE user_films(
         id SERIAL PRIMARY KEY,
         “userId” INTEGER REFERENCES users(id),
@@ -44,6 +54,38 @@ async function createTables() {
         purchaseDate TIMESTAMP,
         expiryDate TIMESTAMP
       );
+
+      CREATE TABLE genres(
+        id SERIAL PRIMARY KEY,
+        "filmId" INTEGER REFERENCES films(id),
+        title VARCHAR(255) REFERENCES films(title),
+        drama BOOLEAN DEFAULT FALSE,
+        crime BOOLEAN DEFAULT FALSE,
+        romance BOOLEAN DEFAULT FALSE,
+        musical BOOLEAN DEFAULT FALSE,
+        comedy BOOLEAN DEFAULT FALSE,
+        western BOOLEAN DEFAULT FALSE,
+        "scienceFiction" BOOLEAN DEFAULT FALSE,
+        thriller BOOLEAN DEFAULT FALSE,
+        mystery BOOLEAN DEFAULT FALSE,
+        epic BOOLEAN DEFAULT FALSE,
+        adventure BOOLEAN DEFAULT FALSE,
+        war BOOLEAN DEFAULT FALSE,
+        action BOOLEAN DEFAULT FALSE,
+        "children's" BOOLEAN DEFAULT FALSE,
+        fantasy BOOLEAN DEFAULT FALSE,
+        spy BOOLEAN DEFAULT FALSE,
+        other BOOLEAN DEFAULT FALSE
+      );
+
+      CREATE TABLE directors(
+        id SERIAL PRIMARY KEY,
+        "filmId" INTEGER REFERENCES films(id),
+        director1 VARCHAR(255),
+        director2 VARCHAR(255),
+        director3 VARCHAR(255)
+      );
+
     `);
     console.log("Finished constructing tables!");
   } catch (error) {
@@ -66,7 +108,7 @@ async function createInitialUsers() {
     const users = await Promise.all(usersToCreate.map(createUser));
 
     console.log("Users created:");
-    console.log(users);
+    // console.log(users);
     console.log("Finished creating users!");
   } catch (error) {
     console.error("Error creating users!");
@@ -80,7 +122,7 @@ async function createInitialFilms() {
     const createdFilms = await Promise.all(films.map(createFilm));
 
     console.log("Films created:");
-    console.log(createdFilms);
+    // console.log(createdFilms);
     console.log("Finished creating films!");
   } catch (error) {
     console.error("Error creating films!");
@@ -88,12 +130,21 @@ async function createInitialFilms() {
   }
 }
 
+async function seedGenresTable() {
+  console.log("starting to seed genres table...");
+  const zed = await addGenreToFilm();
+}
+
+async function addGenresToFilms() {}
+
 async function rebuildDB() {
   try {
     await dropTables();
     await createTables();
     await createInitialUsers();
     await createInitialFilms();
+    await seedGenresTable();
+    await addGenresToFilms();
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error;
@@ -103,5 +154,6 @@ module.exports = {
   rebuildDB,
   dropTables,
   createTables,
+  addGenresToFilms,
 };
 //seedDB();

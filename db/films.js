@@ -2,10 +2,17 @@ const { response } = require("express");
 const client = require("./index");
 
 const fetchFilms = async () => {
-  const response = await client.query(`
+  try {
+    console.log("calling fetchFilms()...");
+    const response = await client.query(`
     SELECT * FROM films
     `);
-  return response.rows;
+    // console.log(response.rows);
+    return response.rows;
+  } catch (error) {
+    console.error("an error occurred during fetchFilms()");
+    throw error;
+  }
 };
 
 // TEST FOR fetchFilms:

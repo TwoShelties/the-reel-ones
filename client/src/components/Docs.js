@@ -211,10 +211,11 @@ const Docs = () => {
           {`}`}
         </code>
       </div>
+
       <h2>User Endpoints</h2>
-      {/*USERS/REGISTER */}
+      {/* POSTUSERS/REGISTER */}
       <p className="endpoint-ex">
-        <code>POST /api/users/register</code>
+        <code>POST /users/register</code>
       </p>
       <p>
         This route is used to create a new user account. On success you will be
@@ -277,25 +278,18 @@ const Docs = () => {
             {`.stringify({`}
             <br />
             <span className="code-line-2">
-              <span className="code-ex-header">{`
-              user`}</span>
-              {`: { `}
-              <br />
-              <span className="code-line-3">
-                <span className="code-ex-header">{`username`}</span>
-                {`: `}
-                <span className="code-ex-string">{`"JohnDoe200"`}</span>
-              </span>
+              <span className="code-ex-header">{`username`}</span>
+              {`: `}
+              <span className="code-ex-string">{`"JohnDoe200"`}</span>
+
               {`,`}
             </span>
             <br />
-            <span className="code-line-3">
+            <span className="code-line-2">
               <span className="code-ex-header">{`password`}</span>
               {`: `}
               <span className="code-ex-string">{`"password123"`}</span>
             </span>
-            <br />
-            <span className="code-line-2">{`}`}</span>
             <br />
             <span className="code-line">{`
             }),`}</span>
@@ -360,9 +354,9 @@ const Docs = () => {
         </code>
       </div>
 
-      {/*USERS/LOGIN **/}
+      {/* POST USERS/LOGIN **/}
       <p className="endpoint-ex">
-        <code>POST /api/users/login</code>
+        <code>POST /users/login</code>
       </p>
       <p>
         This route is for existing users to login with their account
@@ -423,25 +417,17 @@ const Docs = () => {
             {`.stringify({`}
             <br />
             <span className="code-line-2">
-              <span className="code-ex-header">{`
-              user`}</span>
-              {`: { `}
-              <br />
-              <span className="code-line-3">
-                <span className="code-ex-header">{`username`}</span>
-                {`: `}
-                <span className="code-ex-string">{`"JohnDoe200"`}</span>
-              </span>
+              <span className="code-ex-header">{`username`}</span>
+              {`: `}
+              <span className="code-ex-string">{`"JohnDoe200"`}</span>
               {`,`}
             </span>
             <br />
-            <span className="code-line-3">
+            <span className="code-line-2">
               <span className="code-ex-header">{`password`}</span>
               {`: `}
               <span className="code-ex-string">{`"password123"`}</span>
             </span>
-            <br />
-            <span className="code-line-2">{`}`}</span>
             <br />
             <span className="code-line">{`
             }),`}</span>
@@ -489,14 +475,14 @@ const Docs = () => {
           </span>
           <br />
           <span className="code-line-2">
-            <span className="code-ex-string">{`"token`}</span>
+            <span className="code-ex-string">{`"token"`}</span>
             {`: `}
             <span className="code-ex-string">{`"xyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTg5MDY2ZGQ0MzkxNjAwTc1NTNlMDUiLCJ1c2VybmFtZSI6Im1hdHQiLCJpYXQiOjE1ODYwMzgzODF9.CTj4owBl0PB-G6G4E_1l6DS6_cVc0iKcMzBIWFUYM1p"`}</span>
             {`,`}
           </span>
           <br />
           <span className="code-line-2">
-            <span className="code-ex-string">{`"message`}</span>
+            <span className="code-ex-string">{`"message"`}</span>
             {`: `}
             <span className="code-ex-string">{`"You are logged into the-reel-ones."`}</span>
           </span>
@@ -507,13 +493,17 @@ const Docs = () => {
         </code>
       </div>
 
-      {/*USERS/ME **/}
+      {/* GET USERS/ME **/}
       <p className="endpoint-ex">
-        <code>POST /api/users/me</code>
+        <code>GET /users/me</code>
       </p>
       <p>
         This route returns certain relevant information to the end user about
         their account.
+      </p>
+      <p>
+        Note: The user must be <span className="bold">logged in</span> to make
+        this call.
       </p>
       <h3>Request Parameters</h3>
       <ul className="api-docs-list">
@@ -524,10 +514,124 @@ const Docs = () => {
         <li>
           <span className="bold">user (object)</span>
           <ul>
-            <li className="circle">add user objects HERE</li>
+            <li className="circle">id: the user's identification number</li>
+            <li className="circle">username: the user's username</li>
           </ul>
         </li>
       </ul>
+      <h3>Sample Call</h3>
+      <div className="sample-code">
+        <code>
+          {`fetch(`}
+          <span className="code-ex-string">{`"https://the-reel-ones.example.com/api/users/login"`}</span>
+          {`, {`}
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">{`
+            method`}</span>
+            {`: "GET",`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-header">{`
+            headers`}</span>
+            {`: {
+              "Content-Type": "application/json"
+            },`}
+          </span>
+          <br />
+          {`}).then(response => response.json())`}
+          <br />
+          <span className="code-line">{`.then(result => {`}</span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-red">{`console`}</span>
+            {`.log(result);`}
+          </span>
+          <br />
+          <span className="code-line">{`})`}</span>
+          <br />
+          <span className="code-line">
+            {`.catch(`}
+            <span className="code-ex-red">{`console`}</span>
+            {`.error);`}
+          </span>
+        </code>
+      </div>
+
+      <h3>Sample Response</h3>
+      <div className="sample-code">
+        <code>
+          {`{`}
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"success"`}</span>:{" "}
+            <span className="code-ex-string">{`true`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"error"`}</span>:{" "}
+            <span className="code-ex-string">{`null`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line">
+            <span className="code-ex-string">{`"data"`}</span>
+            {`: {`}
+          </span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"id"`}</span>
+            {`: `}
+            <span className="code-ex-string">{`123`}</span>
+            {`,`}
+          </span>
+          <br />
+          <span className="code-line-2">
+            <span className="code-ex-string">{`"username"`}</span>
+            {`: `}
+            <span className="code-ex-string">{`"JohnDoe123"`}</span>
+          </span>
+          <br />
+          <span className="code-line">{`}`}</span>
+          <br />
+          {`}`}
+        </code>
+      </div>
+
+      {/*DELETE USERS/:userId **/}
+      <p className="endpoint-ex">
+        <code>DELTE /users/:userId</code>
+      </p>
+      <p>
+        This route <span className="bold">deletes</span> the user specified in
+        the endpoint params. For example, a DELETE request to /users/1 would
+        delete the user with the ID of 1.
+      </p>
+      <p>
+        Note: The user specified in this call will be{" "}
+        <span className="bold">permanently</span> deleted.
+      </p>
+      <h3>Request Parameters</h3>
+      <ul className="api-docs-list">
+        <li>
+          The user ID number for deletion, formatted in the call like this:
+          /user/:userId
+        </li>
+      </ul>
+      <h3>Return Parameters</h3>
+      <ul className="api-docs-list">
+        <li>
+          <span className="bold">user (object)</span>
+          <ul>
+            <li className="circle">id: the user's identification number</li>
+            <li className="circle">username: the user's username</li>
+          </ul>
+        </li>
+      </ul>
+      <h3>Sample Call</h3>
+      {/* END OF APP DIV */}
     </div>
   );
 };
