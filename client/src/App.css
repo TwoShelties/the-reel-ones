@@ -33,6 +33,8 @@ FILMS
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  align-items: flex-start;
+  flex-grow: 1;
 }
 
 .film-card {
@@ -70,6 +72,12 @@ FILMS
   cursor: pointer;
   margin-top: 0.5rem;
   padding: 0.25rem;
+}
+
+.multiple-genre-wrapper {
+  margin-right: 1rem;
+  padding: 0;
+  display: inline-flex;
 }
 
 /*===========================
@@ -159,4 +167,23 @@ API-DOCS
 
 .circle-li {
   list-style: circle;
+}
+
+/*===========================
+FILM
+===========================*/
+
+.film-year-wrapper {
+  font-size: 1rem;
+  margin-left: 1rem;
+}
+
+.similar-films-btn {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.film-img {
+  width: 15rem;
+  height: 22rem;
 }

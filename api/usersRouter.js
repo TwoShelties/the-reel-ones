@@ -126,7 +126,7 @@ usersRouter.get("/", async (req, res, next) => {
 });
 */
 
-usersRouter.delete("/userId", requireUser, async (req, res, next) => {
+usersRouter.delete("/:userId", requireUser, async (req, res, next) => {
   try {
     const { userId } = req.params;
     const deleteSingleUser = await deleteUser(userId);

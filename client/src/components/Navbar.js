@@ -1,7 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ userData, setToken }) => {
+const Navbar = ({ userData, token, setToken }) => {
+  const navigate = useNavigate();
+
+  const logoutHandler = (event) => {
+    console.log(
+      "Removing token from local storage, and setting token to empty string..."
+    );
+    localStorage.removeItem("token");
+    setToken("");
+    navigate("/login");
+  };
+
   return (
     <div className="navbar">
       <Link to="/">
@@ -9,14 +20,11 @@ const Navbar = ({ userData, setToken }) => {
       </Link>
       <div className="site-nav-links">
         <Link to="/films">Films</Link>
-        {/* include ternary when possible to below: */}
-        <Link to="/login">Login/Register</Link>
-        {/* include ternary when possible to below: */}
-        <Link to="/profile">Profile</Link>
+        {token ? <Link to="/profile">Profile</Link> : <></>}
         <Link to="/cart">Cart</Link>
-        {/* include ternary when possible to below: */}
-        {/* <a href="">Logout</a> */}
         <Link to="/api/docs">API Docs</Link>
+        {!token ? <Link to="/login">Login/Register</Link> : <></>}
+        {token ? <Link onClick={logoutHandler}>Logout</Link> : <></>}
       </div>
     </div>
   );

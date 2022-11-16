@@ -1,6 +1,7 @@
 import React from "react";
 
-const Profile = () => {
+const Profile = ({ userData }) => {
+  console.log(userData);
   return <div>profile</div>;
 };
 

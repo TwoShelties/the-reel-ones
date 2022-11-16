@@ -9,9 +9,10 @@ import Profile from "./components/Profile";
 import Register from "./components/Register";
 import Cart from "./components/Cart";
 import Docs from "./components/Docs";
+import Film from "./components/Film";
 
 const App = () => {
-  const [userData, setUserData] = useState(false);
+  const [userData, setUserData] = useState({});
   const [token, setToken] = useState(0);
 
   const [films, setFilms] = useState([]);
@@ -19,7 +20,7 @@ const App = () => {
   const fetchFilms = async () => {
     const response = await fetch("/api/films");
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     setFilms(data.films);
   };
 
@@ -29,12 +30,22 @@ const App = () => {
 
   return (
     <div>
-      <Navbar userData={userData} setToken={setToken} />
+      <Navbar userData={userData} token={token} setToken={setToken} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={<Login setToken={setToken} setUserData={setUserData} />}
+        />
+        <Route
+          path="/register"
+          element={<Register setToken={setToken} setUserData={setUserData} />}
+        />
         <Route path="/films" element={<Films films={films} />} />
+        <Route
+          path="/films/:filmId"
+          element={<Film films={films} userData={userData} token={token} />}
+        />
         <Route path="/profile" element={<Profile />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/api/docs" element={<Docs />} />
