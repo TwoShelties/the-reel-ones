@@ -1,4 +1,5 @@
 const express = require("express");
+const { getDirectorByFilmId } = require("../db/directors");
 const {
   fetchFilms,
   getFilmByTitle,
@@ -8,16 +9,19 @@ const {
   createFilm,
   deleteFilm,
   updateFilm,
+  getAllFilmGenres,
+  getFilmById,
+  getGenresByFilmId,
 } = require("../db/films");
 
 const { requireUser } = require("./utils");
 
 const filmsRouter = express.Router();
 
-filmsRouter.get("/", async (req, res, next) => {
-  const films = await fetchFilms();
-  res.send({ success: true, films });
-});
+// filmsRouter.get("/", async (req, res, next) => {
+//   const films = await fetchFilms();
+//   res.send({ success: true, films });
+// });
 
 filmsRouter.get("/", async (req, res, next) => {
   try {
@@ -31,25 +35,61 @@ filmsRouter.get("/", async (req, res, next) => {
   }
 });
 
-filmsRouter.get("/:title", async (req, res, next) => {
+filmsRouter.get("/:filmId", async (req, res, next) => {
   try {
-    const title = req.params.title;
-    const films = await getFilmByTitle(title);
-    res.send({ success: true, films });
+    const filmId = req.params.filmId;
+
+    if (typeof filmId !== Number) {
+      next({ message: `Film ID paramter must be a number` });
+      return;
+    }
+
+    const films = await getFilmById(filmId);
+
+    if (films.length > 0) {
+      res.send({ success: true, films });
+    } else {
+      next(error);
+    }
   } catch (error) {
-    console.log("Error with getting film by title");
-    next({ message: `Film with title ${req.params.title} does not exist` });
+    console.error("Error retrieving films with id provided");
+    res.status(404);
+    next({ message: `Error retriving film with ID ${req.params.filmId}` });
     return;
   }
 });
 
-filmsRouter.get("/:director", async (req, res, next) => {
+// filmsRouter.get("/:title", async (req, res, next) => {
+//   try {
+//     const title = req.params.title;
+//     const films = await getFilmByTitle(title);
+//     res.send({ success: true, films });
+//   } catch (error) {
+//     console.log("Error with getting film by title");
+//     next({ message: `Film with title ${req.params.title} does not exist` });
+//     return;
+//   }
+// });
+
+filmsRouter.get("/:filmId/directors", async (req, res, next) => {
   try {
-    const director = req.params.director;
-    const films = await getFilmByDirector(director);
-    res.send({ success: true, films });
+    // let directors = [];
+    // let filmId = req.params.filmId;
+    // const films = await getFilmById(filmId);
+    // const filmsMap = films.map((film) => {
+    //   directors.push(film.director);
+    // });
+
+    // if (directors.length > 0) {
+    //   res.send({ success: true, directors });
+    // } else {
+    //   next(error);
+    // }
+
+    const filmId = req.params.filmId;
+    const directors = await getDirectorByFilmId(filmId);
+    res.send(directors);
   } catch (error) {
-    console.log("Error with getting film by director");
     res.status(404);
     next({
       message: `Film with director ${req.params.director} does not exist`,
@@ -58,11 +98,16 @@ filmsRouter.get("/:director", async (req, res, next) => {
   }
 });
 
-filmsRouter.get("/:year", async (req, res, next) => {
+filmsRouter.get("/year/:year", async (req, res, next) => {
   try {
     const year = req.params.year;
     const films = await getFilmByYear(year);
-    res.send({ success: true, films });
+
+    if (films.length > 0) {
+      res.send({ success: true, films });
+    } else {
+      next(error);
+    }
   } catch (error) {
     console.log("Error with getting film by year");
     res.status(404);
@@ -73,20 +118,76 @@ filmsRouter.get("/:year", async (req, res, next) => {
   }
 });
 
-filmsRouter.get("/:genre", async (req, res, next) => {
+filmsRouter.get("/genres", async (req, res, next) => {
   try {
-    const genre = req.params.genre;
-    const films = await getFilmByGenre(genre);
+    const films = await getAllFilmGenres();
+    console.log(films);
+
     res.send({ success: true, films });
   } catch (error) {
-    console.log("Error with getting film by genre");
     res.status(404);
     next({
-      message: `Film with genre ${req.params.genre} does not exist`,
+      message: "could not retrieve film genres",
     });
-    return;
   }
 });
+
+filmsRouter.get("/:filmId/genres", async (req, res, next) => {
+  try {
+    const filmId = req.params.filmId;
+
+    const films = await getGenresByFilmId(filmId);
+
+    if (films.length > 0) {
+      const filmTitle = films[0].title;
+      const film_id = films[0].filmId;
+      const filmGenres = films[0];
+      // delete filmGenres.title;
+      // delete filmGenres.id;
+      // delete filmGenres.filmId;
+
+      let genresList = [];
+
+      const propertyNames = Object.keys(filmGenres);
+      // console.log(propertyNames);
+
+      const propertyValues = Object.values(filmGenres);
+      // console.log(propertyValues);
+
+      const entries = genresList.push(Object.entries(filmGenres));
+      console.log(genresList);
+
+      res.send({
+        success: true,
+        message: `retrieved genres for film ID: ${filmId}, title: ${filmTitle}`,
+        genresList,
+      });
+    } else {
+      next(error);
+    }
+  } catch (error) {
+    res.status(404);
+    next({
+      message: `Could not retrieve genres for film ID: ${req.params.filmId}`,
+    });
+  }
+});
+
+// filmsRouter.get("genres/:genre", async (req, res, next) => {
+//   try {
+//     const genre = req.params.genre;
+//     const films = await getFilmByGenre(genre);
+
+//     res.send({ films });
+//   } catch (error) {
+//     console.log("Error with getting film by genre");
+//     res.status(404);
+//     next({
+//       message: `Film with genre ${req.params.genre} does not exist`,
+//     });
+//     return;
+//   }
+// });
 
 filmsRouter.post("/", requireUser, async (req, res, next) => {
   const { title, director, year, genre, img, description, price } = req.body;

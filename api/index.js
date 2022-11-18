@@ -46,6 +46,14 @@ apiRouter.use((req, res, next) => {
 const filmsRouter = require("./filmsRouter");
 apiRouter.use("/films", filmsRouter);
 
+// ROUTER: /api/genres
+const genresRouter = require("./genresRouter");
+apiRouter.use("/genres", genresRouter);
+
+// ROUTER: /api/directors
+const directorsRouter = require("./directorsRouter");
+apiRouter.use("/directors", directorsRouter);
+
 // ROUTER: /api/users
 const usersRouter = require("./usersRouter");
 apiRouter.use("/users", usersRouter);

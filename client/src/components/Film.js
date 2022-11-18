@@ -6,6 +6,8 @@ const Film = ({ films, userData, token }) => {
   const navigate = useNavigate();
 
   const [focusFilm, setFocusFilm] = useState({});
+  const [focusDirector, setFocusDirector] = useState([]);
+  const [genres, setGenres] = useState([]);
   const [recommendedFilmsByGenre, setReccomendedFilmsByGenre] = useState([]);
   const [recommendedFilmsByYear, setReccomendedFilmsByYear] = useState([]);
 
@@ -15,10 +17,70 @@ const Film = ({ films, userData, token }) => {
     setFocusFilm(result);
   };
 
-  const similarFilmsCheckByGenre = (genre) => {
+  const setTargetFilmDirector = async () => {
+    if (!focusFilm || focusFilm === undefined) {
+      return;
+    }
+
+    const response = await fetch(`/api/films/${focusFilm.id}/directors`);
+    const data = await response.json();
+    // console.log(data);
+    if (!data.error) {
+      setFocusDirector(data);
+    }
+  };
+
+  const setTargetFilmGenre = async () => {
+    // console.log(focusFilm.id);
+
+    if (!focusFilm) {
+      return;
+    }
+    // Get film genres by film id:
+    const response = await fetch(`/api/films/${focusFilm.id}/genres`);
+    const data = await response.json();
+    // console.log(data);
+
+    let genreValues = [];
+    if (!data.genresList) {
+      return;
+    }
+    const dataMap = data.genresList[0].map((genreKey) => {
+      // console.log(genreKey);
+      if (genreKey.includes(true)) {
+        genreValues.push(genreKey[0]);
+      }
+    });
+    // console.log(genreValues);
+
+    if (genreValues.length > 0) {
+      setGenres(genreValues);
+    }
+  };
+
+  const similarFilmsCheckByGenre = async (genre) => {
+    if (!focusFilm) {
+      return;
+    }
+
+    async function findCurrentFilmGenre() {
+      const id = Number(params.filmId);
+      const result = films.filter((film) => film.id === id)[0];
+      return result;
+    }
+
+    const currentFilmGenre = await findCurrentFilmGenre();
+    console.log(currentFilmGenre.genre);
+
+    if (!currentFilmGenre) {
+      return;
+    }
+
+    genre = currentFilmGenre.genre;
     let result = [];
+
     if (genre.includes(`}`) || genre.includes(`{`)) {
-      console.log("restructuring genre string...");
+      // console.log("restructuring genre string...");
 
       const createNewGenreStrings = (genreString) => {
         // console.log(genreString);
@@ -56,6 +118,12 @@ const Film = ({ films, userData, token }) => {
   };
 
   const similarFilmsCheckByYear = (year) => {
+    if (!focusFilm) {
+      return;
+    }
+
+    year = focusFilm.year;
+
     let yearRange = [];
     const minYear = year - 5;
     const maxYear = year + 5;
@@ -68,7 +136,11 @@ const Film = ({ films, userData, token }) => {
       let result = [];
 
       for (let year of yearArr) {
-        result.push(films.filter((film) => film.year === year));
+        result.push(
+          films.filter(
+            (film) => film.year === year && film.title !== focusFilm.title
+          )
+        );
       }
 
       if (result.length === 0) {
@@ -85,7 +157,11 @@ const Film = ({ films, userData, token }) => {
 
   useEffect(() => {
     findTargetFilm();
-  }, [films, params.filmId]);
+    setTargetFilmGenre();
+    setTargetFilmDirector();
+    similarFilmsCheckByGenre();
+    similarFilmsCheckByYear();
+  }, [films, focusFilm, params.filmId]);
 
   if (!focusFilm) {
     return <></>;
@@ -98,9 +174,41 @@ const Film = ({ films, userData, token }) => {
           {focusFilm.title}
           <span className="film-year-wrapper">({focusFilm.year})</span>
         </h1>
-        <p>{focusFilm.director}</p>
+        <ul>
+          {focusDirector && focusDirector.length > 1 ? (
+            <span>
+              {/* {console.log("focusDirector ", focusDirector)} */}
+              {focusDirector.map((director) => {
+                return <li>{director}</li>;
+              })}
+            </span>
+          ) : (
+            <li>
+              {/* {console.log("focusDirector: ", focusDirector)} */}
+              {focusDirector[0]}
+            </li>
+          )}
+        </ul>
+        {/* <p>{focusFilm.director}</p> */}
         <img src={focusFilm.img} className="film-img" />
-        <p>{focusFilm.genre}</p>
+        {/* <p>{focusFilm.genre}</p> */}
+        {genres ? (
+          <ul className="focus-film-genre-tags">
+            {genres.map((genre) => {
+              return (
+                <li
+                  onClick={() => {
+                    // console.log(genre);
+                  }}
+                >
+                  {genre}
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <></>
+        )}
         <p>{focusFilm.description}</p>
         <p>${focusFilm.price}/day</p>
         <p>
@@ -121,42 +229,35 @@ const Film = ({ films, userData, token }) => {
             <></>
           )}
         </p>
-        <button
-          onClick={(event) => {
-            event.preventDefault();
-            console.log(
-              "checking data in reference to focusFilm: " + focusFilm.title
-            );
-
-            similarFilmsCheckByGenre(focusFilm.genre);
-            similarFilmsCheckByYear(focusFilm.year);
-          }}
-          className="similar-films-btn"
-        >
-          Similar Films
-        </button>
       </div>
       <div className="recommended-films">
-        {recommendedFilmsByGenre.length > 0 ? (
+        {recommendedFilmsByGenre ? (
           <div className="recommended-films-tables">
             <h4>Films with a similar genre to {focusFilm.title}</h4>
-            {recommendedFilmsByGenre.map((film) => {
-              return (
-                <div>
-                  <ul>
-                    <li
-                      onClick={(event) => {
-                        event.preventDefault();
-                        similarFilmsCheckByGenre(film.genre);
-                        navigate(`/films/${film.id}`);
-                      }}
-                    >
-                      {film.title}({film.year})
-                    </li>
-                  </ul>
-                </div>
-              );
-            })}
+            {recommendedFilmsByGenre.length > 0 ? (
+              <div>
+                {recommendedFilmsByGenre.map((film) => {
+                  return (
+                    <div>
+                      <ul>
+                        <li
+                          className="recommended-film-tag"
+                          onClick={(event) => {
+                            event.preventDefault();
+                            similarFilmsCheckByGenre(film.genre);
+                            navigate(`/films/${film.id}`);
+                          }}
+                        >
+                          {film.title} ({film.year})
+                        </li>
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <></>
+            )}
 
             <div>
               <ul>
@@ -168,13 +269,15 @@ const Film = ({ films, userData, token }) => {
                         <div>
                           <ul>
                             <li
+                              className="recommended-film-tag"
                               onClick={(event) => {
                                 event.preventDefault();
+                                console.log(film);
                                 similarFilmsCheckByYear(film.year);
                                 navigate(`/films/${film.id}`);
                               }}
                             >
-                              {film.title}({film.year}) - {film.genre}
+                              {film.title} ({film.year})
                             </li>
                           </ul>
                         </div>
@@ -182,7 +285,7 @@ const Film = ({ films, userData, token }) => {
                     })}
                   </div>
                 ) : (
-                  <p>No films found</p>
+                  <></>
                 )}
               </ul>
             </div>

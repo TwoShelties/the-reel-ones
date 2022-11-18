@@ -3,7 +3,7 @@ const { getFilmById, fetchFilms } = require("./films");
 const client = require("./index");
 const filmsArr = require("./afi-db");
 
-async function addGenreToFilm(film) {
+async function addFilmIdToGenresTable(film) {
   // try {
   //   console.log("calling addGenreToFilm inside db/genres.js");
   //   const films = await fetchFilms();
@@ -85,35 +85,27 @@ async function addGenreToFilm(film) {
   //   throw error;
   // }
   try {
-    // console.log("calling db/genres/addGenreToFilm");
-    // const allFilms = await client.query(
-    //   `
-    //   SELECT * FROM films;
-    //   `
-    // );
-    // // console.log(allFilms.rows);
-    // allFilms.rows.map(async (film) => {
-    //   // console.log(film.id);
-    //   const response = await client.query(
-    //     `
-    //     INSERT INTO genres("filmId")
-    //     VALUES(1)
-    //     RETURNING *;
-    //     `
-    //   );
-    //   // console.log(films);
-    //   return response;
-    // });
-    // const x = await client.query(
-    //   `
-    //   INSERT INTO genres("filmId")
-    //   VALUES(1)
-    //   RETURNING *
-    //   `
-    // );
-    // return x;
+    let allGenres = [];
+    let genresSet;
+    const x = await Promise.all(
+      filmsArr.map((film) => {
+        // console.log(film.genre);
+        if (Array.isArray(film.genre)) {
+          // console.log("film.genre IS an array");
+          film.genre.map((genre) => {
+            allGenres.push(genre);
+            // console.log(genre);
+          });
+        } else {
+          // console.log("film.genre is NOT an array");
+          allGenres.push(film.genre);
+        }
+      })
+    );
+    genresSet = [...new Set(allGenres)];
+    console.log("genresSet:", genresSet);
 
-    const { rows: films } = await client.query(
+    const { rows: filmData } = await client.query(
       `
       SELECT * FROM films;
       `
@@ -122,7 +114,7 @@ async function addGenreToFilm(film) {
     // console.log(films);
 
     const insertionsIntoGenres = await Promise.all(
-      films.map(async (film) => {
+      filmData.map(async (film) => {
         const { rows: films } = await client.query(
           `
         INSERT INTO genres("filmId", title)
@@ -131,28 +123,121 @@ async function addGenreToFilm(film) {
         `,
           [film.id, film.title]
         );
-        console.log(films);
+        // console.log(films);
+
+        let genresMap = genresSet.map(async (genre) => {
+          const createNewGenreStrings = (genreString) => {
+            // console.log(genreString);
+
+            const newGenreString = genreString
+              .replace(/{|_/g, "")
+              .replace(/}|_/g, "")
+              .replace(/"|_/g, "")
+              .replace(/,|_/g, " ");
+            // console.log(newGenreString);
+
+            const newGenres = newGenreString.split(" ");
+            // console.log(newGenres);
+
+            return newGenres;
+          };
+
+          let newGenreString;
+          if (film.genre.includes("{")) {
+            newGenreString = createNewGenreStrings(film.genre);
+            // console.log(newGenreString);
+          }
+
+          if (
+            film.genre.includes(genre) &&
+            !film.genre.includes("{") &&
+            !film.genre.includes("science") &&
+            !film.genre.includes("children's")
+          ) {
+            const { rows: filmGenres } = await client.query(
+              `
+              UPDATE genres SET ${genre}=true
+              WHERE "filmId"=$1
+              RETURNING *;
+              `,
+              [film.id]
+            );
+
+            // console.log(filmGenres);
+          }
+
+          if (
+            film.genre.includes(genre) &&
+            film.genre.includes("{") &&
+            !film.genre.includes("science") &&
+            !film.genre.includes("children's")
+          ) {
+            newGenreString.map(async (genreString) => {
+              const { rows: newFilmGenres } = await client.query(
+                `
+                UPDATE genres SET ${genreString}=true
+                WHERE "filmId"=$1
+                RETURNING *;
+                `,
+                [film.id]
+              );
+
+              // console.log(newFilmGenres);
+            });
+          }
+
+          if (film.genre.includes("science")) {
+            const { rows: response } = await client.query(
+              `
+              UPDATE genres SET "scienceFiction"=true
+              WHERE "filmId"=$1
+              RETURNING *
+              `,
+              [film.id]
+            );
+          }
+
+          if (film.genre.includes("children")) {
+            const { rows: response } = await client.query(
+              `
+              UPDATE genres SET "children's"=true
+              WHERE "filmId"=$1
+              RETURNING *
+              `,
+              [film.id]
+            );
+          }
+
+          if (film.genre.includes("musical")) {
+            const { rows: response } = await client.query(
+              `
+              UPDATE genres SET "musical"=true
+              WHERE "filmId"=$1
+              RETURNING *
+              `,
+              [film.id]
+            );
+          }
+        });
       })
     );
-
-    // console.log(insertionsIntoGenres);
-
-    // const response = await client.query(
-    //   `
-    //     INSERT INTO genres("filmId")
-    //     VALUES(1)
-    //     RETURNING *;
-
-    //   SELECT films.id AS "idFromFilms", genres.* FROM films
-    //   INNER JOIN genres
-    //   ON films.id=genres."filmId";
-    //   `
-    // );
-
-    // return response;
   } catch (error) {
     throw error;
   }
 }
 
-module.exports = { addGenreToFilm };
+async function checkFilms() {
+  try {
+    const { rows: response } = await client.query(
+      `
+      SELECT * FROM genres;
+      `
+    );
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { addFilmIdToGenresTable, checkFilms };

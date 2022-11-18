@@ -20,7 +20,7 @@ const App = () => {
   const fetchFilms = async () => {
     const response = await fetch("/api/films");
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     setFilms(data.films);
   };
 
@@ -30,7 +30,12 @@ const App = () => {
 
   return (
     <div>
-      <Navbar userData={userData} token={token} setToken={setToken} />
+      {token ? (
+        <Navbar userData={userData} token={token} setToken={setToken} />
+      ) : (
+        <></>
+      )}
+
       <Routes>
         <Route path="/" element={<Home />} />
 

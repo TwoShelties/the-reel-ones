@@ -7,7 +7,11 @@ const {
   getFilmByTitle,
   fetchFilms,
 } = require("./films");
-const { addGenreToFilm } = require("./genres");
+const {
+  addGenreToFilm,
+  addFilmIdToGenresTable,
+  checkFilms,
+} = require("./genres");
 
 async function dropTables() {
   try {
@@ -132,7 +136,11 @@ async function createInitialFilms() {
 
 async function seedGenresTable() {
   console.log("starting to seed genres table...");
-  const zed = await addGenreToFilm();
+  const addFilms = await addFilmIdToGenresTable();
+
+  console.log(`seeded genres table with films: `, films);
+  // const checkingFilms = await checkFilms();
+  // console.log(checkingFilms);
 }
 
 async function addGenresToFilms() {}
