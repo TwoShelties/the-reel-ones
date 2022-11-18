@@ -37,7 +37,8 @@ async function createTables() {
       CREATE TABLE users(
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL
+        password VARCHAR(255) NOT NULL,
+        isAdmin BOOLEAN DEFAULT false 
       );
 
       CREATE TABLE films(
@@ -103,11 +104,11 @@ async function createInitialUsers() {
   console.log("Starting to create users...");
   try {
     const usersToCreate = [
-      { username: "adam", password: "secretpass99" },
-      { username: "sandy", password: "sandy123" },
-      { username: "henry", password: "henry123" },
-      { username: "sam", password: "password111" },
-      { username: "user1", password: "123456" },
+      { username: "adam", password: "secretpass99", isAdmin: true },
+      { username: "sandy", password: "sandy123", isAdmin: true },
+      { username: "henry", password: "henry123", isAdmin: true },
+      { username: "sam", password: "password111", isAdmin: true },
+      { username: "user1", password: "123456", isAdmin: true },
     ];
     const users = await Promise.all(usersToCreate.map(createUser));
 
