@@ -140,29 +140,104 @@ async function getFilmByYear(year) {
 // }
 // testGetFilmByYear();
 
-async function getFilmByGenre(genre) {
+async function getAllFilmGenres() {
   try {
     const response = await client.query(
       `
-    SELECT *
-    FROM films
-    WHERE genre=$1
-    `,
-      [genre]
+      SELECT * FROM genres;
+      `
     );
+
     return response.rows;
   } catch (error) {
-    console.log("error getting film genre");
+    console.error("error retrieving films from genres table...");
+    throw error;
+  }
+}
+// getAllFilmGenres();
+
+async function getGenresByFilmId(id) {
+  try {
+    const response = await client.query(
+      ` 
+      SELECT * from genres
+      WHERE "filmId"=$1;
+      `,
+      [id]
+    );
+
+    console.log(response.rows);
+    return response.rows;
+  } catch (error) {
+    console.error("error getting film by genre");
     throw error;
   }
 }
 
-// async function testGetFilmByGenre() {
-//   const genre = "war";
-//   const response = await getFilmByGenre(genre);
-//   console.log(response);
-// }
-// testGetFilmByGenre();
+async function getFilmByGenre(genre) {
+  try {
+    console.log("searching films by genre: ", genre);
+    // console.log(typeof genre);
+
+    if (genre.includes("science")) {
+      genre = `"scienceFiction"`;
+    }
+
+    if (genre.includes("children")) {
+      genre = `"children's"`;
+    }
+
+    const response = await client.query(
+      `
+        SELECT * FROM genres
+        WHERE genres.${genre}=true;
+        `
+    );
+
+    // console.log(response.rows);
+
+    if (response.rows) {
+      const mapResponse = response.rows.map(async (film) => {
+        const result = await client.query(
+          `
+            SELECT * FROM films
+            WHERE films.id=$1;
+            `,
+          [film.filmId]
+        );
+
+        // console.log(result.rows);
+
+        return result.rows;
+      });
+    } else {
+      console.log(`no films found for input genre: ${genre}`);
+    }
+  } catch (error) {
+    console.error("error retrieving films by genre");
+    throw error;
+  }
+}
+
+// getFilmByGenre("childrens");
+
+async function getFilmByGenreId(genreId) {
+  try {
+    const response = await client.query(
+      `
+      SELECT * FROM genres
+      WHERE id=$1
+      `,
+      [genreId]
+    );
+
+    console.log(response.rows);
+    return response.rows;
+  } catch (error) {
+    console.error("an error occurred retrieving film by genre id");
+    throw error;
+  }
+}
 
 async function updateFilm({ id, ...fields }) {
   console.log(fields);
@@ -253,4 +328,6 @@ module.exports = {
   updateFilm,
   deleteFilm,
   getFilmById,
+  getAllFilmGenres,
+  getGenresByFilmId,
 };

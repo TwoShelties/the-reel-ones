@@ -2,32 +2,156 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  box-shadow: none;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  /* background: rgb(4, 99, 128);
+  background: linear-gradient(
+    180deg,
+    rgba(4, 99, 128, 1) 22%,
+    rgba(199, 190, 203, 1) 100%
+  ); */
+  /* color: #ffffff; */
+  height: 100%;
 }
 
 /*===========================
 NAVBAR
 ===========================*/
 
+.nav-banner {
+  height: 7.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-banner .banner-tagline {
+  display: flex;
+  font-size: larger;
+  justify-content: center;
+  align-items: center;
+  /* line-height: 1rem; */
+}
+
+.nav-banner .new-span {
+  background-color: #e50914;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+  letter-spacing: 0.05rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem 0.2rem 0.55rem;
+  border-radius: 0.75rem;
+  margin: 0 1rem;
+  line-height: 1rem;
+}
+
+.nav-banner .price-span {
+  margin: 0 0 0 0.2rem;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.nav-banner .learn-more-span {
+  margin: 0 0 0 2rem;
+  color: #0071eb;
+  font-size: smaller;
+  font-weight: bold;
+}
+
 .navbar {
+  position: absolute;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  color: #fff;
+  /* background-color: #046380; */
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #site-title {
+  font-size: 5rem;
+}
+
+/* #site-logo {
+  width: 25vw;
 }
 
 .site-nav-links {
   margin: 1rem;
+  color: #fff;
+  background-color: #046380;
 }
 
 .site-nav-links * {
   margin: 1rem;
+  color: #fff;
+  text-decoration: none;
+  padding: 1rem;
+  margin: 0;
+} */
+
+/* .site-nav-links *:hover {
+  background-color: #f5e320e0;
+  color: rgba(0, 0, 0, 1);
+  outline: 1px solid #000;
+  transition: 0.3s;
 }
+
+.site-nav-links *:active {
+  background-color: #f5e320;
+  color: rgb(0, 0, 0);
+  outline: 1px solid #000;
+} */
+
+/*===========================
+HOME
+===========================*/
+
+/* .carousel {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.carousel img {
+  height: 463px;
+  position: absolute;
+  width: 100%;
+  -webkit-transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -o-transition: opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out;
+}
+
+.carousel img:hover {
+  width: 100%;
+  opacity: 0;
+} */
 
 /*===========================
 FILMS
 ===========================*/
+
+.search-films-form {
+  width: 50vw;
+  margin: 0 auto 0 auto;
+}
+
+.films-search-input {
+  width: 50vw;
+  height: 2rem;
+  font-size: 1rem;
+}
 
 .films-card-container {
   display: flex;
@@ -48,9 +172,21 @@ FILMS
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
+.film-card-title {
+  cursor: pointer;
+}
+
 .film-card img {
   width: 15rem;
   height: 22rem;
+  cursor: pointer;
+}
+
+.film-card:hover {
+  background-color: #faebd7;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.9);
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.9);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.9);
 }
 
 .film-card div {
@@ -186,4 +322,33 @@ FILM
 .film-img {
   width: 15rem;
   height: 22rem;
+}
+
+.focus-film-genre-tags {
+  display: flex;
+  width: 15rem;
+  justify-content: space-evenly;
+}
+
+.focus-film-genre-tags * {
+  display: flex;
+}
+
+.recommended-film-tag {
+  margin: 1rem;
+  padding: 0.25rem;
+  list-style: none;
+  border: 1px solid #000;
+  width: fit-content;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.recommended-film-tag:hover {
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
+  background-color: #faebd7;
 }

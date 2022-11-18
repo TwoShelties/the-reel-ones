@@ -113,14 +113,15 @@ const Films = ({ films }) => {
       <h1>Films</h1>
       {filteredFilms ? (
         <div>
-          <form onSubmit={filmSearchFormHandler}>
+          <form onSubmit={filmSearchFormHandler} className="search-films-form">
             <input
               type="text"
               className="films-search-input"
+              placeholder="search for films by title, director, or genre..."
               onChange={filmSearchInputHandler}
               value={query}
             />
-            <select onChange={genreSearchHandler} id="genre-select">
+            {/* <select onChange={genreSearchHandler} id="genre-select">
               <option>Genre</option>
               {films.map((film) => {
                 if (!film.genre.includes("{") || !film.genre.includes("}")) {
@@ -174,8 +175,8 @@ const Films = ({ films }) => {
               {directorsSet.map((director) => {
                 return <option>{director}</option>;
               })}
-            </select>
-            <button onClick={(event) => event.preventDefault()}>Submit</button>
+            </select> */}
+            {/* <button onClick={(event) => event.preventDefault()}>Submit</button> */}
           </form>
 
           <ul>
@@ -186,14 +187,32 @@ const Films = ({ films }) => {
                   <div className="films-card-container">
                     <div
                       className="film-card"
-                      onClick={(event) => {
-                        console.log(film.id);
-                        navigate(`/films/${film.id}`);
-                      }}
+                      // onClick={(event) => {
+                      //   console.log(film.id);
+                      //   navigate(`/films/${film.id}`);
+                      // }}
                     >
-                      <h3>{film.title}</h3>
+                      <h3
+                        className="film-card-title"
+                        onClick={(event) => {
+                          console.log(
+                            "navigating to page for film ID: " + film.id
+                          );
+                          navigate(`/films/${film.id}`);
+                        }}
+                      >
+                        {film.title}
+                      </h3>
                       <p>({film.year})</p>
-                      <img src={film.img} />
+                      <img
+                        src={film.img}
+                        onClick={(event) => {
+                          console.log(
+                            "navigating to page for film ID: " + film.id
+                          );
+                          navigate(`/films/${film.id}`);
+                        }}
+                      />
                       <div className="film-card-data">
                         <p>
                           Director:{" "}
@@ -256,7 +275,12 @@ const Films = ({ films }) => {
                         </p>
                         <p className="film-description">{film.description}</p>
                         <p>${film.price}/day</p>
-                        <button className="film-add-to-cart-btn">
+                        <button
+                          className="film-add-to-cart-btn"
+                          onClick={() => {
+                            navigate("/cart");
+                          }}
+                        >
                           Add to Cart
                         </button>
                       </div>

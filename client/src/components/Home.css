@@ -1,0 +1,123 @@
+* {
+  box-sizing: border-box;
+}
+
+#tagline {
+  margin: 1rem auto 1rem;
+  font-size: 1.5rem;
+}
+
+.content-container h3 {
+  margin: 2rem auto;
+}
+
+@media (min-width: 1000px) {
+  .logo-svg {
+    height: 8rem;
+  }
+}
+
+@media (max-width: 825px) {
+  .logo-svg {
+    height: 5rem;
+  }
+}
+
+@media (max-width: 650px) {
+  .logo-svg {
+    height: 4rem;
+  }
+}
+
+.slide-cover {
+  z-index: 3;
+  background-color: rgb(0, 0, 0);
+}
+
+.navbar {
+  display: flex;
+}
+
+.landing-page-nav-link {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 1rem;
+  flex-wrap: wrap;
+  background-color: #e50914;
+  color: #fff;
+  font-size: larger;
+  padding: 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.562);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.landing-page-nav-link:hover {
+  /* box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1); */
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.25) inset;
+  /* -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1); */
+}
+
+#api-docs-link {
+  margin-right: 2rem;
+}
+
+.landing-tagline {
+  position: absolute;
+  top: 25%;
+  left: 30vw;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 3.5rem;
+  color: #fff;
+  /* box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1); */
+}
+
+.get-started {
+  font-size: 1.75rem;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.8);
+  /* margin-bottom: 0.5rem; */
+}
+
+.landing-email-input {
+  width: 35vw;
+  height: 3rem;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75),
+    0px 0px 5px 0px rgba(0, 0, 0, 0.25) inset;
+  border: none;
+  font-size: 1.5rem;
+}
+
+.landing-email-input:focus {
+  outline: none;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75),
+    0px 0px 5px 0px rgba(0, 0, 0, 0.75) inset;
+}
+
+.start-btn {
+  height: 3rem;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  border: none;
+  background-color: #e50914;
+  color: #fff;
+  font-size: 1.5rem;
+  padding: 0 1rem 0.2rem 1rem;
+  line-height: -1rem;
+  cursor: pointer;
+  border-left: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.start-btn:hover {
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.25) inset;
+}
