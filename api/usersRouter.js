@@ -8,7 +8,7 @@ const {
   createUser,
 } = require("../db/users");
 const jwt = require("jsonwebtoken");
-const { requireUser } = require("./utils");
+const { requireUser, requireAdmin } = require("./utils");
 const { JWT_SECRET } = process.env;
 
 usersRouter.get("/", async (req, res, next) => {
@@ -127,7 +127,7 @@ usersRouter.get("/", async (req, res, next) => {
 });
 */
 
-usersRouter.delete("/:userId", requireUser, async (req, res, next) => {
+usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
   try {
     const { userId } = req.params;
     const deleteSingleUser = await deleteUser(userId);

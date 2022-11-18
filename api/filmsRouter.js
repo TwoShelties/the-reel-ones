@@ -14,7 +14,7 @@ const {
   getGenresByFilmId,
 } = require("../db/films");
 
-const { requireUser } = require("./utils");
+const { requireUser, requireAdmin } = require("./utils");
 
 const filmsRouter = express.Router();
 
@@ -189,7 +189,7 @@ filmsRouter.get("/:filmId/genres", async (req, res, next) => {
 //   }
 // });
 
-filmsRouter.post("/", requireUser, async (req, res, next) => {
+filmsRouter.post("/", requireAdmin, async (req, res, next) => {
   const { title, director, year, genre, img, description, price } = req.body;
   console.log(req.body);
   const filmData = {
@@ -210,7 +210,7 @@ filmsRouter.post("/", requireUser, async (req, res, next) => {
   }
 });
 
-filmsRouter.delete("/delete/:filmId", requireUser, async (req, res, next) => {
+filmsRouter.delete("/delete/:filmId", requireAdmin, async (req, res, next) => {
   const { filmId } = req.params;
   try {
     const deleteMovie = await deleteFilm(filmId);
@@ -221,7 +221,7 @@ filmsRouter.delete("/delete/:filmId", requireUser, async (req, res, next) => {
   }
 });
 
-filmsRouter.patch("/:filmId", requireUser, async (req, res, next) => {
+filmsRouter.patch("/:filmId", requireAdmin, async (req, res, next) => {
   const { filmId } = req.params;
   const fields = req.body;
   try {

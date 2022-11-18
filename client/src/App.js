@@ -10,11 +10,12 @@ import Register from "./components/Register";
 import Cart from "./components/Cart";
 import Docs from "./components/Docs";
 import Film from "./components/Film";
+import Admin from "./components/Admin";
 
 const App = () => {
   const [userData, setUserData] = useState({});
   const [token, setToken] = useState(0);
-
+  const [admin, setAdmin] = useState(false);
   const [films, setFilms] = useState([]);
 
   const fetchFilms = async () => {
@@ -24,9 +25,18 @@ const App = () => {
     setFilms(data.films);
   };
 
+  const checkAdmin = async () => {
+    const response = await fetch("/api/users/me");
+    const data = await response.json();
+    if (data.isAdmin) {
+      setAdmin(true);
+    }
+  };
+
   useEffect(() => {
     fetchFilms();
-  }, []);
+    checkAdmin();
+  }, [token, userData]);
 
   return (
     <div>
@@ -49,6 +59,11 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/api/docs" element={<Docs />} />
+        {admin ? (
+          <Route path="/admin" element={<Admin admin={admin} />} />
+        ) : (
+          <></>
+        )}
       </Routes>
     </div>
   );
