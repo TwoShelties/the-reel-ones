@@ -58,6 +58,10 @@ apiRouter.use("/directors", directorsRouter);
 const usersRouter = require("./usersRouter");
 apiRouter.use("/users", usersRouter);
 
+// ROUTER: /api/cart
+const cartsRouter = require("./cartsRouter");
+apiRouter.use("/cart", cartsRouter);
+
 // ROUTER: /api/usersFilms
 const userFilmsRouter = require("./userFilmsRouter");
 apiRouter.use("/usersFilms", userFilmsRouter);

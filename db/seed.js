@@ -12,12 +12,14 @@ const {
   addFilmIdToGenresTable,
   checkFilms,
 } = require("./genres");
+const { addFilmToUserCart } = require("./carts");
 
 async function dropTables() {
   try {
     console.log("Dropping All Tables...");
     client.query(`
       DROP TABLE IF EXISTS user_films;
+      DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS genres;
       DROP TABLE IF EXISTS directors;
       DROP TABLE IF EXISTS films;
@@ -49,6 +51,12 @@ async function createTables() {
         img VARCHAR NOT NULL,
         description TEXT NOT NULL, 
         price FLOAT NOT NULL
+      );
+
+      CREATE TABLE carts(
+        id SERIAL PRIMARY KEY,
+        "userId" INTEGER REFERENCES users(id),
+        "filmId" INTEGER REFERENCES films(id)
       );
       
       CREATE TABLE user_films(
@@ -145,6 +153,28 @@ async function seedGenresTable() {
 
 async function addGenresToFilms() {}
 
+async function createInitialCartItems() {
+  console.log("Starting to create cart items...");
+  try {
+    const cartItemsToCreate = [
+      { userId: 1, filmId: 1 },
+      { userId: 1, filmId: 2 },
+      { userId: 3, filmId: 3 },
+    ];
+    console.log("here");
+    const cartItems = await Promise.all(
+      cartItemsToCreate.map(addFilmToUserCart)
+    );
+
+    console.log("Cart items created:");
+    console.log(cartItems);
+    console.log("Finished creating cart items!");
+  } catch (error) {
+    console.error("Error creating cart items!");
+    throw error;
+  }
+}
+
 async function rebuildDB() {
   try {
     await dropTables();
@@ -153,6 +183,7 @@ async function rebuildDB() {
     await createInitialFilms();
     await seedGenresTable();
     await addGenresToFilms();
+    await createInitialCartItems();
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error;
