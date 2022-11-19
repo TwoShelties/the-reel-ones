@@ -25,30 +25,24 @@ const App = () => {
     setFilms(data.films);
   };
 
-
   const checkAdmin = async () => {
     const response = await fetch("/api/users/me");
     const data = await response.json();
     if (data.isAdmin) {
       setAdmin(true);
     }
+  };
 
   const fetchUser = () => {
     const response = localStorage.getItem("token");
     // console.log(response);
     setToken(response);
-
   };
 
   useEffect(() => {
     fetchFilms();
-<<<<<<< Updated upstream
     checkAdmin();
   }, [token, userData]);
-=======
-    fetchUser();
-  }, [token]);
->>>>>>> Stashed changes
 
   return (
     <div>
