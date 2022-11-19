@@ -42,7 +42,6 @@ async function getCartByUserId(userId) {
 }
 
 //TEST FOR getCartByUserId: Works
-// need to see why "userid" isn't "userId"...
 /*
 async function testGetCartByUserId() {
   console.log("testing getCartByUserId...");
@@ -52,17 +51,17 @@ async function testGetCartByUserId() {
 testGetCartByUserId();
 */
 
-async function addFilmToUserCart({ userId, filmId }) {
+async function addFilmToUserCart({ userId, filmId, days }) {
   try {
     const {
       rows: [cart],
     } = await client.query(
       `
-        INSERT INTO carts ("userId", "filmId")
-        VALUES ($1, $2) 
+        INSERT INTO carts ("userId", "filmId", days)
+        VALUES ($1, $2, $3) 
         RETURNING *;
         `,
-      [userId, filmId]
+      [userId, filmId, days]
     );
     return cart;
   } catch (error) {
@@ -71,21 +70,22 @@ async function addFilmToUserCart({ userId, filmId }) {
   }
 }
 
-// does this need to return anything? works on psql terminal...
-async function deleteCartItem({ userId, filmId }) {
+async function deleteCartItem(userId, filmId) {
   try {
-    const cart = await client.query(
+    await client.query(
       `
           DELETE 
           FROM carts 
           WHERE "userId" = $1 
           AND
-          "filmId" = $2
-          RETURNING *;
+          "filmId" = $2;
           `,
       [userId, filmId]
     );
-    return cart.rows;
+
+    const updatedCart = await getCartByUserId(userId);
+
+    return updatedCart;
   } catch (error) {
     console.log("error deleting cart item");
     throw error;

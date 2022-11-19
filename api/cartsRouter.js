@@ -59,11 +59,11 @@ cartsRouter.get("/:userId", async (req, res, next) => {
 // POST /api/cart
 // Tested, works
 cartsRouter.post("/", requireUser, async (req, res, next) => {
-  const { userId, filmId } = req.body;
+  const { userId, filmId, days } = req.body;
   console.log(req.body);
 
   try {
-    const cart = await addFilmToUserCart({ userId, filmId });
+    const cart = await addFilmToUserCart({ userId, filmId, days });
     res.send({ success: true, cart });
   } catch ({ userId, filmId }) {
     next({ userId, filmId });
@@ -71,8 +71,8 @@ cartsRouter.post("/", requireUser, async (req, res, next) => {
 });
 
 // DELETE /api/cart
-// Not working
-cartsRouter.delete("/", async (req, res, next) => {
+// Tested, works
+cartsRouter.delete("/", requireUser, async (req, res, next) => {
   try {
     const { userId, filmId } = req.body;
     const deletedItem = await deleteCartItem(userId, filmId);
