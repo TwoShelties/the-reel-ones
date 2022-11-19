@@ -13,6 +13,7 @@ const {
   checkFilms,
 } = require("./genres");
 const { addFilmToUserCart } = require("./carts");
+const { addCartItemsToPurchase } = require("./userFilms");
 
 async function dropTables() {
   try {
@@ -57,15 +58,16 @@ async function createTables() {
       CREATE TABLE carts(
         id SERIAL PRIMARY KEY,
         "userId" INTEGER REFERENCES users(id),
-        "filmId" INTEGER REFERENCES films(id)
+        "filmId" INTEGER REFERENCES films(id),
+        days INTEGER NOT NULL
       );
       
       CREATE TABLE user_films(
         id SERIAL PRIMARY KEY,
-        “userId” INTEGER REFERENCES users(id),
-        “filmId” INTEGER REFERENCES films(id),
-        purchaseDate TIMESTAMP,
-        expiryDate TIMESTAMP
+        "userId" INTEGER REFERENCES users(id),
+        "filmId" INTEGER REFERENCES films(id),
+        purchaseDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        expiryDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
       CREATE TABLE genres(
@@ -158,9 +160,9 @@ async function createInitialCartItems() {
   console.log("Starting to create cart items...");
   try {
     const cartItemsToCreate = [
-      { userId: 1, filmId: 1 },
-      { userId: 1, filmId: 2 },
-      { userId: 3, filmId: 3 },
+      { userId: 1, filmId: 1, days: 5 },
+      { userId: 1, filmId: 2, days: 10 },
+      { userId: 3, filmId: 3, days: 2 },
     ];
     console.log("here");
     const cartItems = await Promise.all(
@@ -176,6 +178,25 @@ async function createInitialCartItems() {
   }
 }
 
+async function createInitialPurchaseItems() {
+  console.log("Starting to create purchased items...");
+  try {
+    const purchaseItemsToCreate = [1, 3];
+    console.log("here");
+
+    const purchaseItems = await Promise.all(
+      purchaseItemsToCreate.map((user) => addCartItemsToPurchase(user))
+    );
+
+    console.log("Purchased items:");
+    console.log(purchaseItems);
+    console.log("Finished creating purchased items!");
+  } catch (error) {
+    console.error("Error creating purchased items!");
+    throw error;
+  }
+}
+
 async function rebuildDB() {
   try {
     await dropTables();
@@ -185,6 +206,7 @@ async function rebuildDB() {
     await seedGenresTable();
     await addGenresToFilms();
     await createInitialCartItems();
+    await createInitialPurchaseItems();
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error;
