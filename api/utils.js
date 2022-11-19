@@ -9,6 +9,18 @@ function requireUser(req, res, next) {
   next();
 }
 
+function requireAdmin(req, res, next) {
+  if (!req.user.isAdmin) {
+    next({
+      name: "NotAdminError",
+      message: "You must be an admin to perform this operation",
+    });
+  }
+
+  next();
+}
+
 module.exports = {
   requireUser,
+  requireAdmin,
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-const Films = ({ films }) => {
+const Films = ({ films, token }) => {
   const navigate = useNavigate();
   const [genreSearchInput, setGenreSearchInput] = useState("");
   const [directorSearchInput, setDirectorSearchInput] = useState("");
@@ -110,7 +110,15 @@ const Films = ({ films }) => {
 
   return (
     <div>
-      <h1>Films</h1>
+      {token ? <h1>Films</h1> : <h1>Your choice of the greatest ever made</h1>}
+      {!token ? (
+        <div>
+          <p>Like what you see?</p>
+          <Link to="/register">Sign Up Today</Link>
+        </div>
+      ) : (
+        <></>
+      )}
       {filteredFilms ? (
         <div>
           <form onSubmit={filmSearchFormHandler} className="search-films-form">

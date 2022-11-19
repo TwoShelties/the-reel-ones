@@ -64,6 +64,7 @@ NAVBAR
   color: #0071eb;
   font-size: smaller;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .navbar {
@@ -78,8 +79,23 @@ NAVBAR
   align-items: center;
 }
 
+.navbar-token {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  color: #fff;
+  /* background-color: #046380; */
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
 #site-title {
   font-size: 5rem;
+}
+
+.site-nav-links * {
+  margin-left: 1rem;
 }
 
 /* #site-logo {

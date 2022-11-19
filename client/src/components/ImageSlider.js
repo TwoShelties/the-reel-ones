@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import troText from "./media/troText.svg";
 
-const ImageSlider = ({ slides, token }) => {
+const ImageSlider = ({ slides, token, setToken }) => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInteraction, setUserInteraction] = useState(false);
 
@@ -17,7 +18,14 @@ const ImageSlider = ({ slides, token }) => {
     }, 3000);
   }
 
-  const logoutHandler = () => {};
+  const logoutHandler = () => {
+    console.log(
+      "Removing token from local storage, and setting token to empty string..."
+    );
+    localStorage.removeItem("token");
+    setToken("");
+    navigate("/");
+  };
 
   const sliderStyles = {
     height: "100%",

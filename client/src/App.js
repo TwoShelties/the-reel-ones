@@ -25,33 +25,41 @@ const App = () => {
     setFilms(data.films);
   };
 
+
   const checkAdmin = async () => {
     const response = await fetch("/api/users/me");
     const data = await response.json();
     if (data.isAdmin) {
       setAdmin(true);
     }
+
+  const fetchUser = () => {
+    const response = localStorage.getItem("token");
+    // console.log(response);
+    setToken(response);
+
   };
 
   useEffect(() => {
     fetchFilms();
+<<<<<<< Updated upstream
     checkAdmin();
   }, [token, userData]);
+=======
+    fetchUser();
+  }, [token]);
+>>>>>>> Stashed changes
 
   return (
     <div>
-      {token ? (
-        <Navbar userData={userData} token={token} setToken={setToken} />
-      ) : (
-        <></>
-      )}
+      <Navbar userData={userData} token={token} setToken={setToken} />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home token={token} setToken={setToken} />} />
 
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
-        <Route path="/films" element={<Films films={films} />} />
+        <Route path="/films" element={<Films films={films} token={token} />} />
         <Route
           path="/films/:filmId"
           element={<Film films={films} userData={userData} token={token} />}

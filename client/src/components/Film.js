@@ -229,6 +229,8 @@ const Film = ({ films, userData, token }) => {
             <></>
           )}
         </p>
+        <h3>Reviews for {focusFilm.title}</h3>
+        <p>Lorem ipsum</p>
       </div>
       <div className="recommended-films">
         {recommendedFilmsByGenre ? (
