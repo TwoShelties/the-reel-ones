@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Register = ({ setToken }) => {
+const Register = ({ setToken, setUserData }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,8 +23,9 @@ const Register = ({ setToken }) => {
     const info = await response.json();
 
     if (info) {
-      setToken(info.token);
       localStorage.setItem("token", info.token);
+      setToken(info.token);
+      setUserData(info.user);
       navigate("/profile");
     }
   };

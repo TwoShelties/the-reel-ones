@@ -11,6 +11,32 @@ const Film = ({ films, userData, token }) => {
   const [recommendedFilmsByGenre, setReccomendedFilmsByGenre] = useState([]);
   const [recommendedFilmsByYear, setReccomendedFilmsByYear] = useState([]);
 
+  const [reviews, setReviews] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
+  const [reviewing, setReviewing] = useState(false);
+  const [newReviewContent, setNewReviewContent] = useState("");
+
+  const fetchReviews = async () => {
+    const response = await fetch(`/api/reviews/films/${params.filmId}`);
+    const data = await response.json();
+    // console.log(data);
+    if (data) {
+      setReviews(data.reviews);
+    }
+  };
+
+  const fetchAllUsers = async () => {
+    const response = await fetch(`/api/users`);
+    const data = await response.json();
+    // console.log(data);
+
+    if (data.users) {
+      setAllUsers(data.users);
+    }
+  };
+
   const findTargetFilm = () => {
     const targetFilmId = Number(params.filmId);
     const result = films.filter((film) => film.id === targetFilmId)[0];
@@ -70,7 +96,7 @@ const Film = ({ films, userData, token }) => {
     }
 
     const currentFilmGenre = await findCurrentFilmGenre();
-    console.log(currentFilmGenre.genre);
+    // console.log(currentFilmGenre.genre);
 
     if (!currentFilmGenre) {
       return;
@@ -155,12 +181,92 @@ const Film = ({ films, userData, token }) => {
     return;
   };
 
+  const submitEdit = async (reviewId) => {
+    if (!editedContent || !token) {
+      return;
+    }
+
+    console.log(
+      "user attempting to update review with new review content:" +
+        editedContent
+    );
+
+    const response = await fetch(`/api/reviews/${reviewId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        review: editedContent,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.success) {
+      fetchReviews().then(alert("Your review has been updated!"));
+      setEditing(!editing);
+      return;
+    }
+  };
+
+  const deleteReview = async (reviewId) => {
+    console.log("attempting to delete review ID: " + reviewId);
+
+    const response = await fetch(`/api/reviews/${reviewId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    // console.log(data);
+    if (data.success) {
+      fetchReviews();
+      alert("Your review has been deleted!");
+      setEditing(!editing);
+      // console.log(data.success);
+      return;
+    }
+  };
+
+  const submitNewReview = async (filmId) => {
+    if (!newReviewContent || !token) {
+      return;
+    }
+
+    console.log(
+      "user is attempting to create a new review for film: " + filmId
+    );
+
+    const response = await fetch(`/api/reviews/films/${filmId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        review: newReviewContent,
+      }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      alert("Your review has been created!");
+      fetchReviews();
+      setReviewing(!reviewing);
+      return;
+    }
+  };
+
   useEffect(() => {
     findTargetFilm();
     setTargetFilmGenre();
     setTargetFilmDirector();
     similarFilmsCheckByGenre();
     similarFilmsCheckByYear();
+    fetchReviews();
+    fetchAllUsers();
   }, [films, focusFilm, params.filmId]);
 
   if (!focusFilm) {
@@ -229,8 +335,134 @@ const Film = ({ films, userData, token }) => {
             <></>
           )}
         </p>
+        {/* REVIEWS */}
         <h3>Reviews for {focusFilm.title}</h3>
-        <p>Lorem ipsum</p>
+        {/* <button onClick={() => console.log(allUsers)}>all users</button> */}
+        {reviews && allUsers ? (
+          <div>
+            <div>
+              {!reviewing ? (
+                <button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setReviewing(!reviewing);
+                  }}
+                >
+                  Add a Review
+                </button>
+              ) : (
+                <></>
+              )}
+
+              {reviewing ? (
+                <div>
+                  <form>
+                    <textarea
+                      className="review-edit-textarea"
+                      defaultValue={"Your review here..."}
+                      onChange={(event) => {
+                        event.preventDefault();
+                        setNewReviewContent(event.target.value);
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        submitNewReview(focusFilm.id);
+                      }}
+                    >
+                      Submit
+                    </button>
+                    <button
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setReviewing(!reviewing);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+            {reviews.map((review) => {
+              // console.log(review);
+              return (
+                <div>
+                  <p>"{review.review}"</p>
+                  {allUsers.map((user) => {
+                    // console.log(user);
+                    if (user.id === review.userId) {
+                      // console.log(user.username);
+                      return <p>- {user.username}</p>;
+                    }
+                  })}
+                  {userData.id === review.userId ? (
+                    <div>
+                      {editing ? (
+                        <div>
+                          <form onSubmit={submitEdit}>
+                            <textarea
+                              className="review-edit-textarea"
+                              defaultValue={review.review}
+                              onChange={(event) => {
+                                event.preventDefault();
+                                setEditedContent(event.target.value);
+                              }}
+                            />
+                            <button
+                              type="submit"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                submitEdit(review.id);
+                              }}
+                            >
+                              Submit
+                            </button>
+                            <button
+                              onClick={(event) => {
+                                event.preventDefault();
+                                deleteReview(review.id);
+                              }}
+                            >
+                              Delete Review
+                            </button>
+                          </form>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                      {!editing ? (
+                        <button
+                          onClick={() => {
+                            setEditing(!editing);
+                          }}
+                        >
+                          Edit/Delete Review
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            setEditing(!editing);
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="recommended-films">
         {recommendedFilmsByGenre ? (

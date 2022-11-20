@@ -17,6 +17,7 @@ const App = () => {
   const [token, setToken] = useState(0);
   const [admin, setAdmin] = useState(false);
   const [films, setFilms] = useState([]);
+  const [guest, setGuest] = useState(true);
 
   const fetchFilms = async () => {
     const response = await fetch("/api/films");
@@ -33,15 +34,23 @@ const App = () => {
     }
   };
 
-  const fetchUser = () => {
+  const fetchUser = async () => {
     const response = localStorage.getItem("token");
     // console.log(response);
     setToken(response);
   };
 
+  const fetchUserData = async () => {
+    const response = await fetch("/api/users/me");
+    const data = await response.json();
+    console.log(data);
+  };
+
   useEffect(() => {
     fetchFilms();
     checkAdmin();
+    fetchUser();
+    fetchUserData();
   }, [token, userData]);
 
   return (
@@ -51,8 +60,26 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home token={token} setToken={setToken} />} />
 
-        <Route path="/login" element={<Login setToken={setToken} />} />
-        <Route path="/register" element={<Register setToken={setToken} />} />
+        <Route
+          path="/login"
+          element={
+            <Login
+              setToken={setToken}
+              setUserData={setUserData}
+              token={token}
+            />
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Register
+              setToken={setToken}
+              setUserData={setUserData}
+              token={token}
+            />
+          }
+        />
         <Route path="/films" element={<Films films={films} token={token} />} />
         <Route
           path="/films/:filmId"

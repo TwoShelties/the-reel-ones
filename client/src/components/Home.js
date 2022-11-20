@@ -88,6 +88,8 @@ const Home = ({ token, setToken }) => {
     navigate("/profile");
   }
 
+  const checkaccount = () => {};
+
   return (
     <div>
       {!token ? (

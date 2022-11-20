@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import troText from "./media/troText.svg";
+import troText2 from "./media/troText2.png";
 
 const ImageSlider = ({ slides, token, setToken }) => {
   const navigate = useNavigate();
@@ -111,14 +112,22 @@ const ImageSlider = ({ slides, token, setToken }) => {
     transitionSlide();
   }, [currentIndex]);
 
+  // automatically direct user to /profile if token:
+  // if (token) {
+  //   console.log(localStorage.getItem("token"));
+  //   navigate("/profile");
+  // }
+
   return (
     <div style={sliderStyles}>
+      <div className="slider-overlay"></div>
       {/* <div className="slide-cover"> */}
       <div className="navbar">
         <Link to="/">
           {/* <h1 id="site-title">The Reel Ones</h1> */}
           {/* <img src={siteLogo} id="site-logo" /> */}
-          <img type="image/svg" src={troText} className="logo-svg" />
+          {/* <img type="image/svg" src={troText} className="logo-svg" /> */}
+          <img type="image/svg" src={troText2} className="logo-svg" />
           {/* <h6 id="site-title">TRO</h6> */}
         </Link>
         <div className="site-nav-links">

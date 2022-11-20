@@ -1,6 +1,21 @@
 const { response } = require("express");
 const client = require("./index");
 
+async function getAllReviews() {
+  try {
+    const response = await client.query(
+      `
+        SELECT * FROM reviews;
+        `
+    );
+
+    return response.rows;
+  } catch (error) {
+    console.error("error getting all reviews");
+    throw error;
+  }
+}
+
 async function createReview({ filmId, userId, reviewContent }) {
   //   console.log(filmId, userId);
   try {
@@ -175,4 +190,5 @@ module.exports = {
   deleteReview,
   editReview,
   getReviewByReviewId,
+  getAllReviews,
 };

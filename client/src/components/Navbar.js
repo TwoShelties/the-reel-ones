@@ -40,19 +40,18 @@ const Navbar = ({ userData, token, setToken, admin }) => {
           <Link to="/profile">Profile</Link>
           <Link to="/cart">Cart</Link>
           <Link to="/api/docs">API Docs</Link>
-<<<<<<< Updated upstream
+
           {admin ? <Link to="/admin">Admin</Link> : <></>}
           {!token ? <Link to="/login">Login/Register</Link> : <></>}
           {token ? <Link onClick={logoutHandler}>Logout</Link> : <></>}
-=======
-          <Link onClick={logoutHandler}>Logout</Link>
+
+          {/* <Link onClick={logoutHandler}>Logout</Link> */}
         </div>
       )}
 
       <div className="navbar-token">
         <div className="site-nav-links">
           {/* {!token ? <Link to="/login">Login/Register</Link> : <></>} */}
->>>>>>> Stashed changes
         </div>
       </div>
     </div>

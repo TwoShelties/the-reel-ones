@@ -6,9 +6,27 @@ const {
   getReviewByReviewId,
   editReview,
   deleteReview,
+  getAllReviews,
 } = require("../db/reviews");
 const { requireUser, requireAdmin } = require("./utils");
 const reviewsRouter = express.Router();
+
+// GET all reviews:
+reviewsRouter.get("/", async (req, res, next) => {
+  try {
+    const reviews = await getAllReviews();
+
+    if (reviews) {
+      res.send({ success: true, reviews });
+    }
+  } catch (error) {
+    console.error("error retrieving all reviews");
+    next({
+      error: "ReviewsRetrievalError",
+      message: "An error occurred retrieving all reviews",
+    });
+  }
+});
 
 // GET reviews by filmId param:
 reviewsRouter.get("/films/:filmId", async (req, res, next) => {
