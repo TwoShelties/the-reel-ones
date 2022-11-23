@@ -4,7 +4,7 @@ import "./Home.css";
 import ImageSlider from "./ImageSlider";
 import Profile from "./Profile";
 
-const Home = ({ token, setToken }) => {
+const Home = ({ token, setToken, setGuestEmail, guestEmail }) => {
   const navigate = useNavigate();
   const slides = [
     {
@@ -120,7 +120,11 @@ const Home = ({ token, setToken }) => {
           critics at the{" "}
           <a href="https://www.afi.com/">American Film Institute</a>.
         </p> */}
-          <ImageSlider slides={slides} />
+          <ImageSlider
+            slides={slides}
+            setGuestEmail={setGuestEmail}
+            guestEmail={guestEmail}
+          />
 
           {/* <h3>Why The Reel Ones?</h3> */}
           {/* <p>

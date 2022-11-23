@@ -272,6 +272,29 @@ LOGIN / Register
   outline: 1px solid #333333;
   background-color: #494848;
   transition: 0.2s;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.login-reg-username-2,
+.login-reg-password-2 {
+  border: none;
+  border-bottom: 2px solid #cf8e00;
+  margin: 1rem 0 1rem;
+  height: 3rem;
+  width: 40vw;
+  font-size: larger;
+  background-color: #333333;
+  color: #fff;
+}
+
+.login-reg-username-2:focus,
+.login-reg-password-2:focus {
+  outline: 1px solid #333333;
+  background-color: #494848;
+  transition: 0.2s;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.25) inset;
 }
 
 .login-reg-sign-in-btn {
@@ -284,6 +307,12 @@ LOGIN / Register
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
+}
+
+.login-reg-sign-in-btn:hover {
+  transition: 0.1s;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.25) inset;
 }
 
 .login-reg-signup-link {
@@ -445,4 +474,16 @@ FILM
   -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.6);
   background-color: #faebd7;
+}
+
+/*===========================
+CART
+===========================*/
+
+.cart-items-table {
+  padding: 1rem;
+}
+
+.cart-items-table tr td {
+  padding: 1rem;
 }

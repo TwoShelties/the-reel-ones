@@ -40,7 +40,7 @@ const Login = ({ setToken, setUserData, token }) => {
       localStorage.setItem("token", info.token);
       setToken(info.token);
       setUserData(info.user);
-      // navigate("/profile");
+      navigate("/profile");
     }
 
     if (!info.user) {
@@ -85,24 +85,44 @@ const Login = ({ setToken, setUserData, token }) => {
       />
       <form onSubmit={userLogin} className="login-reg-form">
         <h1 style={{ margin: "2rem auto 1rem auto" }}>Sign In</h1>
-        <input
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder="Username"
-          className="login-reg-username"
-        />
+        {usernameMessage ? (
+          <input
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            placeholder="Username"
+            className="login-reg-username-2"
+          />
+        ) : (
+          <input
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            placeholder="Username"
+            className="login-reg-username"
+          />
+        )}
         {usernameMessage ? (
           <p className="login-reg-message">Please enter a valid username</p>
         ) : (
           <></>
         )}
-        <input
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder={"Password"}
-          type={"password"}
-          className="login-reg-password"
-        />
+        {passwordMessage ? (
+          <input
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={"Password"}
+            type={"password"}
+            className="login-reg-password-2"
+          />
+        ) : (
+          <input
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={"Password"}
+            type={"password"}
+            className="login-reg-password"
+          />
+        )}
+
         {passwordMessage ? (
           <p className="login-reg-message">
             Your password must contain at least 8 characters.
@@ -130,14 +150,25 @@ const Login = ({ setToken, setUserData, token }) => {
         <p style={{ color: "#b3b3b3", fontSize: "0.75rem" }}>
           This page is protected by CamSense to ensure bots are not recording
           content.{" "}
-          <span
-            onClick={() => {
-              setSecurityMessage(!securityMessage);
-            }}
-            className="login-reg-learn-more"
-          >
-            Learn more.
-          </span>
+          {securityMessage ? (
+            <span
+              onClick={() => {
+                setSecurityMessage(!securityMessage);
+              }}
+              className="login-reg-learn-more"
+            >
+              Hide message
+            </span>
+          ) : (
+            <span
+              onClick={() => {
+                setSecurityMessage(!securityMessage);
+              }}
+              className="login-reg-learn-more"
+            >
+              Learn more.
+            </span>
+          )}
         </p>
         {securityMessage ? (
           <p

@@ -18,6 +18,9 @@ const App = () => {
   const [admin, setAdmin] = useState(false);
   const [films, setFilms] = useState([]);
   const [guest, setGuest] = useState(true);
+  const [guestEmail, setGuestEmail] = useState("");
+  // below here will be cart-related stuff:
+  const [cartArray, setCartArray] = useState([]);
 
   const fetchFilms = async () => {
     const response = await fetch("/api/films");
@@ -41,9 +44,23 @@ const App = () => {
   };
 
   const fetchUserData = async () => {
-    const response = await fetch("/api/users/me");
+    if (!token) {
+      return;
+    }
+
+    const response = await fetch(`/api/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await response.json();
     console.log(data);
+
+    if (data.id && data.username) {
+      setUserData(data);
+    }
   };
 
   useEffect(() => {
@@ -51,14 +68,24 @@ const App = () => {
     checkAdmin();
     fetchUser();
     fetchUserData();
-  }, [token, userData]);
+  }, [token]);
 
   return (
     <div>
       <Navbar userData={userData} token={token} setToken={setToken} />
 
       <Routes>
-        <Route path="/" element={<Home token={token} setToken={setToken} />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              token={token}
+              setToken={setToken}
+              setGuestEmail={setGuestEmail}
+              guestEmail={guestEmail}
+            />
+          }
+        />
 
         <Route
           path="/login"
@@ -77,16 +104,44 @@ const App = () => {
               setToken={setToken}
               setUserData={setUserData}
               token={token}
+              guestEmail={guestEmail}
             />
           }
         />
-        <Route path="/films" element={<Films films={films} token={token} />} />
+        <Route
+          path="/films"
+          element={
+            <Films
+              films={films}
+              token={token}
+              cartArray={cartArray}
+              setCartArray={setCartArray}
+            />
+          }
+        />
         <Route
           path="/films/:filmId"
-          element={<Film films={films} userData={userData} token={token} />}
+          element={
+            <Film
+              films={films}
+              userData={userData}
+              token={token}
+              cartArray={cartArray}
+              setCartArray={setCartArray}
+            />
+          }
         />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route
+          path="/cart"
+          element={
+            <Cart
+              cartArray={cartArray}
+              setCartArray={setCartArray}
+              films={films}
+            />
+          }
+        />
         <Route path="/api/docs" element={<Docs />} />
         {admin ? (
           <Route path="/admin" element={<Admin admin={admin} />} />

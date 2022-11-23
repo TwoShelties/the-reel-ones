@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 
-const Film = ({ films, userData, token }) => {
+const Film = ({ films, userData, token, cartArray, setCartArray }) => {
   const params = useParams();
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ const Film = ({ films, userData, token }) => {
   };
 
   const setTargetFilmDirector = async () => {
-    if (!focusFilm || focusFilm === undefined) {
+    if (!focusFilm || focusFilm.id === undefined) {
       return;
     }
 
@@ -59,7 +59,7 @@ const Film = ({ films, userData, token }) => {
   const setTargetFilmGenre = async () => {
     // console.log(focusFilm.id);
 
-    if (!focusFilm) {
+    if (!focusFilm || focusFilm.id === undefined) {
       return;
     }
     // Get film genres by film id:
@@ -326,7 +326,12 @@ const Film = ({ films, userData, token }) => {
                   return;
                 }
 
-                navigate(`/cart`);
+                if (cartArray.includes(focusFilm.id)) {
+                  return;
+                }
+
+                setCartArray((current) => [...current, focusFilm.id]);
+                // navigate(`/cart`);
               }}
             >
               Add to Cart

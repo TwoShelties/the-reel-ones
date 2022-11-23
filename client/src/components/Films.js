@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import troText2 from "./media/troText2.png";
 
-const Films = ({ films, token }) => {
+const Films = ({ films, token, cartArray, setCartArray }) => {
   const navigate = useNavigate();
   const [genreSearchInput, setGenreSearchInput] = useState("");
   const [directorSearchInput, setDirectorSearchInput] = useState("");
@@ -108,9 +109,26 @@ const Films = ({ films, token }) => {
     return newDirectors;
   };
 
+  const addFilmToCart = (filmId) => {
+    if (cartArray.includes(filmId)) {
+      return;
+    }
+
+    setCartArray((current) => [...current, filmId]);
+  };
+
   return (
     <div>
-      {token ? <h1>Films</h1> : <h1>Your choice of the greatest ever made</h1>}
+      <img src={troText2} />
+      <button
+        onClick={(event) => {
+          event.preventDefault();
+          console.log(cartArray);
+        }}
+      >
+        console.log cart array
+      </button>
+      {/* {token ? <h1>Films</h1> : <h1>Your choice of the greatest ever made</h1>} */}
       {!token ? (
         <div>
           <p>Like what you see?</p>
@@ -286,7 +304,8 @@ const Films = ({ films, token }) => {
                         <button
                           className="film-add-to-cart-btn"
                           onClick={() => {
-                            navigate("/cart");
+                            addFilmToCart(film.id);
+                            // navigate("/cart");
                           }}
                         >
                           Add to Cart

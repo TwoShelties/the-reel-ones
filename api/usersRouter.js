@@ -55,12 +55,23 @@ usersRouter.post("/login", async (req, res, next) => {
 });
 
 usersRouter.post("/register", async (req, res, next) => {
+  // const usernameCheck = await getUserByUsername(req.body.username);
+  // if (req.body.username === usernameCheck) {
+  //   res.status(500);
+  //   next({
+  //     error: "UnavailableUsernameError",
+  //     message: "This username is already taken",
+  //   });
+  //   return;
+  // }
   if (!req.body.username || !req.body.password) {
     next({
       name: "MissingCredentialsError",
       message: "Please supply both a username and password",
     });
+    return;
   }
+
   const { username, password } = req.body;
 
   try {

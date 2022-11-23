@@ -4,7 +4,13 @@ import "./Home.css";
 import troText from "./media/troText.svg";
 import troText2 from "./media/troText2.png";
 
-const ImageSlider = ({ slides, token, setToken }) => {
+const ImageSlider = ({
+  slides,
+  token,
+  setToken,
+  setGuestEmail,
+  guestEmail,
+}) => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInteraction, setUserInteraction] = useState(false);
@@ -112,6 +118,12 @@ const ImageSlider = ({ slides, token, setToken }) => {
     transitionSlide();
   }, [currentIndex]);
 
+  const guestRegNavigate = () => {
+    if (guestEmail.length > 0) {
+      navigate("/register");
+    }
+  };
+
   // automatically direct user to /profile if token:
   // if (token) {
   //   console.log(localStorage.getItem("token"));
@@ -155,12 +167,24 @@ const ImageSlider = ({ slides, token, setToken }) => {
         {/* <p>The greatest films of all time.</p> */}
         <label className="get-started">Let's get started</label>
         <span>
-          <input
-            type="text"
-            className="landing-email-input"
-            placeholder="Pick a username"
-          />
-          <button className="start-btn">Get Started &#x27A4;</button>
+          <form onSubmit={guestRegNavigate}>
+            <input
+              type="text"
+              className="landing-email-input"
+              placeholder="Pick a username"
+              onChange={(event) => setGuestEmail(event.target.value)}
+            />
+            <button
+              className="start-btn"
+              type="submit"
+              onClick={(event) => {
+                event.preventDefault();
+                guestRegNavigate();
+              }}
+            >
+              Get Started &#x27A4;
+            </button>
+          </form>
         </span>
       </div>
       <div style={leftArrowStyles} onClick={prevShot} id="prev-btn">
