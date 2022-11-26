@@ -93,7 +93,7 @@ const Home = ({ token, setToken, setGuestEmail, guestEmail }) => {
   return (
     <div>
       {!token ? (
-        <div className="nav-header">
+        <div className="nav-header" style={{ backgroundColor: "#fff" }}>
           <div className="nav-banner">
             <p className="banner-tagline">
               <span className="new-span">NEW!</span> Films now start at{" "}
@@ -115,49 +115,11 @@ const Home = ({ token, setToken, setGuestEmail, guestEmail }) => {
 
       <div>
         <div style={containerStyles} className="content-container">
-          {/* <p id="tagline">
-          Nothing but the best films, according a squad of 90 year old film
-          critics at the{" "}
-          <a href="https://www.afi.com/">American Film Institute</a>.
-        </p> */}
           <ImageSlider
             slides={slides}
             setGuestEmail={setGuestEmail}
             guestEmail={guestEmail}
           />
-
-          {/* <h3>Why The Reel Ones?</h3> */}
-          {/* <p>
-          The classics may be generations older than you, but they're classics
-          for a reason. Really smart people have spent years thinking about
-          these films and have compiled a list of the best films ever made. And
-          we've got 'em all, right here in one spot.
-        </p>
-        <h3>The problem?</h3>
-        <p>
-          No one uses DVDs, people don't know how to work VCRs, and Blockbuster
-          went out of business decades ago. So how does one watch these archaic
-          films?
-        </p>
-        <h3>The solution</h3>
-        <p>
-          Everyone knows how to stream content. You rent streamable films for
-          one to seven days. No returns to the Blockbuster drop-box.
-        </p>
-        <h3>At what cost?</h3>
-        <p>
-          Our content is affordable. Per day, our rentals cost the same as a
-          candy bar, or a wooden ruler from Staples. Prices range from $1-$1.99
-          per day. If you can't afford at most $2 to watch the greatest films of
-          all time, then we recommend a financial consultant.
-        </p>
-        <h3>Getting Started</h3>
-        <p>
-          As the person writing this code I personally recommend you start with{" "}
-          <Link to="/films/2">The Godfather</Link> or{" "}
-          <Link to="/films/24">Apocalypse Now</Link>. Both are incredible.{" "}
-          <Link to="/films/46">Taxi Driver</Link> ain't bad either...
-        </p> */}
         </div>
       </div>
     </div>

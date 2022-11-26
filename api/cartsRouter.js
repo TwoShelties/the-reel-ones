@@ -76,7 +76,11 @@ cartsRouter.delete("/", requireUser, async (req, res, next) => {
   try {
     const { userId, filmId } = req.body;
     const deletedItem = await deleteCartItem(userId, filmId);
-    res.send({ success: true, deletedItem });
+    // console.log(deletedItem);
+
+    const updatedCart = await getCartByUserId(userId);
+    console.log(updatedCart);
+    res.send({ success: true, deletedItem, updatedCart });
   } catch (error) {
     console.log("error deleting item from cart");
     throw error;

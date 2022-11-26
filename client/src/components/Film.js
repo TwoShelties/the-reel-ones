@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import Reviewing from "./Reviewing";
+import Reviews from "./Reviews";
 
-const Film = ({ films, userData, token, cartArray, setCartArray }) => {
+const Film = ({ films, userData, token }) => {
   const params = useParams();
   const navigate = useNavigate();
 
@@ -17,6 +19,11 @@ const Film = ({ films, userData, token, cartArray, setCartArray }) => {
   const [editedContent, setEditedContent] = useState("");
   const [reviewing, setReviewing] = useState(false);
   const [newReviewContent, setNewReviewContent] = useState("");
+
+  const today = new Date();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [rentalEndDate, setRentalEndDate] = useState(today);
+  const [days, setDays] = useState(1);
 
   const fetchReviews = async () => {
     const response = await fetch(`/api/reviews/films/${params.filmId}`);
@@ -181,81 +188,45 @@ const Film = ({ films, userData, token, cartArray, setCartArray }) => {
     return;
   };
 
-  const submitEdit = async (reviewId) => {
-    if (!editedContent || !token) {
+  const calculateInitialPrice = () => {
+    if (!focusFilm) {
       return;
     }
 
-    console.log(
-      "user attempting to update review with new review content:" +
-        editedContent
-    );
-
-    const response = await fetch(`/api/reviews/${reviewId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        review: editedContent,
-      }),
-    });
-    const data = await response.json();
-    console.log(data);
-    if (data.success) {
-      fetchReviews().then(alert("Your review has been updated!"));
-      setEditing(!editing);
-      return;
-    }
+    setTotalPrice(focusFilm.price);
   };
 
-  const deleteReview = async (reviewId) => {
-    console.log("attempting to delete review ID: " + reviewId);
-
-    const response = await fetch(`/api/reviews/${reviewId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await response.json();
-    // console.log(data);
-    if (data.success) {
-      fetchReviews();
-      alert("Your review has been deleted!");
-      setEditing(!editing);
-      // console.log(data.success);
-      return;
-    }
+  const calculateTotalPrice = (days) => {
+    setTotalPrice(focusFilm.price * days);
   };
 
-  const submitNewReview = async (filmId) => {
-    if (!newReviewContent || !token) {
-      return;
-    }
+  const calculateEndDate = (date, days) => {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    setRentalEndDate(result);
+  };
 
+  const addItemToCart = async (userId, filmId, days) => {
     console.log(
-      "user is attempting to create a new review for film: " + filmId
+      `User ID: ${userId} is adding film ID: ${filmId} to cart for amt of days: ${days}`
     );
 
-    const response = await fetch(`/api/reviews/films/${filmId}`, {
+    const response = await fetch(`/api/cart`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        review: newReviewContent,
+        userId,
+        filmId,
+        days,
       }),
     });
-    const data = await response.json();
-    if (data.success) {
-      alert("Your review has been created!");
-      fetchReviews();
-      setReviewing(!reviewing);
-      return;
+    const info = await response.json();
+    // console.log(info);
+    if (info.success) {
+      alert(`You have added ${focusFilm.title} to your cart for ${days} days!`);
     }
   };
 
@@ -267,6 +238,8 @@ const Film = ({ films, userData, token, cartArray, setCartArray }) => {
     similarFilmsCheckByYear();
     fetchReviews();
     fetchAllUsers();
+    calculateEndDate(today, 1);
+    calculateInitialPrice();
   }, [films, focusFilm, params.filmId]);
 
   if (!focusFilm) {
@@ -317,29 +290,34 @@ const Film = ({ films, userData, token, cartArray, setCartArray }) => {
         )}
         <p>{focusFilm.description}</p>
         <p>${focusFilm.price}/day</p>
-        <p>
-          {token ? (
-            <button
-              onClick={(event) => {
-                event.preventDefault();
-                if (!token) {
-                  return;
-                }
-
-                if (cartArray.includes(focusFilm.id)) {
-                  return;
-                }
-
-                setCartArray((current) => [...current, focusFilm.id]);
-                // navigate(`/cart`);
-              }}
-            >
-              Add to Cart
-            </button>
-          ) : (
-            <></>
-          )}
-        </p>
+        <div>
+          <select
+            onChange={(event) => {
+              calculateTotalPrice(event.target.value);
+              calculateEndDate(today, Number(event.target.value));
+              setDays(Number(event.target.value));
+            }}
+          >
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+          </select>
+          <p>Total: ${totalPrice}</p>
+          <p>Rental Ends: {String(rentalEndDate)}</p>
+          <button
+            className="film-add-to-cart-btn"
+            onClick={() => {
+              // addFilmToCart(film.id);
+              addItemToCart(userData.id, focusFilm.id, days);
+            }}
+          >
+            Add to Cart
+          </button>
+        </div>
         {/* REVIEWS */}
         <h3>Reviews for {focusFilm.title}</h3>
         {/* <button onClick={() => console.log(allUsers)}>all users</button> */}
@@ -360,110 +338,48 @@ const Film = ({ films, userData, token, cartArray, setCartArray }) => {
               )}
 
               {reviewing ? (
-                <div>
-                  <form>
-                    <textarea
-                      className="review-edit-textarea"
-                      defaultValue={"Your review here..."}
-                      onChange={(event) => {
-                        event.preventDefault();
-                        setNewReviewContent(event.target.value);
-                      }}
-                    />
-                    <button
-                      type="submit"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        submitNewReview(focusFilm.id);
-                      }}
-                    >
-                      Submit
-                    </button>
-                    <button
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setReviewing(!reviewing);
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                </div>
+                <Reviewing
+                  reviews={reviews}
+                  setReviews={setReviews}
+                  focusFilm={focusFilm}
+                  reviewing={reviewing}
+                  setReviewing={setReviewing}
+                  setNewReviewContent={setNewReviewContent}
+                  token={token}
+                  newReviewContent={newReviewContent}
+                />
               ) : (
                 <></>
               )}
+              {reviews.map((review) => {
+                // console.log(review);
+                return (
+                  <Reviews
+                    review={review}
+                    userData={userData}
+                    token={token}
+                    focusFilm={focusFilm}
+                    setReviews={setReviews}
+                  />
+                );
+              })}
             </div>
-            {reviews.map((review) => {
+            {/* {reviews.map((review) => {
               // console.log(review);
               return (
-                <div>
-                  <p>"{review.review}"</p>
-                  {allUsers.map((user) => {
-                    // console.log(user);
-                    if (user.id === review.userId) {
-                      // console.log(user.username);
-                      return <p>- {user.username}</p>;
-                    }
-                  })}
-                  {userData.id === review.userId ? (
-                    <div>
-                      {editing ? (
-                        <div>
-                          <form onSubmit={submitEdit}>
-                            <textarea
-                              className="review-edit-textarea"
-                              defaultValue={review.review}
-                              onChange={(event) => {
-                                event.preventDefault();
-                                setEditedContent(event.target.value);
-                              }}
-                            />
-                            <button
-                              type="submit"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                submitEdit(review.id);
-                              }}
-                            >
-                              Submit
-                            </button>
-                            <button
-                              onClick={(event) => {
-                                event.preventDefault();
-                                deleteReview(review.id);
-                              }}
-                            >
-                              Delete Review
-                            </button>
-                          </form>
-                        </div>
-                      ) : (
-                        <></>
-                      )}
-                      {!editing ? (
-                        <button
-                          onClick={() => {
-                            setEditing(!editing);
-                          }}
-                        >
-                          Edit/Delete Review
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setEditing(!editing);
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </div>
+                <MyReviews
+                  review={review}
+                  allUsers={allUsers}
+                  userData={userData}
+                  editing={editing}
+                  setEditing={setEditing}
+                  token={token}
+                  editedContent={editedContent}
+                  setEditedContent={setEditedContent}
+                  setReviews={setReviews}
+                />
               );
-            })}
+            })} */}
           </div>
         ) : (
           <></>
@@ -472,61 +388,59 @@ const Film = ({ films, userData, token, cartArray, setCartArray }) => {
       <div className="recommended-films">
         {recommendedFilmsByGenre ? (
           <div className="recommended-films-tables">
-            <h4>Films with a similar genre to {focusFilm.title}</h4>
+            <h4>People also enjoyed</h4>
             {recommendedFilmsByGenre.length > 0 ? (
               <div>
-                {recommendedFilmsByGenre.map((film) => {
-                  return (
-                    <div>
-                      <ul>
-                        <li
-                          className="recommended-film-tag"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            similarFilmsCheckByGenre(film.genre);
-                            navigate(`/films/${film.id}`);
-                          }}
-                        >
-                          {film.title} ({film.year})
-                        </li>
-                      </ul>
-                    </div>
-                  );
-                })}
+                <ul className="recommended-films-list">
+                  {recommendedFilmsByGenre.map((film) => {
+                    return (
+                      <li
+                        className="recommended-film-tag"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          similarFilmsCheckByGenre(film.genre);
+                          navigate(`/films/${film.id}`);
+                        }}
+                      >
+                        {film.title} ({film.year})
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             ) : (
               <></>
             )}
 
             <div>
-              <ul>
+              {/* below are the films that were made around the same
+              time as focusFilm */}
+              {/* <ul>
                 <h4>Films made around the same time as {focusFilm.title}</h4>
                 {recommendedFilmsByYear.length > 0 ? (
                   <div>
-                    {recommendedFilmsByYear.map((film) => {
-                      return (
-                        <div>
-                          <ul>
-                            <li
-                              className="recommended-film-tag"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                console.log(film);
-                                similarFilmsCheckByYear(film.year);
-                                navigate(`/films/${film.id}`);
-                              }}
-                            >
-                              {film.title} ({film.year})
-                            </li>
-                          </ul>
-                        </div>
-                      );
-                    })}
+                    <ul className="recommended-films-list">
+                      {recommendedFilmsByYear.map((film) => {
+                        return (
+                          <li
+                            className="recommended-film-tag"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              console.log(film);
+                              similarFilmsCheckByYear(film.year);
+                              navigate(`/films/${film.id}`);
+                            }}
+                          >
+                            {film.title} ({film.year})
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
                 ) : (
                   <></>
                 )}
-              </ul>
+              </ul> */}
             </div>
           </div>
         ) : (

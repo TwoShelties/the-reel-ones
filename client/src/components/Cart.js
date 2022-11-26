@@ -1,90 +1,63 @@
 import React, { useEffect, useState } from "react";
 import TableData from "./TableData";
 
-const Cart = ({ cartArray, setCartArray, films }) => {
+const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
   const [cartItems, setCartItems] = useState([]);
   const [today, setToday] = useState("");
 
-  const getCartFilms = () => {
-    if (!films || cartArray.length < 1) {
-      return;
-    }
-
-    let cartItemsArr = [];
-    films.map((film) => {
-      cartArray.map((cartItem) => {
-        if (film.id === cartItem) {
-          cartItemsArr.push(film);
-        }
-      });
+  const getCartContents = async () => {
+    const response = await fetch(`/api/cart/${userData.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
-
-    if (cartItemsArr.length < 1) {
-      return;
+    const info = await response.json();
+    // console.log(info);
+    if (info.success) {
+      setCartItems(info.cart);
+      // console.log("retrieved cart for user ID: " + userData.id);
     }
-
-    setCartItems(cartItemsArr);
-  };
-
-  const getDate = () => {
-    setToday(new Date());
   };
 
   useEffect(() => {
-    getCartFilms();
-    getDate();
-  }, [films]);
+    getCartContents();
+  }, [userData, films]);
 
   return (
-    <div>
+    <div className="cart-container">
       <button
         onClick={(event) => {
           event.preventDefault();
           console.log(cartItems);
         }}
       >
-        CL cart array
+        CL cart items
       </button>
-      {cartItems ? (
+      {cartItems.length > 0 ? (
         <form>
-          {cartItems.map((item) => {
-            let totalPrice = item.price;
-
-            return (
-              <table className="cart-items-table">
-                <TableData item={item} />
-                <tr>
-                  <td>Film Title</td>
-                  <td>Rental Length (days)</td>
-                  <td>Total Price (${item.price}/day)</td>
-                  <td>Rental Ends</td>
-                </tr>
-                {/* <tr>
-                  <td>{item.title}</td>
-                  <td>
-                    <select
-                      onChange={(event) => {
-                        totalPrice = event.target.value * item.price;
-                        console.log(totalPrice);
-                        return totalPrice;
-                      }}
-                      defaultValue="1"
-                    >
-                      <option>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
-                      <option>5</option>
-                      <option>6</option>
-                      <option>7</option>
-                    </select>
-                  </td>
-                  <td>{totalPrice}</td>
-                  <td>{String(today)}</td>
-                </tr> */}
-              </table>
-            );
-          })}
+          <table className="cart-items-table">
+            <tr>
+              <td>Film Title</td>
+              <td>Rental Length (days)</td>
+              <td>Total Price</td>
+              <td>Rental Ends</td>
+            </tr>
+            {cartItems.map((item) => {
+              return (
+                <TableData
+                  item={item}
+                  today={today}
+                  films={films}
+                  userData={userData}
+                  token={token}
+                  cartItems={cartItems}
+                  setCartItems={setCartItems}
+                />
+              );
+            })}
+          </table>
+          <button>Purchase</button>
         </form>
       ) : (
         <p>Your cart is empty</p>

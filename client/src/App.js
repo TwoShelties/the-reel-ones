@@ -116,6 +116,7 @@ const App = () => {
               token={token}
               cartArray={cartArray}
               setCartArray={setCartArray}
+              userData={userData}
             />
           }
         />
@@ -139,6 +140,8 @@ const App = () => {
               cartArray={cartArray}
               setCartArray={setCartArray}
               films={films}
+              userData={userData}
+              token={token}
             />
           }
         />

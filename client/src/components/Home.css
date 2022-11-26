@@ -36,6 +36,7 @@
 
 .navbar {
   display: flex;
+  z-index: 3;
 }
 
 .landing-page-nav-link {
@@ -102,6 +103,7 @@
   outline: none;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75),
     0px 0px 5px 0px rgba(0, 0, 0, 0.75) inset;
+  transition: 0.1s;
 }
 
 .start-btn {

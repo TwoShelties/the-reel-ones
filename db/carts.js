@@ -72,16 +72,22 @@ async function addFilmToUserCart({ userId, filmId, days }) {
 
 async function deleteCartItem(userId, filmId) {
   try {
-    await client.query(
+    // added var name to reference which item is deleted:
+    const response = await client.query(
       `
           DELETE 
           FROM carts 
           WHERE "userId" = $1 
           AND
-          "filmId" = $2;
+          "filmId" = $2
+          RETURNING *;
           `,
       [userId, filmId]
     );
+
+    // returning deleted item, will make call to GET updated cart within
+    // cartsRouter route:
+    return response.rows;
 
     const updatedCart = await getCartByUserId(userId);
 
