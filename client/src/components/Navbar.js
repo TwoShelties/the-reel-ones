@@ -41,10 +41,14 @@ const Navbar = ({ userData, token, setToken, admin }) => {
           <Link to="/cart">Cart</Link>
           <Link to="/api/docs">API Docs</Link>
           {admin ? <Link to="/admin">Admin</Link> : <></>}
+<<<<<<< Updated upstream
           {!token ? <Link to="/login">Login/Register</Link> : <></>}
           {token ? <Link onClick={logoutHandler}>Logout</Link> : <></>}
 
           {/* <Link onClick={logoutHandler}>Logout</Link> */}
+=======
+          <Link onClick={logoutHandler}>Logout</Link>
+>>>>>>> Stashed changes
         </div>
       )}
 
