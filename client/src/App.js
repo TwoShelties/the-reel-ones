@@ -159,7 +159,10 @@ const App = () => {
             />
           }
         />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={<Profile userData={userData} films={films} />}
+        />
         <Route
           path="/cart"
           element={

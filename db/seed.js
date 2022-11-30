@@ -134,7 +134,7 @@ async function createInitialUsers() {
     const users = await Promise.all(usersToCreate.map(createUser));
 
     console.log("Users created:");
-    // console.log(users);
+    console.log(users);
     console.log("Finished creating users!");
   } catch (error) {
     console.error("Error creating users!");
@@ -173,7 +173,9 @@ async function createInitialCartItems() {
     const cartItemsToCreate = [
       { userId: 1, filmId: 1, days: 5 },
       { userId: 1, filmId: 2, days: 10 },
+      { userId: 1, filmId: 5, days: 1 },
       { userId: 3, filmId: 3, days: 2 },
+      { userId: 5, filmId: 20, days: 12 },
     ];
     console.log("here");
     const cartItems = await Promise.all(

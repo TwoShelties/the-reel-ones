@@ -651,3 +651,55 @@ CART
 .cart-items-table tr td {
   padding: 1rem;
 }
+
+/*===========================
+PROFILE
+===========================*/
+
+.current-purchase-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.past-purchase-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.all-purchase-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.purchase-item {
+  flex-direction: row;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.film-purchase-image {
+  width: 15rem;
+  height: 22rem;
+}
+
+.profile-text {
+  padding: 1rem;
+  text-align: center;
+  color: white;
+}
+
+.purchase-details {
+  text-align: center;
+  color: white;
+}
+
+

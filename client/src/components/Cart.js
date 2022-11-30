@@ -24,6 +24,26 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
     getCartContents();
   }, [userData, films]);
 
+  /*
+  const purchaseItems = async (userId) => {
+    console.log(`User ID: ${userId} is purchasing cart items`);
+
+    const response = await fetch(`api/userFilms/${userData.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const info = await response.json();
+    console.log(info);
+    if (info.success) {
+      alert(`items purchased!`);
+    }
+  };
+  */
+
   return (
     <div className="cart-container">
       <button
@@ -57,7 +77,7 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
               );
             })}
           </table>
-          <button>Purchase</button>
+          <button>Purchase </button>
         </form>
       ) : (
         <p>Your cart is empty</p>
