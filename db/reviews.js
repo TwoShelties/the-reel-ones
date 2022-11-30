@@ -19,9 +19,9 @@ async function getAllReviews() {
 async function createReview({ filmId, userId, reviewContent }) {
   //   console.log(filmId, userId);
   try {
-    console.log(
-      `creating a review for film ID: ${filmId} | user ID: ${userId} | with review content: ${reviewContent}`
-    );
+    // console.log(
+    //   `creating a review for film ID: ${filmId} | user ID: ${userId} | with review content: ${reviewContent}`
+    // );
 
     if (!filmId || !userId || !reviewContent) {
       return;

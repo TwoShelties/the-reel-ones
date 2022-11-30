@@ -1,7 +1,7 @@
 const client = require("./index");
 const bcrypt = require("bcrypt");
 
-async function createUser({ username, password }) {
+async function createUser({ username, password, isAdmin }) {
   try {
     const SALT_COUNT = 10;
     const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
@@ -10,13 +10,28 @@ async function createUser({ username, password }) {
       rows: [user],
     } = await client.query(
       `
-       INSERT INTO users (username, password)
-       VALUES ($1, $2)
+       INSERT INTO users (username, password, "isAdmin")
+       VALUES ($1, $2, $3)
        ON CONFLICT (username) DO NOTHING
        RETURNING *; 
        `,
-      [username, hashedPassword]
+      [username, hashedPassword, false]
     );
+
+    if (isAdmin) {
+      // console.log("user has admin status: ", username);
+      console.log("adding admin status to user: " + username);
+      const {
+        rows: [user],
+      } = await client.query(
+        `
+        UPDATE users
+        SET "isAdmin"=true
+        WHERE username=$1
+        `,
+        [username]
+      );
+    }
 
     return user;
   } catch (error) {
@@ -211,6 +226,35 @@ async function adminCheck(userId) {
     return response.rows;
   } catch (error) {
     console.error("Error with checking admin");
+    throw error;
+  }
+}
+
+async function giveAdminStatus(userId) {
+  try {
+    const user = await client.query(
+      `
+      SELECT * FROM users
+      WHERE id=$1
+      `,
+      [userId]
+    );
+    console.log("attempting to give admin status to user ID: ", user.id);
+
+    if (user.id) {
+      const response = await client.query(
+        `
+        UPDATE users
+        SET "isAdmin"=true
+        WHERE "userId"=$1
+        `,
+        [userId]
+      );
+
+      console.log("gave admin status to user ID: ", userId);
+    }
+  } catch (error) {
+    console.error("an error occurred giving admin status to a user");
     throw error;
   }
 }

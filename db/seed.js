@@ -44,7 +44,7 @@ async function createTables() {
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
-        "isAdmin" BOOLEAN DEFAULT true 
+        "isAdmin" BOOLEAN DEFAULT false 
       );
 
       CREATE TABLE films(
@@ -124,11 +124,12 @@ async function createInitialUsers() {
   console.log("Starting to create users...");
   try {
     const usersToCreate = [
-      { username: "adam", password: "secretpass99", isAdmin: true },
-      { username: "sandy", password: "sandy123", isAdmin: true },
-      { username: "henry", password: "henry123", isAdmin: true },
-      { username: "sam", password: "password111", isAdmin: true },
-      { username: "user1", password: "123456", isAdmin: true },
+      { username: "zak", password: "password", isAdmin: true },
+      { username: "andrew", password: "password", isAdmin: true },
+      { username: "roshni", password: "password", isAdmin: true },
+      { username: "niko", password: "password", isAdmin: true },
+      { username: "tomFromMyspace", password: "123456", isAdmin: false },
+      { username: "bill", password: "password", isAdmin: false },
     ];
     const users = await Promise.all(usersToCreate.map(createUser));
 
@@ -159,7 +160,7 @@ async function seedGenresTable() {
   console.log("starting to seed genres table...");
   const addFilms = await addFilmIdToGenresTable();
 
-  console.log(`seeded genres table with films: `, films);
+  // console.log(`seeded genres table with films: `, films);
   // const checkingFilms = await checkFilms();
   // console.log(checkingFilms);
 }
@@ -180,7 +181,7 @@ async function createInitialCartItems() {
     );
 
     console.log("Cart items created:");
-    console.log(cartItems);
+    // console.log(cartItems);
     console.log("Finished creating cart items!");
   } catch (error) {
     console.error("Error creating cart items!");
@@ -199,7 +200,7 @@ async function createInitialPurchaseItems() {
     );
 
     console.log("Purchased items:");
-    console.log(purchaseItems);
+    // console.log(purchaseItems);
     console.log("Finished creating purchased items!");
   } catch (error) {
     console.error("Error creating purchased items!");
@@ -230,7 +231,7 @@ async function createInitialReviews() {
 
     const reviews = await Promise.all(initialReviews.map(createReview));
     console.log("Initial reviews created:");
-    console.log(reviews);
+    // console.log(reviews);
     console.log("Finished creating reviews!");
   } catch (error) {
     console.error("an error occurred creating initial seed reviews");
