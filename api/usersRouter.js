@@ -8,7 +8,7 @@ const {
   createUser,
 } = require("../db/users");
 const jwt = require("jsonwebtoken");
-const { requireUser } = require("./utils");
+const { requireUser, requireAdmin } = require("./utils");
 const { JWT_SECRET } = process.env;
 
 usersRouter.get("/", async (req, res, next) => {
@@ -55,12 +55,23 @@ usersRouter.post("/login", async (req, res, next) => {
 });
 
 usersRouter.post("/register", async (req, res, next) => {
+  // const usernameCheck = await getUserByUsername(req.body.username);
+  // if (req.body.username === usernameCheck) {
+  //   res.status(500);
+  //   next({
+  //     error: "UnavailableUsernameError",
+  //     message: "This username is already taken",
+  //   });
+  //   return;
+  // }
   if (!req.body.username || !req.body.password) {
     next({
       name: "MissingCredentialsError",
       message: "Please supply both a username and password",
     });
+    return;
   }
+
   const { username, password } = req.body;
 
   try {
@@ -127,7 +138,7 @@ usersRouter.get("/", async (req, res, next) => {
 });
 */
 
-usersRouter.delete("/:userId", requireUser, async (req, res, next) => {
+usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
   try {
     const { userId } = req.params;
     const deleteSingleUser = await deleteUser(userId);

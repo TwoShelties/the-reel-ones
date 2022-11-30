@@ -206,7 +206,7 @@ filmsRouter.post("/", requireAdmin, async (req, res, next) => {
     const film = await createFilm(filmData);
     res.send({ filmData });
   } catch ({ title, director, year, genre, img, description, price }) {
-    next({ title, director, year, genre, img, description, price });
+    next({ message: "could not create film" });
   }
 });
 

@@ -1,8 +1,16 @@
 import React from "react";
+import troText2 from "./media/troText2.png";
+import { useNavigate } from "react-router-dom";
 
 const Docs = () => {
+  const navigate = useNavigate();
   return (
     <div>
+      <img
+        src={troText2}
+        onClick={() => navigate("/")}
+        style={{ cursor: "pointer" }}
+      />
       <h1>API Documentation</h1>
       <h2>Introduction</h2>
       <p>

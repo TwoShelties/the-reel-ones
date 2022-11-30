@@ -1,9 +1,17 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import troText from "./media/troText.svg";
+import troText2 from "./media/troText2.png";
 
-const ImageSlider = ({ slides, token }) => {
+const ImageSlider = ({
+  slides,
+  token,
+  setToken,
+  setGuestEmail,
+  guestEmail,
+}) => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInteraction, setUserInteraction] = useState(false);
 
@@ -17,7 +25,14 @@ const ImageSlider = ({ slides, token }) => {
     }, 3000);
   }
 
-  const logoutHandler = () => {};
+  const logoutHandler = () => {
+    console.log(
+      "Removing token from local storage, and setting token to empty string..."
+    );
+    localStorage.removeItem("token");
+    setToken("");
+    navigate("/");
+  };
 
   const sliderStyles = {
     height: "100%",
@@ -103,14 +118,28 @@ const ImageSlider = ({ slides, token }) => {
     transitionSlide();
   }, [currentIndex]);
 
+  const guestRegNavigate = () => {
+    if (guestEmail.length > 0) {
+      navigate("/register");
+    }
+  };
+
+  // automatically direct user to /profile if token:
+  // if (token) {
+  //   console.log(localStorage.getItem("token"));
+  //   navigate("/profile");
+  // }
+
   return (
     <div style={sliderStyles}>
+      <div className="slider-overlay"></div>
       {/* <div className="slide-cover"> */}
       <div className="navbar">
         <Link to="/">
           {/* <h1 id="site-title">The Reel Ones</h1> */}
           {/* <img src={siteLogo} id="site-logo" /> */}
-          <img type="image/svg" src={troText} className="logo-svg" />
+          {/* <img type="image/svg" src={troText} className="logo-svg" /> */}
+          <img type="image/svg" src={troText2} className="logo-svg" />
           {/* <h6 id="site-title">TRO</h6> */}
         </Link>
         <div className="site-nav-links">
@@ -138,12 +167,24 @@ const ImageSlider = ({ slides, token }) => {
         {/* <p>The greatest films of all time.</p> */}
         <label className="get-started">Let's get started</label>
         <span>
-          <input
-            type="text"
-            className="landing-email-input"
-            placeholder="Pick a username"
-          />
-          <button className="start-btn">Get Started &#x27A4;</button>
+          <form onSubmit={guestRegNavigate}>
+            <input
+              type="text"
+              className="landing-email-input"
+              placeholder="Pick a username"
+              onChange={(event) => setGuestEmail(event.target.value)}
+            />
+            <button
+              className="start-btn"
+              type="submit"
+              onClick={(event) => {
+                event.preventDefault();
+                guestRegNavigate();
+              }}
+            >
+              Get Started &#x27A4;
+            </button>
+          </form>
         </span>
       </div>
       <div style={leftArrowStyles} onClick={prevShot} id="prev-btn">

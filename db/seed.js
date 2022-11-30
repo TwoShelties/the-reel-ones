@@ -12,14 +12,19 @@ const {
   addFilmIdToGenresTable,
   checkFilms,
 } = require("./genres");
+const { addFilmToUserCart } = require("./carts");
+const { addCartItemsToPurchase } = require("./userFilms");
+const { createReview } = require("./reviews");
 
 async function dropTables() {
   try {
     console.log("Dropping All Tables...");
     client.query(`
       DROP TABLE IF EXISTS user_films;
+      DROP TABLE IF EXISTS carts;
       DROP TABLE IF EXISTS genres;
       DROP TABLE IF EXISTS directors;
+      DROP TABLE IF EXISTS reviews;
       DROP TABLE IF EXISTS films;
       DROP TABLE IF EXISTS users;
     `);
@@ -29,6 +34,7 @@ async function dropTables() {
     throw error;
   }
 }
+
 async function createTables() {
   // create all tables, in the correct order
   try {
@@ -51,13 +57,20 @@ async function createTables() {
         description TEXT NOT NULL, 
         price FLOAT NOT NULL
       );
+
+      CREATE TABLE carts(
+        id SERIAL PRIMARY KEY,
+        "userId" INTEGER REFERENCES users(id),
+        "filmId" INTEGER REFERENCES films(id),
+        days INTEGER NOT NULL
+      );
       
       CREATE TABLE user_films(
         id SERIAL PRIMARY KEY,
-        “userId” INTEGER REFERENCES users(id),
-        “filmId” INTEGER REFERENCES films(id),
-        purchaseDate TIMESTAMP,
-        expiryDate TIMESTAMP
+        "userId" INTEGER REFERENCES users(id),
+        "filmId" INTEGER REFERENCES films(id),
+        purchaseDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        expiryDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
       CREATE TABLE genres(
@@ -90,6 +103,13 @@ async function createTables() {
         director2 VARCHAR(255),
         director3 VARCHAR(255)
       );
+
+      CREATE TABLE reviews(
+        id SERIAL PRIMARY KEY,
+        "filmId" INTEGER REFERENCES films(id),
+        "userId" INTEGER REFERENCES users(id),
+        review VARCHAR(255) NOT NULL
+      )
 
     `);
     console.log("Finished constructing tables!");
@@ -146,6 +166,78 @@ async function seedGenresTable() {
 
 async function addGenresToFilms() {}
 
+async function createInitialCartItems() {
+  console.log("Starting to create cart items...");
+  try {
+    const cartItemsToCreate = [
+      { userId: 1, filmId: 1, days: 5 },
+      { userId: 1, filmId: 2, days: 10 },
+      { userId: 3, filmId: 3, days: 2 },
+    ];
+    console.log("here");
+    const cartItems = await Promise.all(
+      cartItemsToCreate.map(addFilmToUserCart)
+    );
+
+    console.log("Cart items created:");
+    console.log(cartItems);
+    console.log("Finished creating cart items!");
+  } catch (error) {
+    console.error("Error creating cart items!");
+    throw error;
+  }
+}
+
+async function createInitialPurchaseItems() {
+  console.log("Starting to create purchased items...");
+  try {
+    const purchaseItemsToCreate = [1, 3];
+    console.log("here");
+
+    const purchaseItems = await Promise.all(
+      purchaseItemsToCreate.map((user) => addCartItemsToPurchase(user))
+    );
+
+    console.log("Purchased items:");
+    console.log(purchaseItems);
+    console.log("Finished creating purchased items!");
+  } catch (error) {
+    console.error("Error creating purchased items!");
+  }
+}
+
+async function createInitialReviews() {
+  try {
+    const initialReviews = [
+      {
+        filmId: 1,
+        userId: 1,
+        reviewContent: "film 1 is the best film ever made!",
+      },
+      { filmId: 2, userId: 3, reviewContent: "i love film 2!" },
+      {
+        filmId: 50,
+        userId: 4,
+        reviewContent: "film 50 is better than film 10!",
+      },
+      { filmId: 100, userId: 2, reviewContent: "I like film 100 the best!" },
+      {
+        filmId: 1,
+        userId: 3,
+        reviewContent: "I also think film 1 is the best ever made!",
+      },
+    ];
+
+    const reviews = await Promise.all(initialReviews.map(createReview));
+    console.log("Initial reviews created:");
+    console.log(reviews);
+    console.log("Finished creating reviews!");
+  } catch (error) {
+    console.error("an error occurred creating initial seed reviews");
+    throw error;
+  }
+}
+
 async function rebuildDB() {
   try {
     await dropTables();
@@ -154,15 +246,18 @@ async function rebuildDB() {
     await createInitialFilms();
     await seedGenresTable();
     await addGenresToFilms();
+    await createInitialCartItems();
+    await createInitialPurchaseItems();
+    await createInitialReviews();
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error;
   }
 }
+
 module.exports = {
   rebuildDB,
   dropTables,
   createTables,
   addGenresToFilms,
 };
-//seedDB();

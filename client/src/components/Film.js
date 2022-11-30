@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import Reviewing from "./Reviewing";
+import Reviews from "./Reviews";
 
 const Film = ({ films, userData, token }) => {
   const params = useParams();
@@ -11,6 +13,37 @@ const Film = ({ films, userData, token }) => {
   const [recommendedFilmsByGenre, setReccomendedFilmsByGenre] = useState([]);
   const [recommendedFilmsByYear, setReccomendedFilmsByYear] = useState([]);
 
+  const [reviews, setReviews] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
+  const [reviewing, setReviewing] = useState(false);
+  const [newReviewContent, setNewReviewContent] = useState("");
+
+  const today = new Date();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [rentalEndDate, setRentalEndDate] = useState(today);
+  const [days, setDays] = useState(1);
+
+  const fetchReviews = async () => {
+    const response = await fetch(`/api/reviews/films/${params.filmId}`);
+    const data = await response.json();
+    // console.log(data);
+    if (data) {
+      setReviews(data.reviews);
+    }
+  };
+
+  const fetchAllUsers = async () => {
+    const response = await fetch(`/api/users`);
+    const data = await response.json();
+    // console.log(data);
+
+    if (data.users) {
+      setAllUsers(data.users);
+    }
+  };
+
   const findTargetFilm = () => {
     const targetFilmId = Number(params.filmId);
     const result = films.filter((film) => film.id === targetFilmId)[0];
@@ -18,7 +51,7 @@ const Film = ({ films, userData, token }) => {
   };
 
   const setTargetFilmDirector = async () => {
-    if (!focusFilm || focusFilm === undefined) {
+    if (!focusFilm || focusFilm.id === undefined) {
       return;
     }
 
@@ -33,7 +66,7 @@ const Film = ({ films, userData, token }) => {
   const setTargetFilmGenre = async () => {
     // console.log(focusFilm.id);
 
-    if (!focusFilm) {
+    if (!focusFilm || focusFilm.id === undefined) {
       return;
     }
     // Get film genres by film id:
@@ -70,7 +103,7 @@ const Film = ({ films, userData, token }) => {
     }
 
     const currentFilmGenre = await findCurrentFilmGenre();
-    console.log(currentFilmGenre.genre);
+    // console.log(currentFilmGenre.genre);
 
     if (!currentFilmGenre) {
       return;
@@ -155,12 +188,58 @@ const Film = ({ films, userData, token }) => {
     return;
   };
 
+  const calculateInitialPrice = () => {
+    if (!focusFilm) {
+      return;
+    }
+
+    setTotalPrice(focusFilm.price);
+  };
+
+  const calculateTotalPrice = (days) => {
+    setTotalPrice(focusFilm.price * days);
+  };
+
+  const calculateEndDate = (date, days) => {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    setRentalEndDate(result);
+  };
+
+  const addItemToCart = async (userId, filmId, days) => {
+    console.log(
+      `User ID: ${userId} is adding film ID: ${filmId} to cart for amt of days: ${days}`
+    );
+
+    const response = await fetch(`/api/cart`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        userId,
+        filmId,
+        days,
+      }),
+    });
+    const info = await response.json();
+    // console.log(info);
+    if (info.success) {
+      alert(`You have added ${focusFilm.title} to your cart for ${days} days!`);
+    }
+  };
+
   useEffect(() => {
     findTargetFilm();
     setTargetFilmGenre();
     setTargetFilmDirector();
     similarFilmsCheckByGenre();
     similarFilmsCheckByYear();
+    fetchReviews();
+    fetchAllUsers();
+    calculateEndDate(today, 1);
+    calculateInitialPrice();
   }, [films, focusFilm, params.filmId]);
 
   if (!focusFilm) {
@@ -211,83 +290,157 @@ const Film = ({ films, userData, token }) => {
         )}
         <p>{focusFilm.description}</p>
         <p>${focusFilm.price}/day</p>
-        <p>
-          {token ? (
-            <button
-              onClick={(event) => {
-                event.preventDefault();
-                if (!token) {
-                  return;
-                }
+        <div>
+          <select
+            onChange={(event) => {
+              calculateTotalPrice(event.target.value);
+              calculateEndDate(today, Number(event.target.value));
+              setDays(Number(event.target.value));
+            }}
+          >
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+          </select>
+          <p>Total: ${totalPrice}</p>
+          <p>Rental Ends: {String(rentalEndDate)}</p>
+          <button
+            className="film-add-to-cart-btn"
+            onClick={() => {
+              // addFilmToCart(film.id);
+              addItemToCart(userData.id, focusFilm.id, days);
+            }}
+          >
+            Add to Cart
+          </button>
+        </div>
+        {/* REVIEWS */}
+        <h3>Reviews for {focusFilm.title}</h3>
+        {/* <button onClick={() => console.log(allUsers)}>all users</button> */}
+        {reviews && allUsers ? (
+          <div>
+            <div>
+              {!reviewing ? (
+                <button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setReviewing(!reviewing);
+                  }}
+                >
+                  Add a Review
+                </button>
+              ) : (
+                <></>
+              )}
 
-                navigate(`/cart`);
-              }}
-            >
-              Add to Cart
-            </button>
-          ) : (
-            <></>
-          )}
-        </p>
+              {reviewing ? (
+                <Reviewing
+                  reviews={reviews}
+                  setReviews={setReviews}
+                  focusFilm={focusFilm}
+                  reviewing={reviewing}
+                  setReviewing={setReviewing}
+                  setNewReviewContent={setNewReviewContent}
+                  token={token}
+                  newReviewContent={newReviewContent}
+                />
+              ) : (
+                <></>
+              )}
+              {reviews.map((review) => {
+                // console.log(review);
+                return (
+                  <Reviews
+                    review={review}
+                    userData={userData}
+                    token={token}
+                    focusFilm={focusFilm}
+                    setReviews={setReviews}
+                  />
+                );
+              })}
+            </div>
+            {/* {reviews.map((review) => {
+              // console.log(review);
+              return (
+                <MyReviews
+                  review={review}
+                  allUsers={allUsers}
+                  userData={userData}
+                  editing={editing}
+                  setEditing={setEditing}
+                  token={token}
+                  editedContent={editedContent}
+                  setEditedContent={setEditedContent}
+                  setReviews={setReviews}
+                />
+              );
+            })} */}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="recommended-films">
         {recommendedFilmsByGenre ? (
           <div className="recommended-films-tables">
-            <h4>Films with a similar genre to {focusFilm.title}</h4>
+            <h4>People also enjoyed</h4>
             {recommendedFilmsByGenre.length > 0 ? (
               <div>
-                {recommendedFilmsByGenre.map((film) => {
-                  return (
-                    <div>
-                      <ul>
-                        <li
-                          className="recommended-film-tag"
-                          onClick={(event) => {
-                            event.preventDefault();
-                            similarFilmsCheckByGenre(film.genre);
-                            navigate(`/films/${film.id}`);
-                          }}
-                        >
-                          {film.title} ({film.year})
-                        </li>
-                      </ul>
-                    </div>
-                  );
-                })}
+                <ul className="recommended-films-list">
+                  {recommendedFilmsByGenre.map((film) => {
+                    return (
+                      <li
+                        className="recommended-film-tag"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          similarFilmsCheckByGenre(film.genre);
+                          navigate(`/films/${film.id}`);
+                        }}
+                      >
+                        {film.title} ({film.year})
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             ) : (
               <></>
             )}
 
             <div>
-              <ul>
+              {/* below are the films that were made around the same
+              time as focusFilm */}
+              {/* <ul>
                 <h4>Films made around the same time as {focusFilm.title}</h4>
                 {recommendedFilmsByYear.length > 0 ? (
                   <div>
-                    {recommendedFilmsByYear.map((film) => {
-                      return (
-                        <div>
-                          <ul>
-                            <li
-                              className="recommended-film-tag"
-                              onClick={(event) => {
-                                event.preventDefault();
-                                console.log(film);
-                                similarFilmsCheckByYear(film.year);
-                                navigate(`/films/${film.id}`);
-                              }}
-                            >
-                              {film.title} ({film.year})
-                            </li>
-                          </ul>
-                        </div>
-                      );
-                    })}
+                    <ul className="recommended-films-list">
+                      {recommendedFilmsByYear.map((film) => {
+                        return (
+                          <li
+                            className="recommended-film-tag"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              console.log(film);
+                              similarFilmsCheckByYear(film.year);
+                              navigate(`/films/${film.id}`);
+                            }}
+                          >
+                            {film.title} ({film.year})
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
                 ) : (
                   <></>
                 )}
-              </ul>
+              </ul> */}
             </div>
           </div>
         ) : (

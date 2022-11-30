@@ -20,7 +20,7 @@ apiRouter.use(async (req, res, next) => {
 
       if (id) {
         req.user = await getUserById(id);
-        console.log(req.user);
+        // console.log(req.user);
         next();
       }
     } catch ({ name, message }) {
@@ -36,7 +36,7 @@ apiRouter.use(async (req, res, next) => {
 
 apiRouter.use((req, res, next) => {
   if (req.user) {
-    console.log("User is set:", req.user);
+    // console.log("User is set:", req.user);
   }
 
   next();
@@ -58,9 +58,17 @@ apiRouter.use("/directors", directorsRouter);
 const usersRouter = require("./usersRouter");
 apiRouter.use("/users", usersRouter);
 
+// ROUTER: /api/cart
+const cartsRouter = require("./cartsRouter");
+apiRouter.use("/cart", cartsRouter);
+
 // ROUTER: /api/usersFilms
 const userFilmsRouter = require("./userFilmsRouter");
 apiRouter.use("/usersFilms", userFilmsRouter);
+
+// ROUTER: /api/reviews
+const reviewsRouter = require("./reviewsRouter");
+apiRouter.use("/reviews", reviewsRouter);
 
 apiRouter.get("/", (req, res, next) => {
   res.send("api router working");

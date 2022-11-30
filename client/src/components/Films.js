@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import troText2 from "./media/troText2.png";
+import FilmsCardData from "./FilmsCardData";
 
-const Films = ({ films }) => {
+const Films = ({ films, token, cartArray, setCartArray, userData }) => {
   const navigate = useNavigate();
   const [genreSearchInput, setGenreSearchInput] = useState("");
   const [directorSearchInput, setDirectorSearchInput] = useState("");
@@ -108,9 +110,27 @@ const Films = ({ films }) => {
     return newDirectors;
   };
 
+  const addFilmToCart = (filmId) => {
+    if (cartArray.includes(filmId)) {
+      return;
+    }
+
+    setCartArray((current) => [...current, filmId]);
+  };
+
   return (
-    <div>
-      <h1>Films</h1>
+    <div className="films-container">
+      <div className="opaque-cover"></div>
+      <img src={troText2} />
+      {/* {token ? <h1>Films</h1> : <h1>Your choice of the greatest ever made</h1>} */}
+      {!token ? (
+        <div>
+          <p>Like what you see?</p>
+          <Link to="/register">Sign Up Today</Link>
+        </div>
+      ) : (
+        <></>
+      )}
       {filteredFilms ? (
         <div>
           <form onSubmit={filmSearchFormHandler} className="search-films-form">
@@ -121,168 +141,101 @@ const Films = ({ films }) => {
               onChange={filmSearchInputHandler}
               value={query}
             />
-            {/* <select onChange={genreSearchHandler} id="genre-select">
-              <option>Genre</option>
-              {films.map((film) => {
-                if (!film.genre.includes("{") || !film.genre.includes("}")) {
-                  genres.push(film.genre);
-                } else {
-                  const newGenreString = film.genre
-                    .replace(/{|_/g, "")
-                    .replace(/}|_/g, "")
-                    .replace(/"|_/g, "")
-                    .replace(/,|_/g, " ");
-                  // console.log(newGenreString);
-
-                  const newGenres = newGenreString.split(" ");
-                  // console.log(newGenres);
-
-                  newGenres.forEach((element) => {
-                    genres.push(element);
-                  });
-                }
-              })}
-              {(genresSet = [...new Set(genres)].sort())}
-              {genresSet.map((genre) => {
-                return <option>{genre}</option>;
-              })}
-            </select>
-            <select onChange={directorSearchHandler} id="director-select">
-              <option>Director</option>
-              {films.map((film) => {
-                if (
-                  !film.director.includes("{") ||
-                  !film.director.includes("}")
-                ) {
-                  directors.push(film.director);
-                } else {
-                  const newDirectorString = film.director
-                    .replace(/{|_/g, "")
-                    .replace(/}|_/g, "")
-                    .replace(/"|_/g, "")
-                    .replace(/,|_/g, ",");
-                  // console.log(newDirectorString);
-
-                  const newDirectors = newDirectorString.split(",");
-                  // console.log(newDirectors);
-
-                  newDirectors.forEach((element) => {
-                    directors.push(element);
-                  });
-                }
-              })}
-              {(directorsSet = [...new Set(directors)].sort())}
-              {directorsSet.map((director) => {
-                return <option>{director}</option>;
-              })}
-            </select> */}
-            {/* <button onClick={(event) => event.preventDefault()}>Submit</button> */}
           </form>
 
-          <ul>
+          <ul className="film-list-container">
             {filteredFilms.map((film) => {
-              // console.log(film.genre);
               return (
-                <li>
-                  <div className="films-card-container">
-                    <div
-                      className="film-card"
-                      // onClick={(event) => {
-                      //   console.log(film.id);
-                      //   navigate(`/films/${film.id}`);
-                      // }}
+                <li className="films-list-item">
+                  <div className="film-card">
+                    <h3
+                      className="film-card-title"
+                      onClick={(event) => {
+                        console.log(
+                          "navigating to page for film ID: " + film.id
+                        );
+                        navigate(`/films/${film.id}`);
+                      }}
                     >
-                      <h3
-                        className="film-card-title"
-                        onClick={(event) => {
-                          console.log(
-                            "navigating to page for film ID: " + film.id
-                          );
-                          navigate(`/films/${film.id}`);
-                        }}
-                      >
-                        {film.title}
-                      </h3>
-                      <p>({film.year})</p>
-                      <img
-                        src={film.img}
-                        onClick={(event) => {
-                          console.log(
-                            "navigating to page for film ID: " + film.id
-                          );
-                          navigate(`/films/${film.id}`);
-                        }}
-                      />
-                      <div className="film-card-data">
-                        <p>
-                          Director:{" "}
-                          <span className="film-data-tag">
-                            {film.director.includes("{") ||
-                            film.director.includes("}") ? (
-                              createNewDirectorsString(film.director).map(
-                                (director) => {
-                                  return (
-                                    <span
-                                      className="multiple-genre-wrapper"
-                                      onClick={() => {
-                                        setQuery(director);
-                                        console.log(director);
-                                      }}
-                                    >
-                                      {director}
-                                    </span>
-                                  );
-                                }
-                              )
-                            ) : (
-                              <span
-                                onClick={() => {
-                                  setQuery(film.director);
-                                }}
-                              >
-                                {film.director}
-                              </span>
-                            )}
-                          </span>
-                        </p>
-                        <p>
-                          Genre:{" "}
-                          <span className="film-data-tag">
-                            {film.genre.includes("{") ||
-                            film.genre.includes("}") ? (
-                              createNewGenreStrings(film.genre).map((genre) => {
+                      {film.title}
+                    </h3>
+                    <p className="film-card-year">({film.year})</p>
+                    <img
+                      src={film.img}
+                      className="film-card-img"
+                      onClick={(event) => {
+                        navigate(`/films/${film.id}`);
+                      }}
+                    />
+                    <div className="film-card-data">
+                      <p>
+                        Director:{" "}
+                        <span className="film-data-tag">
+                          {film.director.includes("{") ||
+                          film.director.includes("}") ? (
+                            createNewDirectorsString(film.director).map(
+                              (director) => {
                                 return (
                                   <span
                                     className="multiple-genre-wrapper"
                                     onClick={() => {
-                                      setQuery(genre);
+                                      setQuery(director);
+                                      console.log(director);
                                     }}
                                   >
-                                    {genre}
+                                    {director}
                                   </span>
                                 );
-                              })
-                            ) : (
-                              <span
-                                onClick={() => {
-                                  setQuery(film.genre);
-                                }}
-                              >
-                                {film.genre}
-                              </span>
-                            )}
-                          </span>
-                        </p>
-                        <p className="film-description">{film.description}</p>
-                        <p>${film.price}/day</p>
-                        <button
-                          className="film-add-to-cart-btn"
-                          onClick={() => {
-                            navigate("/cart");
-                          }}
-                        >
-                          Add to Cart
-                        </button>
+                              }
+                            )
+                          ) : (
+                            <span
+                              onClick={() => {
+                                setQuery(film.director);
+                              }}
+                            >
+                              {film.director}
+                            </span>
+                          )}
+                        </span>
+                      </p>
+                      <p>
+                        Genre:{" "}
+                        <span className="film-data-tag">
+                          {film.genre.includes("{") ||
+                          film.genre.includes("}") ? (
+                            createNewGenreStrings(film.genre).map((genre) => {
+                              return (
+                                <span
+                                  className="multiple-genre-wrapper"
+                                  onClick={() => {
+                                    setQuery(genre);
+                                  }}
+                                >
+                                  {genre}
+                                </span>
+                              );
+                            })
+                          ) : (
+                            <span
+                              onClick={() => {
+                                setQuery(film.genre);
+                              }}
+                            >
+                              {film.genre}
+                            </span>
+                          )}
+                        </span>
+                      </p>
+                      {/* <p className="film-description">{film.description}</p> */}
+                      <p>${film.price}/day</p>
+
+                      <div className="films-card-data">
+                        <FilmsCardData
+                          film={film}
+                          userData={userData}
+                          token={token}
+                        />
                       </div>
                     </div>
                   </div>
