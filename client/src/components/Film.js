@@ -19,6 +19,7 @@ const Film = ({ films, userData, token }) => {
   const [editedContent, setEditedContent] = useState("");
   const [reviewing, setReviewing] = useState(false);
   const [newReviewContent, setNewReviewContent] = useState("");
+  const [viewReviews, setViewReviews] = useState(false);
 
   const today = new Date();
   const [totalPrice, setTotalPrice] = useState(0);
@@ -137,7 +138,7 @@ const Film = ({ films, userData, token }) => {
           result.push(films.filter((film) => film.genre === genre));
         }
         result = [].concat.apply([], result);
-        console.log("recommended films: ", result);
+        // console.log("recommended films: ", result);
         setReccomendedFilmsByGenre(result);
       }
       checkGenreArray(genreArray);
@@ -270,7 +271,7 @@ const Film = ({ films, userData, token }) => {
         </ul>
         {/* <p>{focusFilm.director}</p> */}
         <img src={focusFilm.img} className="film-img" />
-        {/* <p>{focusFilm.genre}</p> */}
+        <p>Genre(s):</p>
         {genres ? (
           <ul className="focus-film-genre-tags">
             {genres.map((genre) => {
@@ -290,7 +291,7 @@ const Film = ({ films, userData, token }) => {
         )}
         <p>{focusFilm.description}</p>
         <p>${focusFilm.price}/day</p>
-        <div>
+        <div className="film-page-cart-content">
           <select
             onChange={(event) => {
               calculateTotalPrice(event.target.value);
@@ -319,67 +320,67 @@ const Film = ({ films, userData, token }) => {
           </button>
         </div>
         {/* REVIEWS */}
-        <h3>Reviews for {focusFilm.title}</h3>
-        {/* <button onClick={() => console.log(allUsers)}>all users</button> */}
-        {reviews && allUsers ? (
-          <div>
-            <div>
-              {!reviewing ? (
-                <button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setReviewing(!reviewing);
-                  }}
-                >
-                  Add a Review
-                </button>
-              ) : (
-                <></>
-              )}
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            setViewReviews(!viewReviews);
+          }}
+          className="view-reviews-toggle"
+        >
+          {viewReviews ? (
+            <span>Close</span>
+          ) : (
+            <span>Reviews for {focusFilm.title}</span>
+          )}
+        </button>
+        {viewReviews ? (
+          <div className="reviews-container">
+            {reviews && allUsers ? (
+              <div>
+                {!reviewing ? (
+                  <button
+                    className="add-review-btn"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setReviewing(!reviewing);
+                    }}
+                  >
+                    Add a Review
+                  </button>
+                ) : (
+                  <></>
+                )}
 
-              {reviewing ? (
-                <Reviewing
-                  reviews={reviews}
-                  setReviews={setReviews}
-                  focusFilm={focusFilm}
-                  reviewing={reviewing}
-                  setReviewing={setReviewing}
-                  setNewReviewContent={setNewReviewContent}
-                  token={token}
-                  newReviewContent={newReviewContent}
-                />
-              ) : (
-                <></>
-              )}
-              {reviews.map((review) => {
-                // console.log(review);
-                return (
-                  <Reviews
-                    review={review}
-                    userData={userData}
-                    token={token}
-                    focusFilm={focusFilm}
+                {reviewing ? (
+                  <Reviewing
+                    reviews={reviews}
                     setReviews={setReviews}
+                    focusFilm={focusFilm}
+                    reviewing={reviewing}
+                    setReviewing={setReviewing}
+                    setNewReviewContent={setNewReviewContent}
+                    token={token}
+                    newReviewContent={newReviewContent}
                   />
-                );
-              })}
-            </div>
-            {/* {reviews.map((review) => {
-              // console.log(review);
-              return (
-                <MyReviews
-                  review={review}
-                  allUsers={allUsers}
-                  userData={userData}
-                  editing={editing}
-                  setEditing={setEditing}
-                  token={token}
-                  editedContent={editedContent}
-                  setEditedContent={setEditedContent}
-                  setReviews={setReviews}
-                />
-              );
-            })} */}
+                ) : (
+                  <></>
+                )}
+                {reviews.map((review) => {
+                  // console.log(review);
+                  return (
+                    <Reviews
+                      review={review}
+                      userData={userData}
+                      token={token}
+                      focusFilm={focusFilm}
+                      setReviews={setReviews}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         ) : (
           <></>
@@ -400,9 +401,20 @@ const Film = ({ films, userData, token }) => {
                           event.preventDefault();
                           similarFilmsCheckByGenre(film.genre);
                           navigate(`/films/${film.id}`);
+                          window.scrollTo(0, 0);
                         }}
                       >
-                        {film.title} ({film.year})
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <p>{film.title}</p>
+                          <img src={film.img} style={{ width: "7rem" }} />
+                        </div>
                       </li>
                     );
                   })}

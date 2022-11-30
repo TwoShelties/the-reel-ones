@@ -79,7 +79,7 @@ const Reviews = ({ review, userData, token, focusFilm, setReviews }) => {
   }, []);
 
   return (
-    <div>
+    <div className="individual-review-container">
       <p>"{review.review}"</p>
       {allUsers ? (
         <div>
@@ -98,6 +98,7 @@ const Reviews = ({ review, userData, token, focusFilm, setReviews }) => {
       {userData.id === review.userId && !editing ? (
         <div>
           <button
+            className="add-review-btn"
             onClick={(event) => {
               event.preventDefault();
               setEditing(!editing);
