@@ -163,6 +163,30 @@ async function deleteUser(username) {
   }
 }
 
+async function updateUser({ id, ...fields }) {
+  console.log(fields);
+  try {
+    for (let key in fields) {
+      await client.query(`
+      UPDATE users
+      SET ${key} = '${fields[key]}'
+      WHERE id= ${id}
+      `);
+      const {
+        rows: [response],
+      } = await client.query(`
+      SELECT *
+      FROM users
+      WHERE id= ${id}
+      `);
+      return response;
+    }
+  } catch (error) {
+    console.log("error updating user");
+    throw error;
+  }
+}
+
 // TEST FOR deleteUser:
 // async function testDeleteUser() {
 //   const user = "zak2";
@@ -199,4 +223,5 @@ module.exports = {
   getAllUsers,
   getUserById,
   adminCheck,
+  updateUser,
 };

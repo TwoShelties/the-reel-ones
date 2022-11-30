@@ -43,8 +43,6 @@ const Navbar = ({ userData, token, setToken, admin }) => {
           {admin ? <Link to="/admin">Admin</Link> : <></>}
           {!token ? <Link to="/login">Login/Register</Link> : <></>}
           {token ? <Link onClick={logoutHandler}>Logout</Link> : <></>}
-
-          {/* <Link onClick={logoutHandler}>Logout</Link> */}
         </div>
       )}
 

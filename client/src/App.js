@@ -11,6 +11,8 @@ import Cart from "./components/Cart";
 import Docs from "./components/Docs";
 import Film from "./components/Film";
 import Admin from "./components/Admin";
+import EditFilm from "./components/editFilm";
+import EditUser from "./components/editUser";
 
 const App = () => {
   const [userData, setUserData] = useState({});
@@ -21,6 +23,8 @@ const App = () => {
   const [guestEmail, setGuestEmail] = useState("");
   // below here will be cart-related stuff:
   const [cartArray, setCartArray] = useState([]);
+  const [selectedFilm, setSelectedFilm] = useState({});
+  const [selectedUser, setSelectedUser] = useState([]);
 
   const fetchFilms = async () => {
     const response = await fetch("/api/films");
@@ -170,7 +174,50 @@ const App = () => {
         />
         <Route path="/api/docs" element={<Docs />} />
         {admin ? (
-          <Route path="/admin" element={<Admin admin={admin} />} />
+          <Route
+            path="/admin"
+            element={
+              <Admin
+                admin={admin}
+                films={films}
+                token={token}
+                selectedFilm={selectedFilm}
+                setSelectedFilm={setSelectedFilm}
+              />
+            }
+          />
+        ) : (
+          <></>
+        )}
+        {admin ? (
+          <Route
+            path="/editFilm"
+            element={
+              <EditFilm
+                admin={admin}
+                films={films}
+                token={token}
+                selectedFilm={selectedFilm}
+                setSelectedFilm={setSelectedFilm}
+              />
+            }
+          />
+        ) : (
+          <></>
+        )}
+        {admin ? (
+          <Route
+            path="/editUser"
+            element={
+              <EditUser
+                admin={admin}
+                films={films}
+                token={token}
+                selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
+              />
+            }
+          />
         ) : (
           <></>
         )}

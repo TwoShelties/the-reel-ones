@@ -7,6 +7,7 @@ const {
   deleteUser,
   createUser,
   adminCheck,
+  updateUser,
 } = require("../db/users");
 const jwt = require("jsonwebtoken");
 const { requireUser, requireAdmin } = require("./utils");
@@ -163,6 +164,18 @@ usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
     res.send(deleteSingleUser);
   } catch (error) {
     console.log("error deleting user");
+    throw error;
+  }
+});
+
+usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
+  const { userId } = req.params;
+  const fields = req.body;
+  try {
+    const update = await updateUser({ id: userId, ...fields });
+    res.send(update);
+  } catch (error) {
+    console.log("error updating user");
     throw error;
   }
 });
