@@ -520,12 +520,79 @@ FILM
 
 .focus-film-genre-tags {
   display: flex;
-  width: 15rem;
-  justify-content: space-evenly;
+  flex-direction: column;
 }
 
 .focus-film-genre-tags * {
   display: flex;
+}
+
+.film-page-cart-content {
+  display: block;
+  margin: 1rem 1rem;
+}
+
+.film-page-cart-content * {
+  margin-top: 0.125rem;
+}
+
+.film-page-cart-content button {
+  margin: 0.5rem 0;
+}
+
+.view-reviews-toggle {
+  margin: 1rem;
+  height: 1.25rem;
+  padding: 0.5rem;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #e50914;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-reviews-toggle:hover {
+  box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.5) inset;
+  transition: 0.2s;
+}
+
+.add-review-btn {
+  margin: 1rem 0;
+  height: 1.25rem;
+  padding: 0.5rem;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #e50914;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-review-btn:hover {
+  box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.5) inset;
+  transition: 0.2s;
+}
+
+.reviews-container {
+  margin: 1rem;
+  /* border: 1px solid #fff; */
+}
+
+.individual-review-container {
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  padding: 1rem;
 }
 
 .recommended-films-list {
