@@ -18,11 +18,11 @@ const Profile = ({ userData, films }) => {
     });
 
     const info = await response.json();
-    console.log(info);
+    // console.log(info);
 
     if (info.success) {
       setCurrentItems(info.currentPurchases);
-      console.log(info.currentPurchases);
+      // console.log(info.currentPurchases);
     }
   };
 
@@ -35,11 +35,11 @@ const Profile = ({ userData, films }) => {
     });
 
     const info = await response.json();
-    console.log(info);
+    // console.log(info);
 
     if (info.success) {
       setPastItems(info.pastPurchases);
-      console.log(info.pastPurchases);
+      // console.log(info.pastPurchases);
     }
   };
 
@@ -52,11 +52,11 @@ const Profile = ({ userData, films }) => {
     });
 
     const info = await response.json();
-    console.log(info);
+    // console.log(info);
 
     if (info.success) {
       setAllItems(info.userPurchases);
-      console.log(info.userPurchases);
+      // console.log(info.userPurchases);
     }
   };
 

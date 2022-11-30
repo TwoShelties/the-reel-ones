@@ -4,6 +4,8 @@ const {
   getCartByUserId,
   addFilmToUserCart,
   deleteCartItem,
+  editCartItem,
+  checkForCartItem,
 } = require("../db/carts");
 
 const { requireUser } = require("./utils");
@@ -63,8 +65,18 @@ cartsRouter.post("/", requireUser, async (req, res, next) => {
   console.log(req.body);
 
   try {
+    const checkedItem = await checkForCartItem(userId, filmId);
+    // console.log("checkedItem: ", checkedItem);
+    if (checkedItem !== null) {
+      next({
+        message: `user ID: ${userId} already has film ID: ${filmId} in their cart`,
+      });
+      return;
+    }
+
     const cart = await addFilmToUserCart({ userId, filmId, days });
     res.send({ success: true, cart });
+    return;
   } catch ({ userId, filmId }) {
     next({ userId, filmId });
   }
@@ -83,7 +95,22 @@ cartsRouter.delete("/", requireUser, async (req, res, next) => {
     res.send({ success: true, deletedItem, updatedCart });
   } catch (error) {
     console.log("error deleting item from cart");
-    throw error;
+    next({ message: "an error occurred while deleting cart item" });
+  }
+});
+
+// PATCH /api/cart/:userId/:cartItemId
+cartsRouter.patch("/:userId/:filmId", requireUser, async (req, res, next) => {
+  try {
+    const { userId, filmId } = req.params;
+    const days = req.body.days;
+    const editedCartItem = await editCartItem({ userId, filmId, days });
+    console.log(editCartItem);
+
+    res.send({ success: true, editedCartItem });
+  } catch (error) {
+    console.error("an error occurred while patching cart item");
+    next({ message: "an error occurred while patching cart item" });
   }
 });
 

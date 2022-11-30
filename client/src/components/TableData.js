@@ -80,6 +80,34 @@ const TableData = ({
     }
   };
 
+  const updateCartItem = async (days) => {
+    if (!userData || !cartItem || !token) {
+      return;
+    }
+    console.log(`changing rental length on cart item to ${days} days`);
+    // console.log(cartItem);
+    // console.log(userData);
+    // console.log(token);
+
+    const response = await fetch(`/api/cart/${userData.id}/${cartItem.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        days,
+      }),
+    });
+    const data = await response.json();
+    // console.log(data);
+    if (data.success && data.editedCartItem) {
+      alert(
+        `You have changed the the rental length for ${cartItem.title} to ${days} days!`
+      );
+    }
+  };
+
   useEffect(() => {
     filterFilms();
     calculateInitialEndDate();
@@ -99,6 +127,7 @@ const TableData = ({
             setTotalPrice(event.target.value * cartItem.price);
             // console.log(event.target.value);
             calculateEndDate(today, event.target.value);
+            updateCartItem(Number(event.target.value));
           }}
           defaultValue={item.days}
         >

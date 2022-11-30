@@ -1,6 +1,6 @@
 const client = require(".");
 const films = require("./afi-db");
-const { createUser } = require("./users");
+const { createUser, createInitialAdmins, createDummies } = require("./users");
 const {
   createFilm,
   getFilmById,
@@ -124,18 +124,33 @@ async function createInitialUsers() {
   console.log("Starting to create users...");
   try {
     const usersToCreate = [
-      { username: "zak", password: "password", isAdmin: true },
-      { username: "andrew", password: "password", isAdmin: true },
-      { username: "roshni", password: "password", isAdmin: true },
-      { username: "niko", password: "password", isAdmin: true },
-      { username: "tomFromMyspace", password: "123456", isAdmin: false },
-      { username: "bill", password: "password", isAdmin: false },
+      { username: "zak", password: "password" },
+      { username: "andrew", password: "password" },
+      { username: "roshni", password: "password" },
+      { username: "niko", password: "password" },
     ];
     const users = await Promise.all(usersToCreate.map(createUser));
 
     console.log("Users created:");
     console.log(users);
     console.log("Finished creating users!");
+
+    console.log("giving admin status to intitial admins...");
+    const initialAdmins = await createInitialAdmins();
+    console.log("gave admin status to: ", initialAdmins);
+
+    console.log("creating dummy users (non-admins)...");
+    const dummiesToCreate = [
+      { username: "Tom67", password: "arlygoodpassword" },
+      { username: "EricOnYoutube", password: "iamahornplayer" },
+      { username: "Ethanos", password: "dontlikenarb42" },
+      { username: "BulletAndCapone", password: "222dogs222" },
+      { username: "csharphtml", password: "2bows1inventory" },
+      { username: "hammerdogs", password: "rotpkernub" },
+    ];
+    const dummies = await Promise.all(dummiesToCreate.map(createDummies));
+    console.log("Dummies created:");
+    console.log(dummies);
   } catch (error) {
     console.error("Error creating users!");
     throw error;
@@ -175,7 +190,6 @@ async function createInitialCartItems() {
       { userId: 1, filmId: 2, days: 10 },
       { userId: 1, filmId: 5, days: 1 },
       { userId: 3, filmId: 3, days: 2 },
-      { userId: 5, filmId: 20, days: 12 },
     ];
     console.log("here");
     const cartItems = await Promise.all(

@@ -584,6 +584,27 @@ FILM
   transition: 0.2s;
 }
 
+.review-edit-btn {
+  height: 1.25rem;
+  padding: 0.5rem;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #e50914;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-review-btn:hover {
+  box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.5) inset;
+  transition: 0.2s;
+}
+
 .reviews-container {
   margin: 1rem;
   /* border: 1px solid #fff; */
@@ -701,5 +722,3 @@ PROFILE
   text-align: center;
   color: white;
 }
-
-

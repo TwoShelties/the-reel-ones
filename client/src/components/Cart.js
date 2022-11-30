@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import TableData from "./TableData";
+import Checkout from "./Checkout";
 
 const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
   const [cartItems, setCartItems] = useState([]);
   const [today, setToday] = useState("");
+  const [checkingOut, setCheckingOut] = useState(false);
 
   const getCartContents = async () => {
     const response = await fetch(`/api/cart/${userData.id}`, {
@@ -77,11 +79,19 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
               );
             })}
           </table>
-          <button>Purchase </button>
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              setCheckingOut(!checkingOut);
+            }}
+          >
+            {!checkingOut ? <span>Checkout</span> : <span>Cancel</span>}
+          </button>
         </form>
       ) : (
         <p>Your cart is empty</p>
       )}
+      {checkingOut ? <Checkout /> : <></>}
     </div>
   );
 };

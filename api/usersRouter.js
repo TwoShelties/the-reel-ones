@@ -8,6 +8,7 @@ const {
   createUser,
   adminCheck,
   updateUser,
+  giveAdminStatus,
 } = require("../db/users");
 const jwt = require("jsonwebtoken");
 const { requireUser, requireAdmin } = require("./utils");
@@ -152,7 +153,7 @@ usersRouter.get("/:userId/adminCheck", async (req, res, next) => {
     }
   } catch (error) {
     res.status(500);
-    next({ message: "an error occurred checking admin status" });
+    next({ message: "user is not an admin" });
     return;
   }
 });
@@ -179,5 +180,21 @@ usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
     throw error;
   }
 });
+
+usersRouter.patch(
+  "/:userId/giveAdminStatus",
+  requireAdmin,
+  async (req, res, next) => {
+    try {
+      const userId = Number(req.params.userId);
+      const response = await giveAdminStatus(userId);
+      // console.log(response);
+      res.send({ success: true, response });
+    } catch (error) {
+      next({ message: "error updating admin status of user" });
+      throw error;
+    }
+  }
+);
 
 module.exports = usersRouter;

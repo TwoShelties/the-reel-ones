@@ -5,6 +5,10 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
   // const params = useParams();
   // const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  let sortedUsers = [];
+  const [nonAdmins, setNonAdmins] = useState([]);
+  let sortedAdmins = [];
+  const [admins, setAdmins] = useState([]);
   const [film, setFilm] = useState([]);
   const [title, setTitle] = useState("");
   const [director, setDirector] = useState("");
@@ -31,7 +35,37 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
     const response = await fetch("/api/users");
     const data = await response.json();
     // console.log(data);
-    setUsers(data.users);
+
+    if (data.users) {
+      setUsers(data.users);
+      // console.log(data.users);
+
+      // Setting list of alphabetical non-admins and a separate list
+      // of admins:
+      if (sortedUsers.length > 0 || sortedAdmins.length > 0) {
+        return;
+      }
+
+      data.users.map((user) => {
+        if (!user.isAdmin) {
+          sortedUsers.push(user.username);
+        } else {
+          sortedAdmins.push(user.username);
+        }
+      });
+
+      sortedUsers = sortedUsers.sort(function (a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+      });
+      setNonAdmins(sortedUsers);
+      // console.log(sortedUsers);
+
+      sortedAdmins = sortedAdmins.sort(function (a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+      });
+      setAdmins(sortedAdmins);
+      // console.log(sortedAdmins);
+    }
   };
 
   // const getallGenres = aysnc () => {
@@ -50,7 +84,7 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
   // }
 
   const insertnewFilm = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
     const response = await fetch(`api/films`, {
       method: "POST",
@@ -76,7 +110,7 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
   };
 
   const deleteFilm = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
     const response = await fetch(`api/films/delete/:filmId`, {
       method: "DELETE",
@@ -89,14 +123,6 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
     return info;
   };
 
-  useEffect(() => {
-    // getallGenres();
-    insertnewFilm();
-    fetchUsers();
-    // fetchFilms();
-    deleteFilm();
-  }, []);
-
   // const renderFilms = (films) =>
   //     films.map((r) => {
   //       const key = <td>{Object.keys(r)[0]}</td>;
@@ -108,6 +134,45 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
   //         </tr>
   //       );
   //     });
+
+  const [newAdmin, setNewAdmin] = useState(null);
+  const [selectedUser, setSelectedUser] = useState({});
+
+  const submitNewAdmin = async () => {
+    if (!newAdmin) {
+      return;
+    }
+    console.log("attempting to give admin status to user: " + newAdmin);
+
+    const filteredUser = users.filter((user) => user.username === newAdmin)[0];
+    const userId = filteredUser.id;
+
+    if (filteredUser.isAdmin) {
+      return;
+    }
+
+    const response = await fetch(`/api/users/${userId}/giveAdminStatus`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.response.isAdmin) {
+      alert(`You made ${data.response.username} an admin!`);
+      fetchUsers();
+      return;
+    }
+  };
+
+  useEffect(() => {
+    // getallGenres();
+    insertnewFilm();
+    fetchUsers();
+    // fetchFilms();
+    deleteFilm();
+  }, []);
 
   return (
     <div>
@@ -190,7 +255,65 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
             >Delete Film
         </button> */}
 
-      <p>{console.log("Error")}</p>
+      {/* <p>{console.log("Error")}</p> */}
+      <div style={{ backgroundColor: "#fff" }}>
+        <form>
+          <h3>The holiest of powers, giving admin status to a non-admin</h3>
+          <select
+            onChange={(event) => {
+              setNewAdmin(event.target.value);
+
+              if (users) {
+                const filteredUser = users.filter(
+                  (user) => user.username === event.target.value
+                )[0];
+
+                delete filteredUser.password;
+                // console.log(filteredUser);
+
+                setSelectedUser(filteredUser);
+              }
+            }}
+          >
+            <option>(select user)</option>
+            {nonAdmins ? (
+              nonAdmins.map((user) => {
+                return <option>{user}</option>;
+              })
+            ) : (
+              <></>
+            )}
+          </select>
+
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              submitNewAdmin();
+            }}
+          >
+            Submit
+          </button>
+          {selectedUser ? (
+            <div>
+              <p style={{ textDecoration: "underline" }}>User selected</p>
+              <p>{selectedUser.username}</p>
+              <p>User ID: {selectedUser.id}</p>
+            </div>
+          ) : (
+            <></>
+          )}
+        </form>
+        {/* <p style={{ textDecoration: "underline" }}>Current Admins</p>
+        <ul>
+          {admins ? (
+            admins.map((admin) => {
+              return <li style={{ fontSize: "smaller" }}>{admin}</li>;
+            })
+          ) : (
+            <></>
+          )}
+        </ul> */}
+      </div>
     </div>
   );
 };

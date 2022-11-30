@@ -122,31 +122,43 @@ const Reviews = ({ review, userData, token, focusFilm, setReviews }) => {
                 setEditedContent(event.target.value);
               }}
             />
-            <button
-              type="submit"
-              onClick={(event) => {
-                event.preventDefault();
-                submitEdit(review.id);
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
               }}
             >
-              Submit
-            </button>
-            <button
-              onClick={(event) => {
-                event.preventDefault();
-                deleteReview(review.id);
-              }}
-            >
-              Delete Review
-            </button>
-            <button
-              onClick={(event) => {
-                event.preventDefault();
-                setEditing(!editing);
-              }}
-            >
-              Cancel
-            </button>
+              <button
+                type="submit"
+                onClick={(event) => {
+                  event.preventDefault();
+                  submitEdit(review.id);
+                }}
+                className="review-edit-btn"
+              >
+                Submit
+              </button>
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  deleteReview(review.id);
+                }}
+                className="review-edit-btn"
+                style={{ marginLeft: "0.5rem" }}
+              >
+                Delete
+              </button>
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  setEditing(!editing);
+                }}
+                className="review-edit-btn"
+                style={{ marginLeft: "0.5rem" }}
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       ) : (

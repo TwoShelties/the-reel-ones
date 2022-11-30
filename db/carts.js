@@ -51,6 +51,31 @@ async function testGetCartByUserId() {
 testGetCartByUserId();
 */
 
+async function checkForCartItem(userId, filmId) {
+  try {
+    const {
+      rows: [response],
+    } = await client.query(
+      `
+      SELECT * FROM carts
+      WHERE "userId"=$1
+      AND "filmId"=$2;
+      `,
+      [userId, filmId]
+    );
+
+    // console.log(response);
+    if (response !== undefined) {
+      return response;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("an error occurred while checking for cart item");
+    throw error;
+  }
+}
+
 async function addFilmToUserCart({ userId, filmId, days }) {
   try {
     const {
@@ -107,9 +132,37 @@ async function testDeleteCartItem() {
 testDeleteCartItem();
 */
 
+async function editCartItem({ userId, filmId, days }) {
+  try {
+    if (days < 1 || days > 7) {
+      console.error("days range out of acceptable parameters");
+      return;
+    }
+
+    const response = await client.query(
+      `
+      UPDATE carts
+      SET days=$1
+      WHERE "userId"=$2
+      AND "filmId"=$3
+      RETURNING *;
+      `,
+      [days, userId, filmId]
+    );
+
+    // console.log(response.rows);
+    return response.rows[0];
+  } catch (error) {
+    console.error("error updating cart item");
+    throw error;
+  }
+}
+
 module.exports = {
   getAllCarts,
   getCartByUserId,
   addFilmToUserCart,
   deleteCartItem,
+  editCartItem,
+  checkForCartItem,
 };
