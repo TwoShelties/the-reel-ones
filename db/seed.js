@@ -172,6 +172,7 @@ async function createInitialCartItems() {
     const cartItemsToCreate = [
       { userId: 1, filmId: 1, days: 5 },
       { userId: 1, filmId: 2, days: 10 },
+      { userId: 1, filmId: 5, days: 1 },
       { userId: 3, filmId: 3, days: 2 },
       { userId: 5, filmId: 20, days: 12 },
     ];

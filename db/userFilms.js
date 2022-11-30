@@ -1,5 +1,5 @@
 const client = require(".");
-const { getCartByUserId } = require("./carts");
+const { getCartByUserId, deleteCartItem } = require("./carts");
 
 async function getAllPurchases() {
   try {
@@ -226,6 +226,11 @@ async function addCartItemsToPurchase(userId) {
 
       let newPurchase = await createTableEntry(userid, filmid, expiresOn);
       purchases.push(newPurchase);
+
+      // delete cart now...works
+      //let deleteItem = await deleteCartItem(userId, filmid);
+      //let updatedCart = await getCartByUserId(userId);
+      //console.log(updatedCart, "here");
     }
     return purchases;
   } catch (error) {
