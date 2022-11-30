@@ -171,6 +171,26 @@ async function deleteUser(username) {
 // }
 // testDeleteUser();
 
+async function adminCheck(userId) {
+  try {
+    console.log("calling adminCheck");
+    const response = await client.query(
+      `
+      SELECT * FROM users
+      WHERE id=$1
+      AND "isAdmin"=true;
+      `,
+      [userId]
+    );
+
+    // console.log("result from adminCheck", response.rows);
+    return response.rows;
+  } catch (error) {
+    console.error("Error with checking admin");
+    throw error;
+  }
+}
+
 module.exports = {
   createUser,
   getUser,
@@ -178,4 +198,5 @@ module.exports = {
   deleteUser,
   getAllUsers,
   getUserById,
+  adminCheck,
 };

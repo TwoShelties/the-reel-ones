@@ -29,12 +29,23 @@ const App = () => {
     setFilms(data.films);
   };
 
-  const checkAdmin = async () => {
-    const response = await fetch("/api/users/me");
-    const data = await response.json();
-    if (data.isAdmin) {
-      setAdmin(true);
+  const checkAdmin = async (userId) => {
+    if (!userData.id) {
+      return;
     }
+
+    console.log("checking admin status for user ID: " + userData.id);
+
+    userId = userData.id;
+
+    const response = await fetch(`api/users/${userData.id}/checkAdmin`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
   };
 
   const fetchUser = async () => {
@@ -61,6 +72,13 @@ const App = () => {
     if (data.id && data.username) {
       setUserData(data);
     }
+
+    const checkAdminResponse = await fetch(`/api/users/${data.id}/adminCheck`);
+    const checkAdminResult = await checkAdminResponse.json();
+
+    if (checkAdminResult.isAdmin) {
+      setAdmin(true);
+    }
   };
 
   useEffect(() => {
@@ -72,7 +90,12 @@ const App = () => {
 
   return (
     <div>
-      <Navbar userData={userData} token={token} setToken={setToken} />
+      <Navbar
+        userData={userData}
+        token={token}
+        setToken={setToken}
+        admin={admin}
+      />
 
       <Routes>
         <Route

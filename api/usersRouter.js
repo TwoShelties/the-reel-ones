@@ -6,6 +6,7 @@ const {
   getAllUsers,
   deleteUser,
   createUser,
+  adminCheck,
 } = require("../db/users");
 const jwt = require("jsonwebtoken");
 const { requireUser, requireAdmin } = require("./utils");
@@ -137,6 +138,23 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 */
+
+usersRouter.get("/:userId/adminCheck", async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    console.log(userId);
+    const response = await adminCheck(userId);
+    console.log(response[0].isAdmin);
+
+    if (response.length > 0 && response[0].isAdmin) {
+      res.send({ isAdmin: true });
+    }
+  } catch (error) {
+    res.status(500);
+    next({ message: "an error occurred checking admin status" });
+    return;
+  }
+});
 
 usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
   try {
