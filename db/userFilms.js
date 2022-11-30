@@ -3,19 +3,26 @@ const { getCartByUserId } = require("./carts");
 
 async function getAllPurchases() {
   try {
-    const {
-      result: [film],
-    } = await client.query(
+    const result = await client.query(
       `
             SELECT * FROM user_films;
       `
     );
-    return film;
+    return result.rows;
   } catch (error) {
     console.log("Error with getting user films");
     throw error;
   }
 }
+
+// TEST FOR getAllPurchases: works
+/*
+async function testGetAllPurchases() {
+  const allPurchases = await getAllPurchases();
+  console.log(allPurchases);
+}
+testGetAllPurchases();
+*/
 
 async function getAllPurchasesByUserId(userId) {
   try {
@@ -231,7 +238,7 @@ async function addCartItemsToPurchase(userId) {
 // Test for addCartItemsToPurchase
 /*
 async function testAddCartItemsToPurchase() {
-  const response = await addCartItemsToPurchase(1);
+  const response = await addCartItemsToPurchase(5);
   console.log(response);
 }
 testAddCartItemsToPurchase();
