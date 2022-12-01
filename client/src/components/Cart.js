@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import TableData from "./TableData";
 import Checkout from "./Checkout";
 
@@ -7,8 +8,18 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
   const [today, setToday] = useState("");
   const [checkingOut, setCheckingOut] = useState(false);
   const [totalCartPrice, setTotalCartPrice] = useState(0);
+  // var below toggles to force app to refetch cart contents on
+  // changes to the days:
+  const [fetchCart, setFetchCart] = useState(false);
 
   const getCartContents = async () => {
+    if (!userData) {
+      return;
+    }
+
+    console.log("fetchCard value has changed...");
+    console.log("making an api call to grab user's cart...");
+
     const response = await fetch(`/api/cart/${userData.id}`, {
       method: "GET",
       headers: {
@@ -16,11 +27,10 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
       },
     });
     const info = await response.json();
-    // console.log(info);
+    console.log(info);
     if (info.success) {
       setCartItems(info.cart);
       // console.log("retrieved cart for user ID: " + userData.id);
-      calculateTotalCartPrice();
     }
   };
 
@@ -28,6 +38,10 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
     if (!cartItems || !films) {
       return;
     }
+
+    console.log("calculating total price...");
+
+    getCartContents();
 
     // Get array of days (per film):
     let daysArr = [];
@@ -74,7 +88,8 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
 
   useEffect(() => {
     getCartContents();
-  }, [userData, films, cartItems]);
+    calculateTotalCartPrice();
+  }, [userData, films, fetchCart]);
 
   /*
   const purchaseItems = async (userId) => {
@@ -98,14 +113,6 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
 
   return (
     <div className="cart-container">
-      <button
-        onClick={(event) => {
-          event.preventDefault();
-          console.log(cartItems);
-        }}
-      >
-        CL cart items
-      </button>
       {cartItems.length > 0 ? (
         <form>
           <table className="cart-items-table">
@@ -127,6 +134,8 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
                   setCartItems={setCartItems}
                   checkingOut={checkingOut}
                   setCheckingOut={setCheckingOut}
+                  fetchCart={fetchCart}
+                  setFetchCart={setFetchCart}
                 />
               );
             })}
@@ -137,12 +146,21 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
               calculateTotalCartPrice();
               setCheckingOut(!checkingOut);
             }}
+            className="review-edit-btn"
+            style={{ margin: "1rem" }}
           >
             {!checkingOut ? <span>Checkout</span> : <span>Cancel</span>}
           </button>
         </form>
       ) : (
-        <p>Your cart is empty</p>
+        <div className="login-reg-form">
+          <p>Your cart is empty</p>
+          <p>
+            <Link to="/films" style={{ color: "#0071eb" }}>
+              Find some awesome films!
+            </Link>
+          </p>
+        </div>
       )}
       {checkingOut ? (
         <div>

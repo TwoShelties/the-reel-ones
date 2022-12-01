@@ -104,9 +104,13 @@ cartsRouter.delete("/", requireUser, async (req, res, next) => {
 cartsRouter.patch("/:userId/:filmId", requireUser, async (req, res, next) => {
   try {
     const { userId, filmId } = req.params;
+    if (req.user.id !== Number(userId)) {
+      res.status(500);
+      next({ message: "You are not authorized to edit this cart." });
+    }
     const days = req.body.days;
     const editedCartItem = await editCartItem({ userId, filmId, days });
-    console.log(editCartItem);
+    // console.log(editCartItem);
 
     res.send({ success: true, editedCartItem });
   } catch (error) {

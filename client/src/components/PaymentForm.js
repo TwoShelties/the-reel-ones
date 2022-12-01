@@ -51,12 +51,20 @@ const PaymentForm = ({
     );
 
     // console.log(`Payment Intent (${paymentIntent})`);
-    // console.log(paymentIntent);
+    console.log(paymentIntent);
+
+    if (paymentIntent === undefined) {
+      alert(
+        "Your credit card was not processed, please ensure you've entered in all information. If your transaction still does not process, please consult your card provider."
+      );
+      return;
+    }
 
     if (paymentIntent.status === "succeeded") {
       console.log("payment succeeded, amount: " + paymentIntent.amount);
       setCheckingOut(!checkingOut);
       //   alert("Your payment has been accepted!");
+      console.log("Attempting to clear cart...");
 
       const response = await fetch(`/api/cart/${userData.id}`, {
         method: "DELETE",
@@ -70,24 +78,28 @@ const PaymentForm = ({
 
       if (data.success) {
         setCartItems([]);
+        navigate("/confirmation");
         return;
       }
     }
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "#fff",
-        width: "50%",
-        margin: "0 auto",
-        color: "#000",
-      }}
-    >
+    <div className="login-reg-form" style={{ color: "#fff" }}>
       <form onSubmit={handleSubmit}>
-        <CardElement id="card-element" />
-        <button>Pay</button>
-        <p>note: payment integration developed with Stripe.js</p>
+        <p style={{ textAlign: "center", margin: "0.5rem" }}>
+          Total ${totalCartPrice}
+        </p>
+        <div
+          style={{ width: "33vw", padding: "1rem" }}
+          className="cc-payment-form"
+        >
+          <CardElement id="card-element" style={{ color: "#fff" }} />
+        </div>
+        <button className="review-edit-btn" style={{ margin: "0.5rem auto" }}>
+          Pay
+        </button>
+        {/* <p style={{ margin: "0.5rem auto" }}>payment integration with Stripe</p> */}
       </form>
     </div>
   );
