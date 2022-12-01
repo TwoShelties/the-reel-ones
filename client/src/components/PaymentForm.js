@@ -1,20 +1,44 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import PaymentInputs from "./paymentInputs.js/PaymentInputs";
 
-const PaymentForm = () => {
+const PaymentForm = ({
+  totalCartPrice,
+  checkingOut,
+  setCheckingOut,
+  userData,
+  token,
+  setCartItems,
+}) => {
   const navigate = useNavigate();
   const elements = useElements();
   const stripe = useStripe();
 
-  const handleSubmit = async (event) => {
+  //   const getCartContents = async () => {
+  //     const response = await fetch(`/api/cart/${userData.id}`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     const info = await response.json();
+  //     // console.log(info);
+  //     if (info.success) {
+  //       setCartItems(info.cart);
+  //       // console.log("retrieved cart for user ID: " + userData.id);
+  //     }
+  //   };
+
+  const handleSubmit = async (event, amt) => {
     event.preventDefault();
 
-    if (!stripe || !elements) {
+    if (!stripe || !elements || !totalCartPrice) {
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
+    amt = totalCartPrice;
+    amt = parseInt(amt.toString().replace(".", ""), 10);
 
     // create payment intent on the server:
     const clientSecret = await fetch("/create-payment-intent", {
@@ -25,6 +49,7 @@ const PaymentForm = () => {
       body: JSON.stringify({
         paymentMethodType: "card",
         currency: "usd",
+        amt: amt,
       }),
     });
 
@@ -42,11 +67,27 @@ const PaymentForm = () => {
     );
 
     // console.log(`Payment Intent (${paymentIntent})`);
-    console.log(paymentIntent);
+    // console.log(paymentIntent);
 
     if (paymentIntent.status === "succeeded") {
-      alert("Your payment has been accepted!");
-      navigate("/profile");
+      console.log("payment succeeded, amount: " + paymentIntent.amount);
+      setCheckingOut(!checkingOut);
+      //   alert("Your payment has been accepted!");
+
+      const response = await fetch(`/api/cart/${userData.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+
+      if (data.success) {
+        setCartItems([]);
+        return;
+      }
     }
   };
 
@@ -60,8 +101,8 @@ const PaymentForm = () => {
       }}
     >
       <form onSubmit={handleSubmit}>
+        {/* <PaymentInputs /> */}
         <CardElement id="card-element" />
-
         <button>Pay</button>
         <p>note: payment integration developed with Stripe.js</p>
       </form>

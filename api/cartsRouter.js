@@ -6,6 +6,7 @@ const {
   deleteCartItem,
   editCartItem,
   checkForCartItem,
+  clearEntireCart,
 } = require("../db/carts");
 
 const { requireUser } = require("./utils");
@@ -111,6 +112,21 @@ cartsRouter.patch("/:userId/:filmId", requireUser, async (req, res, next) => {
   } catch (error) {
     console.error("an error occurred while patching cart item");
     next({ message: "an error occurred while patching cart item" });
+  }
+});
+
+// DELETE /api/cart/:userId
+// (CAUTION: CLEARS ENTIRE CART):
+cartsRouter.delete("/:userId", requireUser, async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+
+    const deletedCart = await clearEntireCart(userId);
+
+    res.send({ success: true, deletedCart });
+  } catch (error) {
+    console.error("an error occurred while attempting to clear user's cart");
+    next({ message: "an error occurred while deleting user's cart" });
   }
 });
 

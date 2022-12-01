@@ -32,7 +32,8 @@ const TableData = ({
     if (!cartItem) {
       return;
     }
-    setTotalPrice(cartItem.price * item.days);
+
+    setTotalPrice((cartItem.price * item.days).toFixed(2));
   };
 
   const filterFilms = async () => {

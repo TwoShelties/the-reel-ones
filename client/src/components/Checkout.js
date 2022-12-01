@@ -7,11 +7,25 @@ const stripePromise = loadStripe(
   "pk_test_51M9vLZCGmXM6FzSe7rp7hvFIeh4jhYNpTQug9Tdq7x0xHtUmqffgooZpuCeAxryL6Rj9l4GYjNPOSDK8z3lPZfzt00vKFYr1df"
 );
 
-const Checkout = () => {
+const Checkout = ({
+  totalCartPrice,
+  checkingOut,
+  setCheckingOut,
+  userData,
+  token,
+  setCartItems,
+}) => {
   return (
     <div>
       <Elements stripe={stripePromise}>
-        <PaymentForm />
+        <PaymentForm
+          totalCartPrice={totalCartPrice}
+          checkingOut={checkingOut}
+          setCheckingOut={setCheckingOut}
+          userData={userData}
+          token={token}
+          setCartItems={setCartItems}
+        />
       </Elements>
     </div>
   );

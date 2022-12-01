@@ -158,6 +158,26 @@ async function editCartItem({ userId, filmId, days }) {
   }
 }
 
+// Delete all items in a user's cart:
+async function clearEntireCart(userId) {
+  try {
+    const response = await client.query(
+      `
+      DELETE FROM carts
+      WHERE "userId"=$1
+      RETURNING *;
+      `,
+      [userId]
+    );
+
+    console.log("deleted cart: ", response.rows);
+    return response.rows;
+  } catch (error) {
+    console.error("an error occurred while emptying user's cart");
+    throw error;
+  }
+}
+
 module.exports = {
   getAllCarts,
   getCartByUserId,
@@ -165,4 +185,5 @@ module.exports = {
   deleteCartItem,
   editCartItem,
   checkForCartItem,
+  clearEntireCart,
 };
