@@ -17,6 +17,7 @@ const Checkout = ({
 }) => {
   return (
     <div>
+      <p>Total Price of Cart: ${totalCartPrice}</p>
       <Elements stripe={stripePromise}>
         <PaymentForm
           totalCartPrice={totalCartPrice}

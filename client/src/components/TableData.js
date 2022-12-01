@@ -7,6 +7,8 @@ const TableData = ({
   token,
   cartItems,
   setCartItems,
+  checkingOut,
+  setCheckingOut,
 }) => {
   let today = new Date();
 
@@ -101,8 +103,9 @@ const TableData = ({
       }),
     });
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     if (data.success && data.editedCartItem) {
+      setCheckingOut(!checkingOut);
       alert(
         `You have changed the the rental length for ${cartItem.title} to ${days} days!`
       );

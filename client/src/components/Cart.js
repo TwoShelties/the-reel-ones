@@ -20,6 +20,7 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
     if (info.success) {
       setCartItems(info.cart);
       // console.log("retrieved cart for user ID: " + userData.id);
+      calculateTotalCartPrice();
     }
   };
 
@@ -73,7 +74,7 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
 
   useEffect(() => {
     getCartContents();
-  }, [userData, films]);
+  }, [userData, films, cartItems]);
 
   /*
   const purchaseItems = async (userId) => {
@@ -124,6 +125,8 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
                   token={token}
                   cartItems={cartItems}
                   setCartItems={setCartItems}
+                  checkingOut={checkingOut}
+                  setCheckingOut={setCheckingOut}
                 />
               );
             })}
@@ -137,7 +140,6 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
           >
             {!checkingOut ? <span>Checkout</span> : <span>Cancel</span>}
           </button>
-          <p>Total Price of Cart: ${totalCartPrice}</p>
         </form>
       ) : (
         <p>Your cart is empty</p>

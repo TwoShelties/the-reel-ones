@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import PaymentInputs from "./paymentInputs.js/PaymentInputs";
 
 const PaymentForm = ({
   totalCartPrice,
@@ -14,21 +13,6 @@ const PaymentForm = ({
   const navigate = useNavigate();
   const elements = useElements();
   const stripe = useStripe();
-
-  //   const getCartContents = async () => {
-  //     const response = await fetch(`/api/cart/${userData.id}`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     const info = await response.json();
-  //     // console.log(info);
-  //     if (info.success) {
-  //       setCartItems(info.cart);
-  //       // console.log("retrieved cart for user ID: " + userData.id);
-  //     }
-  //   };
 
   const handleSubmit = async (event, amt) => {
     event.preventDefault();
@@ -101,7 +85,6 @@ const PaymentForm = ({
       }}
     >
       <form onSubmit={handleSubmit}>
-        {/* <PaymentInputs /> */}
         <CardElement id="card-element" />
         <button>Pay</button>
         <p>note: payment integration developed with Stripe.js</p>
