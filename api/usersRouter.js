@@ -141,8 +141,9 @@ usersRouter.get("/", async (req, res, next) => {
 });
 */
 
-usersRouter.get("/:userId/adminCheck", async (req, res, next) => {
+usersRouter.get("/:userId/checkAdmin", async (req, res, next) => {
   try {
+    console.log("calling adminCheck");
     const userId = req.params.userId;
     console.log(userId);
     const response = await adminCheck(userId);
@@ -152,8 +153,7 @@ usersRouter.get("/:userId/adminCheck", async (req, res, next) => {
       res.send({ isAdmin: true });
     }
   } catch (error) {
-    res.status(500);
-    next({ message: "user is not an admin" });
+    res.status(500).next({ message: "user is not an admin" });
     return;
   }
 });
@@ -185,6 +185,7 @@ usersRouter.patch(
   "/:userId/giveAdminStatus",
   requireAdmin,
   async (req, res, next) => {
+    console.log(req.user);
     try {
       const userId = Number(req.params.userId);
       const response = await giveAdminStatus(userId);
