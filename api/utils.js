@@ -1,4 +1,5 @@
 function requireUser(req, res, next) {
+  console.log(req.user);
   if (!req.user) {
     next({
       name: "MissingUserError",
@@ -10,6 +11,7 @@ function requireUser(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
+  console.log(req.user);
   if (!req.user.isAdmin) {
     next({
       name: "NotAdminError",

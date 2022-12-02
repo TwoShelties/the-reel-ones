@@ -78,11 +78,14 @@ const App = () => {
       setUserData(data);
     }
 
-    const checkAdminResponse = await fetch(`/api/users/${data.id}/adminCheck`);
+    const checkAdminResponse = await fetch(`/api/users/${data.id}/checkAdmin`);
     const checkAdminResult = await checkAdminResponse.json();
+    console.log(checkAdminResult);
 
     if (checkAdminResult.isAdmin) {
       setAdmin(true);
+    } else {
+      setAdmin(false);
     }
   };
 

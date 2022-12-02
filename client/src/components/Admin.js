@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
+const Admin = ({ films, selectedFilm, setSelectedFilm, token }) => {
   // const params = useParams();
   // const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -19,8 +19,6 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
   const [price, setPrice] = useState("");
   // const [allgenres, setAllgenres] = useState([]);
   // const [films, setFilms] = useState([]);
-
-  const [token, setToken] = useState("");
 
   const navigate = useNavigate();
 
@@ -150,11 +148,13 @@ const Admin = ({ films, selectedFilm, setSelectedFilm }) => {
     if (filteredUser.isAdmin) {
       return;
     }
+    console.log(token);
 
     const response = await fetch(`/api/users/${userId}/giveAdminStatus`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     const data = await response.json();

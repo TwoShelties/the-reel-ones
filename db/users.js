@@ -249,6 +249,7 @@ async function adminCheck(userId) {
 
 async function giveAdminStatus(userId) {
   try {
+    console.log("calling giveAdminStatus");
     const user = await client.query(
       `
       SELECT * FROM users
