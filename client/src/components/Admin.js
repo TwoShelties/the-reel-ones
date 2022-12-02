@@ -21,6 +21,7 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token }) => {
   const [editUserid, seteditUserid] = useState(null);
   // const [allgenres, setAllgenres] = useState([]);
   // const [films, setFilms] = useState([]);
+  const [editUserId, setEditUserId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -166,6 +167,13 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token }) => {
       fetchUsers();
       return;
     }
+  };
+
+  const findUserId = (username) => {
+    const filteredUsers = users.filter((user) => user.username === username)[0];
+    // console.log(filteredUsers);
+    setEditUserId(filteredUsers.id);
+    navigate(`/editUser/${editUserId}`);
   };
 
   useEffect(() => {
