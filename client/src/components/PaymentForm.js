@@ -56,7 +56,41 @@ const PaymentForm = ({
     if (paymentIntent.status === "succeeded") {
       console.log("payment succeeded, amount: " + paymentIntent.amount);
       setCheckingOut(!checkingOut);
-      //   alert("Your payment has been accepted!");
+      //alert("Your payment has been accepted!");
+
+      // enter cart data into usersFilms table
+      /*
+      const createPurchase = await fetch(`api/usersFilms/${userData.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const purchase = await createPurchase.json();
+      console.log(purchase);
+
+      if (purchase.success) {
+        //setCurrentItems(purchase.currentPurchases);
+        console.log(purchase.purchaseItems);
+
+        const response = await fetch(`/api/cart/${userData.id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        console.log(data);
+
+        if (data.success) {
+          setCartItems([]);
+          navigate("/profile");
+          //return;
+        }
+      }
+      */
 
       const response = await fetch(`/api/cart/${userData.id}`, {
         method: "DELETE",
