@@ -60,23 +60,28 @@ const Reviewing = ({
             setNewReviewContent(event.target.value);
           }}
         />
-        <button
-          type="submit"
-          onClick={(event) => {
-            event.preventDefault();
-            submitNewReview(focusFilm.id);
-          }}
-        >
-          Submit
-        </button>
-        <button
-          onClick={(event) => {
-            event.preventDefault();
-            setReviewing(!reviewing);
-          }}
-        >
-          Cancel
-        </button>
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <button
+            type="submit"
+            onClick={(event) => {
+              event.preventDefault();
+              submitNewReview(focusFilm.id);
+            }}
+            className="review-edit-btn"
+          >
+            Submit
+          </button>
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              setReviewing(!reviewing);
+            }}
+            className="review-edit-btn"
+            style={{ marginLeft: "0.5rem" }}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );

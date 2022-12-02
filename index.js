@@ -7,6 +7,9 @@ const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
 
+// stripe middleware:
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 // Setup your Middleware and API Router here
 app.use(morgan("dev"));
 app.use(cors());
@@ -22,6 +25,40 @@ app.use(function (error, req, res, next) {
     message: error.message,
     name: "Notauthorizederror",
   });
+});
+
+// setup stripe and app.use static:
+app.use(express.static(process.env.STATIC_DIR));
+
+// route for publishable key for stripe (/config):
+app.get("/config", (req, res, next) => {
+  res.send({
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+  });
+});
+
+// stripe payment intent
+app.post("/create-payment-intent", async (req, res, next) => {
+  try {
+    const amt = req.body.amt;
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      currency: "usd",
+      amount: amt,
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+
+    console.log(paymentIntent.client_secret);
+
+    res.send({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    console.error("an error occurred attempting to send payment intent");
+    res.send({
+      message: "an error occurred while attempting to send payment intent info",
+    });
+  }
 });
 
 app.listen(PORT, () => {

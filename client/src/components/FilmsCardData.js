@@ -39,7 +39,7 @@ const FilmsCardData = ({ film, userData, token }) => {
       }),
     });
     const info = await response.json();
-    // console.log(info);
+    console.log(info);
     if (info.success) {
       alert(`You have added ${film.title} to your cart for ${days} days!`);
     }

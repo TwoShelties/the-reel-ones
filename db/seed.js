@@ -1,6 +1,6 @@
 const client = require(".");
 const films = require("./afi-db");
-const { createUser } = require("./users");
+const { createUser, createInitialAdmins, createDummies } = require("./users");
 const {
   createFilm,
   getFilmById,
@@ -44,7 +44,7 @@ async function createTables() {
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
-        "isAdmin" BOOLEAN DEFAULT true 
+        "isAdmin" BOOLEAN DEFAULT false 
       );
 
       CREATE TABLE films(
@@ -124,17 +124,33 @@ async function createInitialUsers() {
   console.log("Starting to create users...");
   try {
     const usersToCreate = [
-      { username: "adam", password: "secretpass99", isAdmin: true },
-      { username: "sandy", password: "sandy123", isAdmin: true },
-      { username: "henry", password: "henry123", isAdmin: true },
-      { username: "sam", password: "password111", isAdmin: true },
-      { username: "user1", password: "123456", isAdmin: true },
+      { username: "zak", password: "password" },
+      { username: "andrew", password: "password" },
+      { username: "roshni", password: "password" },
+      { username: "niko", password: "password" },
     ];
     const users = await Promise.all(usersToCreate.map(createUser));
 
     console.log("Users created:");
-    // console.log(users);
+    console.log(users);
     console.log("Finished creating users!");
+
+    console.log("giving admin status to intitial admins...");
+    const initialAdmins = await createInitialAdmins();
+    console.log("gave admin status to: ", initialAdmins);
+
+    console.log("creating dummy users (non-admins)...");
+    const dummiesToCreate = [
+      { username: "Tom67", password: "arlygoodpassword" },
+      { username: "EricOnYoutube", password: "iamahornplayer" },
+      { username: "Ethanos", password: "dontlikenarb42" },
+      { username: "BulletAndCapone", password: "222dogs222" },
+      { username: "csharphtml", password: "2bows1inventory" },
+      { username: "hammerdogs", password: "rotpkernub" },
+    ];
+    const dummies = await Promise.all(dummiesToCreate.map(createDummies));
+    console.log("Dummies created:");
+    console.log(dummies);
   } catch (error) {
     console.error("Error creating users!");
     throw error;
@@ -159,7 +175,7 @@ async function seedGenresTable() {
   console.log("starting to seed genres table...");
   const addFilms = await addFilmIdToGenresTable();
 
-  console.log(`seeded genres table with films: `, films);
+  // console.log(`seeded genres table with films: `, films);
   // const checkingFilms = await checkFilms();
   // console.log(checkingFilms);
 }
@@ -172,6 +188,7 @@ async function createInitialCartItems() {
     const cartItemsToCreate = [
       { userId: 1, filmId: 1, days: 5 },
       { userId: 1, filmId: 2, days: 10 },
+      { userId: 1, filmId: 5, days: 1 },
       { userId: 3, filmId: 3, days: 2 },
     ];
     console.log("here");
@@ -180,7 +197,7 @@ async function createInitialCartItems() {
     );
 
     console.log("Cart items created:");
-    console.log(cartItems);
+    // console.log(cartItems);
     console.log("Finished creating cart items!");
   } catch (error) {
     console.error("Error creating cart items!");
@@ -199,7 +216,7 @@ async function createInitialPurchaseItems() {
     );
 
     console.log("Purchased items:");
-    console.log(purchaseItems);
+    // console.log(purchaseItems);
     console.log("Finished creating purchased items!");
   } catch (error) {
     console.error("Error creating purchased items!");
@@ -230,7 +247,7 @@ async function createInitialReviews() {
 
     const reviews = await Promise.all(initialReviews.map(createReview));
     console.log("Initial reviews created:");
-    console.log(reviews);
+    // console.log(reviews);
     console.log("Finished creating reviews!");
   } catch (error) {
     console.error("an error occurred creating initial seed reviews");

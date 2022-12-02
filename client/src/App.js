@@ -13,6 +13,7 @@ import Film from "./components/Film";
 import Admin from "./components/Admin";
 import EditFilm from "./components/editFilm";
 import EditUser from "./components/editUser";
+import Confirmation from "./components/Confirmation";
 
 const App = () => {
   const [userData, setUserData] = useState({});
@@ -159,7 +160,10 @@ const App = () => {
             />
           }
         />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={<Profile userData={userData} films={films} />}
+        />
         <Route
           path="/cart"
           element={
@@ -173,6 +177,7 @@ const App = () => {
           }
         />
         <Route path="/api/docs" element={<Docs />} />
+        <Route path="/confirmation" element={<Confirmation />} />
         {admin ? (
           <Route
             path="/admin"

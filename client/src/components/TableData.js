@@ -7,6 +7,10 @@ const TableData = ({
   token,
   cartItems,
   setCartItems,
+  checkingOut,
+  setCheckingOut,
+  fetchCart,
+  setFetchCart,
 }) => {
   let today = new Date();
 
@@ -32,7 +36,8 @@ const TableData = ({
     if (!cartItem) {
       return;
     }
-    setTotalPrice(cartItem.price * item.days);
+
+    setTotalPrice((cartItem.price * item.days).toFixed(2));
   };
 
   const filterFilms = async () => {
@@ -80,6 +85,36 @@ const TableData = ({
     }
   };
 
+  const updateCartItem = async (days) => {
+    if (!userData || !cartItem || !token) {
+      return;
+    }
+    console.log(`changing rental length on cart item to ${days} days`);
+    // console.log(cartItem);
+    // console.log(userData);
+    // console.log(token);
+
+    const response = await fetch(`/api/cart/${userData.id}/${cartItem.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        days,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data.success && data.editedCartItem) {
+      setFetchCart(!fetchCart);
+      setCheckingOut(false);
+      // alert(
+      //   `You have changed the the rental length for ${cartItem.title} to ${days} days!`
+      // );
+    }
+  };
+
   useEffect(() => {
     filterFilms();
     calculateInitialEndDate();
@@ -99,8 +134,9 @@ const TableData = ({
             setTotalPrice(event.target.value * cartItem.price);
             // console.log(event.target.value);
             calculateEndDate(today, event.target.value);
+            updateCartItem(Number(event.target.value));
           }}
-          defaultValue={item.days}
+          value={item.days}
         >
           <option>1</option>
           <option>2</option>
@@ -113,17 +149,27 @@ const TableData = ({
       </td>
       <td>${totalPrice}</td>
       <td>{String(rentalEndDate)}</td>
-      <button
-        onClick={(event) => {
-          event.preventDefault();
-          if (!userData.id) {
-            return;
-          }
-          removeCartItem(userData.id, cartItem.id);
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "1rem",
         }}
       >
-        Remove
-      </button>
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            if (!userData.id) {
+              return;
+            }
+            removeCartItem(userData.id, cartItem.id);
+          }}
+          className="review-edit-btn"
+        >
+          Remove
+        </button>
+      </div>
       {/* <button
         onClick={async (event) => {
           event.preventDefault();

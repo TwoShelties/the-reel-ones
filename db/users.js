@@ -10,12 +10,12 @@ async function createUser({ username, password }) {
       rows: [user],
     } = await client.query(
       `
-       INSERT INTO users (username, password)
-       VALUES ($1, $2)
+       INSERT INTO users (username, password, "isAdmin")
+       VALUES ($1, $2, $3)
        ON CONFLICT (username) DO NOTHING
        RETURNING *; 
        `,
-      [username, hashedPassword]
+      [username, hashedPassword, false]
     );
 
     return user;
@@ -25,16 +25,47 @@ async function createUser({ username, password }) {
   }
 }
 
-// TEST FOR createUser:
-/*
-async function testCreateUser() {
-  console.log("testing createUser...");
-  let userObj = { username: "zakTest", password: "zakzakzak" };
-  const newUser = await createUser(userObj);
-  console.log(newUser);
+async function createInitialAdmins() {
+  try {
+    console.log("calling createInitialAdmins...");
+    const users = await client.query(
+      `
+      UPDATE users
+      SET "isAdmin"=true;
+      `
+    );
+
+    console.log(users.rows);
+    return users.rows;
+  } catch (error) {
+    console.error("error creating initial admins");
+    throw error;
+  }
 }
-testCreateUser();
-*/
+
+async function createDummies({ username, password }) {
+  try {
+    const SALT_COUNT = 10;
+    const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
+
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+       INSERT INTO users (username, password, "isAdmin")
+       VALUES ($1, $2, $3)
+       ON CONFLICT (username) DO NOTHING
+       RETURNING *; 
+       `,
+      [username, hashedPassword, false]
+    );
+
+    return user;
+  } catch (error) {
+    console.log("error occured while creating user");
+    throw error;
+  }
+}
 
 async function getAllUsers() {
   try {
@@ -215,6 +246,41 @@ async function adminCheck(userId) {
   }
 }
 
+async function giveAdminStatus(userId) {
+  try {
+    const user = await client.query(
+      `
+      SELECT * FROM users
+      WHERE id=$1
+      `,
+      [userId]
+    );
+    console.log(
+      "attempting to give admin status to user ID: ",
+      user.rows[0].id
+    );
+
+    if (user.rows[0].id) {
+      const response = await client.query(
+        `
+        UPDATE users
+        SET "isAdmin"=true
+        WHERE id=$1
+        RETURNING *;
+        `,
+        [userId]
+      );
+
+      delete response.rows[0].password;
+      console.log("gave admin status to user ID: ", userId);
+      return response.rows[0];
+    }
+  } catch (error) {
+    console.error("an error occurred giving admin status to a user");
+    throw error;
+  }
+}
+
 module.exports = {
   createUser,
   getUser,
@@ -224,4 +290,7 @@ module.exports = {
   getUserById,
   adminCheck,
   updateUser,
+  giveAdminStatus,
+  createInitialAdmins,
+  createDummies,
 };

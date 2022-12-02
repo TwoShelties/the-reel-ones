@@ -584,6 +584,27 @@ FILM
   transition: 0.2s;
 }
 
+.review-edit-btn {
+  height: 1.25rem;
+  padding: 0.5rem;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #e50914;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-edit-btn:hover {
+  box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.75),
+    0px 0px 10px 0px rgba(0, 0, 0, 0.5) inset;
+  transition: 0.2s;
+}
+
 .reviews-container {
   margin: 1rem;
   /* border: 1px solid #fff; */
@@ -641,13 +662,80 @@ CART
 ===========================*/
 
 .cart-container {
+  height: 100vh;
   color: #fff;
+  background-image: url("https://wallpapercave.com/dwp1x/OGoOmxs.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart-items-table {
-  padding: 1rem;
+  padding: 2rem;
+  background-color: rgb(0, 0, 0, 0.6);
+  color: #ffffff;
+  border-radius: 1rem;
 }
 
 .cart-items-table tr td {
   padding: 1rem;
+}
+
+.cc-payment-form {
+  background-color: #fff;
+  border: 0.25rem solid rgba(229, 9, 20, 0.75);
+  border-radius: 0.5rem;
+}
+
+/*===========================
+PROFILE
+===========================*/
+
+.current-purchase-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.past-purchase-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.all-purchase-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.purchase-item {
+  flex-direction: row;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.film-purchase-image {
+  width: 15rem;
+  height: 22rem;
+}
+
+.profile-text {
+  padding: 1rem;
+  text-align: center;
+  color: white;
+}
+
+.purchase-details {
+  text-align: center;
+  color: white;
 }
