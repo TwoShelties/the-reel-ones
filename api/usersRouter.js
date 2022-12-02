@@ -16,6 +16,7 @@ const { JWT_SECRET } = process.env;
 
 usersRouter.get("/", async (req, res, next) => {
   const users = await getAllUsers();
+  console.log(users);
 
   res.send({ success: true, users });
 });
@@ -172,9 +173,12 @@ usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
 usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
   const { userId } = req.params;
   const username = req.body.username;
+  // console.log(userId, username);
+
   try {
     const update = await updateUser({ id: userId, username });
-    res.send({ sucess: true, update });
+    console.log(update);
+    res.send({ success: true, update });
   } catch (error) {
     console.log("error updating user");
     throw error;

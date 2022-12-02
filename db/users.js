@@ -201,7 +201,8 @@ async function updateUser({ id, username }) {
       `
     UPDATE users 
     SET username=$1
-    WHERE id=$2;
+    WHERE id=$2
+    RETURNING *;
     `,
       [username, id]
     );

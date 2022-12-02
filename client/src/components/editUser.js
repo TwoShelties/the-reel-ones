@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const EditUser = ({ selectedUser, token }) => {
+  const navigate = useNavigate();
+  const params = useParams();
   const [users, setUsers] = useState([]);
 
   const [username, setUsername] = useState("");
@@ -9,10 +11,8 @@ const EditUser = ({ selectedUser, token }) => {
 
   const [targetUser, setTargetUser] = useState({});
 
-  // const navigate = useNavigate();
-  const params = useParams();
-
   const fetchUsers = async () => {
+    console.log("fetching users...");
     const response = await fetch("/api/users");
     const data = await response.json();
     console.log(data);
@@ -20,25 +20,21 @@ const EditUser = ({ selectedUser, token }) => {
     if (data.users) {
       setUsers(data.users);
 
-      // data.users.map((user) => {
-      //   console.log(typeof user.username);
-      //   console.log(params.username);
-      //   if (user.username === params.username) {
-      //     console.log(user);
-      //     setTargetUser(user);
-      //   }
-      // });
       const filteredUser = data.users.filter(
         (user) => user.username === params.username
       )[0];
-      console.log(filteredUser);
+      // console.log(filteredUser);
+
+      if (filteredUser.id) {
+        setTargetUser(filteredUser);
+      }
     }
   };
 
   const changeUser = async () => {
     // console.log("editing user");
     // console.log(token);
-    if (!targetUser) {
+    if (!targetUser || !username) {
       return;
     }
     console.log(targetUser);
@@ -50,14 +46,19 @@ const EditUser = ({ selectedUser, token }) => {
       },
       body: JSON.stringify({
         id: targetUser.id,
-        username: targetUser.username,
+        username,
       }),
     });
     const info = await response.json();
     console.log(info);
 
-    if (info.username) {
-      console.log(info);
+    if (info.success) {
+      console.log(`changed username ${username} to :`, info.update[0].username);
+      let newUsername = info.update[0].username;
+      // console.log(newUsername);
+      setUsername(newUsername);
+      alert(`You have changed username: ${params.username} to: ${newUsername}`);
+      navigate(`/admin`);
     }
   };
 
@@ -79,30 +80,36 @@ const EditUser = ({ selectedUser, token }) => {
     fetchUsers();
   }, []);
 
+  if (!targetUser) {
+    return <></>;
+  }
+
   return (
     <div>
-      <form onSubmit={changeUser}>
-        <input
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          placeholder="New username"
-        />
-        <input
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="New password"
-        />
-        <button
-          onClick={(event) => {
-            event.preventDefault();
-            changeUser();
-          }}
-        >
-          Save changes for user
-        </button>
-        <p onClick={() => console.log(targetUser)}>Target User</p>
-        <button onClick={(event) => deleteUser}>Delete User</button>
-      </form>
+      {targetUser.id ? (
+        <form onSubmit={changeUser} style={{ color: "#fff" }}>
+          <p>Current Username: {targetUser.username}</p>
+
+          <input
+            defaultValue={targetUser.username}
+            onChange={(event) => {
+              setUsername(event.target.value);
+            }}
+            placeholder="New username"
+          />
+          <button
+            onClick={(event) => {
+              event.preventDefault();
+              changeUser();
+            }}
+          >
+            Save changes for user
+          </button>
+          <button onClick={(event) => deleteUser}>Delete User</button>
+        </form>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
