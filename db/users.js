@@ -31,7 +31,8 @@ async function createInitialAdmins() {
     const users = await client.query(
       `
       UPDATE users
-      SET "isAdmin"=true;
+      SET "isAdmin"=true
+      RETURNING *;
       `
     );
 
