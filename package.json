@@ -13,5 +13,23 @@
     "pg": "^8.8.0",
     "react": "^18.2.0",
     "stripe": "^11.1.0"
-  }
+  },
+  "name": "the-reel-ones",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ak6136/the-reel-ones.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ak6136/the-reel-ones/issues"
+  },
+  "homepage": "https://github.com/ak6136/the-reel-ones#readme"
 }
