@@ -19,6 +19,7 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token }) => {
   const [price, setPrice] = useState("");
   // const [allgenres, setAllgenres] = useState([]);
   // const [films, setFilms] = useState([]);
+  const [editUserId, setEditUserId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -166,6 +167,13 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token }) => {
     }
   };
 
+  const findUserId = (username) => {
+    const filteredUsers = users.filter((user) => user.username === username)[0];
+    // console.log(filteredUsers);
+    setEditUserId(filteredUsers.id);
+    navigate(`/editUser/${editUserId}`);
+  };
+
   useEffect(() => {
     // getallGenres();
     insertnewFilm();
@@ -180,17 +188,21 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token }) => {
         <div className="allFilms">
           <table>
             <tbody>
-              <select
-                onChange={(event) => {
-                  setSelectedFilm(event.target.value);
-                  navigate("/editFilm");
-                }}
-              >
-                <option>No Films Selected</option>
-                {films.map((film) => {
-                  return <option>{film.title}</option>;
-                })}
-              </select>
+              <tr>
+                <td>
+                  <select
+                    onChange={(event) => {
+                      setSelectedFilm(event.target.value);
+                      navigate("/editFilm");
+                    }}
+                  >
+                    <option>No Films Selected</option>
+                    {films.map((film) => {
+                      return <option>{film.title}</option>;
+                    })}
+                  </select>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -199,17 +211,21 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token }) => {
         <div className="allUsers">
           <table>
             <tbody>
-              <select
-                onChange={(event) => {
-                  setUsers(event.target.value);
-                  navigate("/editUser");
-                }}
-              >
-                <option>No Users Selected</option>
-                {users.map((user) => {
-                  return <option>{user.userid}</option>;
-                })}
-              </select>
+              <tr>
+                <td>
+                  <select
+                    onChange={(event) => {
+                      setUsers(event.target.value);
+                      findUserId(event.target.value);
+                    }}
+                  >
+                    <option>No Users Selected</option>
+                    {users.map((user) => {
+                      return <option>{user.username}</option>;
+                    })}
+                  </select>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
