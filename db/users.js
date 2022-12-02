@@ -195,26 +195,19 @@ async function deleteUser(username) {
   }
 }
 
-async function updateUser({ id, ...fields }) {
-  console.log(fields);
+async function updateUser({ id, username }) {
   try {
-    for (let key in fields) {
-      await client.query(`
-      UPDATE users
-      SET ${key} = '${fields[key]}'
-      WHERE id= ${id}
-      `);
-      const {
-        rows: [response],
-      } = await client.query(`
-      SELECT *
-      FROM users
-      WHERE id= ${id}
-      `);
-      return response;
-    }
+    const response = await client.query(
+      `
+    UPDATE users 
+    SET username=$1
+    WHERE id=$2;
+    `,
+      [username, id]
+    );
+    return response.rows;
   } catch (error) {
-    console.log("error updating user");
+    console.log("Error updating user");
     throw error;
   }
 }

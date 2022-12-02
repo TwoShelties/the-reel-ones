@@ -199,7 +199,7 @@ const App = () => {
         )}
         {admin ? (
           <Route
-            path="/editFilm"
+            path="/editFilm/:filmId"
             element={
               <EditFilm
                 admin={admin}
@@ -215,7 +215,7 @@ const App = () => {
         )}
         {admin ? (
           <Route
-            path="/editUser"
+            path="/editUser/:username"
             element={
               <EditUser
                 admin={admin}

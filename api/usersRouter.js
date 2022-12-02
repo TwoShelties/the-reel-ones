@@ -171,10 +171,10 @@ usersRouter.delete("/:userId", requireAdmin, async (req, res, next) => {
 
 usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
   const { userId } = req.params;
-  const fields = req.body;
+  const username = req.body.username;
   try {
-    const update = await updateUser({ id: userId, ...fields });
-    res.send(update);
+    const update = await updateUser({ id: userId, username });
+    res.send({ sucess: true, update });
   } catch (error) {
     console.log("error updating user");
     throw error;
