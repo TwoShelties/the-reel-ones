@@ -59,7 +59,7 @@ const PaymentForm = ({
       //alert("Your payment has been accepted!");
 
       // enter cart data into usersFilms table
-      /*
+
       const createPurchase = await fetch(`api/usersFilms/${userData.id}`, {
         method: "POST",
         headers: {
@@ -86,12 +86,13 @@ const PaymentForm = ({
 
         if (data.success) {
           setCartItems([]);
+          alert("Your payment has been accepted!");
           navigate("/profile");
           //return;
         }
       }
-      */
 
+      /*
       const response = await fetch(`/api/cart/${userData.id}`, {
         method: "DELETE",
         headers: {
@@ -106,6 +107,7 @@ const PaymentForm = ({
         setCartItems([]);
         return;
       }
+      */
     }
   };
 
