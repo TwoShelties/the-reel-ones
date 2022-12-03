@@ -43,7 +43,7 @@ reviewsRouter.get("/films/:filmId", async (req, res, next) => {
     }
   } catch (error) {
     console.error("an error occurred retrieving reviews for params.filmId");
-    throw error;
+    next({ message: "an error occurred while getting film by ID" });
   }
 });
 
@@ -62,7 +62,7 @@ reviewsRouter.get("/users/:userId", async (req, res, next) => {
     }
   } catch (error) {
     console.error("an error occurred retrieving reviews for params.filmId");
-    throw error;
+    next({ message: "an error occurred while getting user's reviews" });
   }
 });
 

@@ -24,7 +24,7 @@ const Login = ({ setToken, setUserData, token }) => {
       setPasswordMessage(!passwordMessage);
     }
 
-    const response = await fetch(`api/users/login`, {
+    const response = await fetch(`/api/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

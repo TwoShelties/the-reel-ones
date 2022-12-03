@@ -54,7 +54,7 @@ usersRouter.post("/login", async (req, res, next) => {
     }
   } catch (error) {
     console.log("Error with logging in");
-    throw error;
+    next({ message: "an error occurred while logging in" });
   }
 });
 
@@ -181,7 +181,7 @@ usersRouter.patch("/:userId", requireUser, async (req, res, next) => {
     res.send({ success: true, update });
   } catch (error) {
     console.log("error updating user");
-    throw error;
+    next({ message: "an error occurred while updating user" });
   }
 });
 
@@ -197,7 +197,6 @@ usersRouter.patch(
       res.send({ success: true, response });
     } catch (error) {
       next({ message: "error updating admin status of user" });
-      throw error;
     }
   }
 );

@@ -8,6 +8,7 @@ const {
   checkForCartItem,
   clearEntireCart,
 } = require("../db/carts");
+const { getCurrentPurchasesByUserId } = require("../db/userFilms");
 
 const { requireUser } = require("./utils");
 
@@ -74,6 +75,9 @@ cartsRouter.post("/", requireUser, async (req, res, next) => {
       });
       return;
     }
+
+    const checkedCurrentPurchase = await getCurrentPurchasesByUserId(userId);
+    console.log("checkedCurrentPurchase", checkedCurrentPurchase);
 
     const cart = await addFilmToUserCart({ userId, filmId, days });
     res.send({ success: true, cart });

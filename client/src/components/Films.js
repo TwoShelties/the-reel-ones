@@ -110,14 +110,6 @@ const Films = ({ films, token, cartArray, setCartArray, userData }) => {
     return newDirectors;
   };
 
-  const addFilmToCart = (filmId) => {
-    if (cartArray.includes(filmId)) {
-      return;
-    }
-
-    setCartArray((current) => [...current, filmId]);
-  };
-
   return (
     <div className="films-container">
       <div className="opaque-cover"></div>

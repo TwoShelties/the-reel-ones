@@ -217,7 +217,7 @@ filmsRouter.delete("/delete/:filmId", requireAdmin, async (req, res, next) => {
     res.send(deleteMovie);
   } catch (error) {
     console.log("error deleting film");
-    throw error;
+    next({ message: "an error occurred while deleting film" });
   }
 });
 
@@ -229,7 +229,7 @@ filmsRouter.patch("/:filmId", requireAdmin, async (req, res, next) => {
     res.send(update);
   } catch (error) {
     console.log("error updating film");
-    throw error;
+    next({ message: "an error occurred while patching film" });
   }
 });
 
