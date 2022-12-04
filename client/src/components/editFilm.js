@@ -56,6 +56,16 @@ const EditFilm = ({ selectedFilm, token, films, setFilms }) => {
     }
   };
 
+  const checkDateValidity = async (year) => {
+    let currentYear = new Date().getFullYear();
+
+    if (year < 1888 || year > currentYear) {
+      return false;
+    }
+
+    return true;
+  };
+
   const submitChanges = async () => {
     console.log("attempting to submit changes...");
     console.log(
@@ -97,6 +107,11 @@ const EditFilm = ({ selectedFilm, token, films, setFilms }) => {
     if (yearSafeCheck) {
       yearSubmission = yearSafeCheck;
     } else {
+      const yearValidty = await checkDateValidity(newYear);
+      if (yearValidty === false) {
+        alert("Year provided is out of acceptable range!");
+        return;
+      }
       yearSubmission = newYear;
     }
     if (priceSafeCheck) {

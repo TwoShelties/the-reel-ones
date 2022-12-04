@@ -115,12 +115,28 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token, setFilms }) => {
     }
   };
 
+  const checkDateValidity = async (year) => {
+    let currentYear = new Date().getFullYear();
+
+    if (year < 1888 || year > currentYear) {
+      return false;
+    }
+
+    return true;
+  };
+
   const createNewFilm = async () => {
     if (!token) {
       return;
     }
 
+    // check validity of image and date:
     await checkImgUrl(newFilmImage);
+    const yearCheck = await checkDateValidity(newFilmYear);
+    if (yearCheck === false) {
+      alert("Year provided is out of acceptable range!");
+      return;
+    }
 
     console.log(
       "title: ",
@@ -171,6 +187,10 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token, setFilms }) => {
     });
     const data = await response.json();
     console.log(data);
+    if (data.message === `a film by the name ${newFilmTitle} already exists`) {
+      alert(data.message);
+      return;
+    }
     if (data.success) {
       alert(`You added a new film: ${data.newFilm.title}!`);
 
