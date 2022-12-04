@@ -239,24 +239,40 @@ async function getFilmByGenreId(genreId) {
   }
 }
 
-async function updateFilm({ id, ...fields }) {
-  console.log(fields);
+async function updateFilm({
+  id,
+  title,
+  director,
+  year,
+  description,
+  price,
+  image,
+  genre,
+}) {
   try {
-    for (let key in fields) {
-      await client.query(`
+    id = Number(id);
+    year = Number(year);
+
+    console.log("attempting to update film ID: ", id);
+
+    // director = "'" + director + "'";
+    // console.log(director);
+    // description = "'" + description + "'";
+    // console.log(description);
+    // console.log(year);
+
+    const response = await client.query(
+      `
       UPDATE films
-      SET ${key} = '${fields[key]}'
-      WHERE id= ${id}
-      `);
-      const {
-        rows: [response],
-      } = await client.query(`
-      SELECT *
-      FROM films
-      WHERE id= ${id}
-      `);
-      return response;
-    }
+      SET title=$1, director=$2, year=$3, description=$4, price=$5, img=$6, genre=$7
+      WHERE id=$8
+      RETURNING *;
+      `,
+      [title, director, year, description, price, image, genre, id]
+    );
+    console.log(response.rows);
+
+    return response.rows[0];
   } catch (error) {
     console.log("error updating film");
     throw error;
@@ -272,6 +288,7 @@ async function updateFilm({ id, ...fields }) {
 
 async function deleteFilm(id) {
   try {
+    console.log("calling deleteFilm...");
     const result = await client.query(
       `
         DELETE 
@@ -281,7 +298,8 @@ async function deleteFilm(id) {
         `,
       [id]
     );
-    return result;
+
+    return result.rows;
   } catch (error) {
     console.log("error deleting film");
     throw error;

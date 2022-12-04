@@ -12,6 +12,7 @@ const {
   getAllFilmGenres,
   getFilmById,
   getGenresByFilmId,
+  updateFilmTitle,
 } = require("../db/films");
 
 const { requireUser, requireAdmin } = require("./utils");
@@ -58,18 +59,6 @@ filmsRouter.get("/:filmId", async (req, res, next) => {
     return;
   }
 });
-
-// filmsRouter.get("/:title", async (req, res, next) => {
-//   try {
-//     const title = req.params.title;
-//     const films = await getFilmByTitle(title);
-//     res.send({ success: true, films });
-//   } catch (error) {
-//     console.log("Error with getting film by title");
-//     next({ message: `Film with title ${req.params.title} does not exist` });
-//     return;
-//   }
-// });
 
 filmsRouter.get("/:filmId/directors", async (req, res, next) => {
   try {
@@ -143,8 +132,8 @@ filmsRouter.get("/:filmId/genres", async (req, res, next) => {
       const film_id = films[0].filmId;
       const filmGenres = films[0];
       // delete filmGenres.title;
-      // delete filmGenres.id;
-      // delete filmGenres.filmId;
+      // delete fi res.id;
+      // delete fi res.filmId;
 
       let genresList = [];
 
@@ -203,18 +192,31 @@ filmsRouter.post("/", requireAdmin, async (req, res, next) => {
     price: price,
   };
   try {
-    const film = await createFilm(filmData);
-    res.send({ filmData });
+    const titleCheckFilm = await getFilmByTitle(title);
+    if (titleCheckFilm) {
+      next({ message: `a film by the name ${title} already exists` });
+    }
+    const newFilm = await createFilm(filmData);
+    res.send({ success: true, newFilm });
   } catch ({ title, director, year, genre, img, description, price }) {
     next({ message: "could not create film" });
   }
 });
 
 filmsRouter.delete("/delete/:filmId", requireAdmin, async (req, res, next) => {
-  const { filmId } = req.params;
+  let { filmId } = req.params;
+
+  filmId = Number(filmId);
+  console.log("attempting to delete film ID: ", filmId);
   try {
-    const deleteMovie = await deleteFilm(filmId);
-    res.send(deleteMovie);
+    const deletedFilm = await deleteFilm(filmId);
+    console.log("deletedFilm: ", deletedFilm);
+
+    if (deletedFilm.length > 0) {
+      res.send({ success: true, deletedFilm });
+    } else {
+      next({ success: false, message: "film set for deletion does not exist" });
+    }
   } catch (error) {
     console.log("error deleting film");
     next({ message: "an error occurred while deleting film" });
@@ -223,10 +225,23 @@ filmsRouter.delete("/delete/:filmId", requireAdmin, async (req, res, next) => {
 
 filmsRouter.patch("/:filmId", requireAdmin, async (req, res, next) => {
   const { filmId } = req.params;
-  const fields = req.body;
+  const { title, director, year, description, price, image, genre } = req.body;
+
   try {
-    const update = await updateFilm({ id: filmId, ...fields });
-    res.send(update);
+    // const updatedFilmTitle = await updateFilmTitle(filmId, title);
+    // console.log(updatedFilmTitle);
+    const updatedFilm = await updateFilm({
+      id: filmId,
+      title,
+      director,
+      year,
+      description,
+      price,
+      image,
+      genre,
+    });
+
+    res.send({ success: true, updatedFilm });
   } catch (error) {
     console.log("error updating film");
     next({ message: "an error occurred while patching film" });

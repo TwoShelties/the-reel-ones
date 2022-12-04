@@ -60,23 +60,29 @@ async function createTables() {
 
       CREATE TABLE carts(
         id SERIAL PRIMARY KEY,
-        "userId" INTEGER REFERENCES users(id),
-        "filmId" INTEGER REFERENCES films(id),
+        "userId" INTEGER REFERENCES users(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        "filmId" INTEGER REFERENCES films(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
         days INTEGER NOT NULL
       );
       
       CREATE TABLE user_films(
         id SERIAL PRIMARY KEY,
-        "userId" INTEGER REFERENCES users(id),
-        "filmId" INTEGER REFERENCES films(id),
+        "userId" INTEGER REFERENCES users(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        "filmId" INTEGER REFERENCES films(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
         purchaseDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         expiryDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
       CREATE TABLE genres(
         id SERIAL PRIMARY KEY,
-        "filmId" INTEGER REFERENCES films(id),
-        title VARCHAR(255) REFERENCES films(title),
+        "filmId" INTEGER REFERENCES films(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        title VARCHAR(255) REFERENCES films(title)
+          ON DELETE CASCADE ON UPDATE CASCADE,
         drama BOOLEAN DEFAULT FALSE,
         crime BOOLEAN DEFAULT FALSE,
         romance BOOLEAN DEFAULT FALSE,
@@ -98,7 +104,8 @@ async function createTables() {
 
       CREATE TABLE directors(
         id SERIAL PRIMARY KEY,
-        "filmId" INTEGER REFERENCES films(id),
+        "filmId" INTEGER REFERENCES films(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
         director1 VARCHAR(255),
         director2 VARCHAR(255),
         director3 VARCHAR(255)
@@ -106,8 +113,10 @@ async function createTables() {
 
       CREATE TABLE reviews(
         id SERIAL PRIMARY KEY,
-        "filmId" INTEGER REFERENCES films(id),
-        "userId" INTEGER REFERENCES users(id),
+        "filmId" INTEGER REFERENCES films(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
+        "userId" INTEGER REFERENCES users(id)
+          ON DELETE CASCADE ON UPDATE CASCADE,
         review VARCHAR(255) NOT NULL
       )
 

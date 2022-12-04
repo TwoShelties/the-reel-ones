@@ -188,6 +188,7 @@ const App = () => {
               <Admin
                 admin={admin}
                 films={films}
+                setFilms={setFilms}
                 token={token}
                 selectedFilm={selectedFilm}
                 setSelectedFilm={setSelectedFilm}
@@ -199,11 +200,12 @@ const App = () => {
         )}
         {admin ? (
           <Route
-            path="/editFilm/:filmId"
+            path="/editFilm/:filmTitle"
             element={
               <EditFilm
                 admin={admin}
                 films={films}
+                setFilms={setFilms}
                 token={token}
                 selectedFilm={selectedFilm}
                 setSelectedFilm={setSelectedFilm}

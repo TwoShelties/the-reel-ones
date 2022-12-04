@@ -20,11 +20,40 @@ const genresRouter = express.Router();
 genresRouter.get("/", async (req, res, next) => {
   try {
     const films = await getAllFilmGenres();
+    console.log(films);
     res.send({ success: true, films });
   } catch (error) {
     res.status(404);
     next({ message: `Error fetching film genres` });
     return;
+  }
+});
+
+genresRouter.get("/all-genres", async (req, res, next) => {
+  try {
+    const genres = [
+      "drama",
+      "crime",
+      "romance",
+      "musical",
+      "comedy",
+      "western",
+      "scienceFiction",
+      "thriller",
+      "mystery",
+      "epic",
+      "adventure",
+      "war",
+      "action",
+      "children's",
+      "fantasy",
+      "spy",
+      "other",
+    ].sort();
+
+    res.send({ success: true, genres });
+  } catch (error) {
+    next({ message: "Could not retrieve all genres" });
   }
 });
 

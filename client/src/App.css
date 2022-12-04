@@ -739,3 +739,12 @@ PROFILE
   text-align: center;
   color: white;
 }
+
+/*-----------------
+EDIT FILM
+-----------------*/
+.edit-film-list *:hover {
+  cursor: pointer;
+  background-color: #b2bdbe;
+  color: rgb(0, 0, 0);
+}
