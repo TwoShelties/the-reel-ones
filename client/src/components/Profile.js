@@ -18,7 +18,7 @@ const Profile = ({ userData, films }) => {
     });
 
     const info = await response.json();
-    // console.log(info);
+    console.log(info);
 
     if (info.success) {
       setCurrentItems(info.currentPurchases);
@@ -35,11 +35,11 @@ const Profile = ({ userData, films }) => {
     });
 
     const info = await response.json();
-    // console.log(info);
+    console.log(info);
 
     if (info.success) {
       setPastItems(info.pastPurchases);
-      // console.log(info.pastPurchases);
+      //console.log(info.pastPurchases);
     }
   };
 
@@ -61,10 +61,18 @@ const Profile = ({ userData, films }) => {
   };
 
   useEffect(() => {
-    currentRentals();
-    pastRentals();
-    allRentals();
+    if (!userData.id) {
+      return;
+    } else {
+      currentRentals();
+      pastRentals();
+      allRentals();
+    }
   }, [userData]);
+
+  if (!userData.id) {
+    return;
+  }
 
   return (
     <div>
@@ -110,7 +118,7 @@ const Profile = ({ userData, films }) => {
       )}
       {pastItems.length > 0 ? (
         <div>
-          <h3>Past Purchases</h3>
+          <h3 className="profile-text">Past Purchases</h3>
           <div className="past-purchase-container">
             {pastItems.map((item) => {
               return (
@@ -128,6 +136,12 @@ const Profile = ({ userData, films }) => {
                           />
                           <p className="purchase-details">
                             Purchased On: {item.purchasedate.slice(0, 10)}
+                          </p>
+                          <p className="purchase-details">
+                            Ended On: {item.expirydate.slice(0, 10)}
+                          </p>
+                          <p className="purchase-details">
+                            Price: ${film.price}/day
                           </p>
                         </div>
                       );

@@ -94,7 +94,6 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
   /*
   const purchaseItems = async (userId) => {
     console.log(`User ID: ${userId} is purchasing cart items`);
-
     const response = await fetch(`api/userFilms/${userData.id}`, {
       method: "POST",
       headers: {
@@ -102,7 +101,6 @@ const Cart = ({ cartArray, setCartArray, films, userData, token }) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     const info = await response.json();
     console.log(info);
     if (info.success) {
