@@ -15,6 +15,8 @@ const Films = ({ films, token, cartArray, setCartArray, userData }) => {
   const genres = [];
   let genresSet;
 
+  const imgErrorSrc = `https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png?20221130100445`;
+
   useEffect(() => {
     search();
   }, [query, films]);
@@ -153,6 +155,7 @@ const Films = ({ films, token, cartArray, setCartArray, userData }) => {
                     </h3>
                     <p className="film-card-year">({film.year})</p>
                     <img
+                      id="film-car-img"
                       src={film.img}
                       className="film-card-img"
                       onClick={(event) => {

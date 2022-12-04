@@ -101,10 +101,26 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token, setFilms }) => {
     }
   };
 
+  const checkImgUrl = async (url) => {
+    console.log("checking validity of film src url...");
+    const backupImageSrc = `https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png?20221130100445`;
+    let http = new XMLHttpRequest();
+    http.open("HEAD", url, false);
+    http.send();
+    if (http.status === 404) {
+      alert(
+        "Image URL provided isn't valid. If your film posts, the image will be replaced with a placeholder! You can edit the image if necessary."
+      );
+      setNewFilmImage(backupImageSrc);
+    }
+  };
+
   const createNewFilm = async () => {
     if (!token) {
       return;
     }
+
+    await checkImgUrl(newFilmImage);
 
     console.log(
       "title: ",
@@ -232,7 +248,9 @@ const Admin = ({ films, selectedFilm, setSelectedFilm, token, setFilms }) => {
           <input
             placeholder="Film URL"
             type="text"
-            onChange={(event) => setNewFilmImage(event.target.value)}
+            onChange={(event) => {
+              setNewFilmImage(event.target.value);
+            }}
           />
           {genres ? (
             <select

@@ -24,6 +24,8 @@ const EditFilm = ({ selectedFilm, token, films, setFilms }) => {
 
   const [genres, setGenres] = useState([]);
 
+  const backupImageSrc = `https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png?20221130100445`;
+
   const findTargetFilm = () => {
     if (!films || !token) {
       return;
@@ -121,6 +123,14 @@ const EditFilm = ({ selectedFilm, token, films, setFilms }) => {
       imageSubmission = targetFilm.img;
     } else {
       imageSubmission = newImage;
+      // const imgCheck = await fetch(imageSubmission);
+      // if
+      let http = new XMLHttpRequest();
+      http.open("HEAD", imageSubmission, false);
+      http.send();
+      if (http.status === 404) {
+        imageSubmission = backupImageSrc;
+      }
     }
     if (!newGenre) {
       genreSubmission = targetFilm.genre;
