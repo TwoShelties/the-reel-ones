@@ -153,7 +153,7 @@ const Profile = ({ userData, films }) => {
           </div>
         </div>
       ) : (
-        <h3></h3>
+        <h3>No past purchases</h3>
       )}
     </div>
   );
