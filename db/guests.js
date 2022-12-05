@@ -90,6 +90,5 @@ async function createGuest() {
     throw error;
   }
 }
-createGuest();
 
 module.exports = { createGuest, getGuestByUsername };
