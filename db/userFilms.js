@@ -54,29 +54,29 @@ testGetAllPurchasesByUserId();
 async function getPastPurchasesByUserId(userId) {
   try {
     const userPurchases = await getAllPurchasesByUserId(userId);
-    let pastPurchases = [];
 
-    for (item of userPurchases) {
-      let filmid = item.filmId;
+    const pastPurchases = await Promise.all(
+      userPurchases.map(async (purchase) => {
+        const filmid = purchase.filmId;
+        const time = await getTimeLeft(userId, filmid);
+        //console.log(time);
 
-      let time = await getTimeLeft(userId, filmid);
+        if (time.days && time.days < 0) {
+          //console.log(purchase);
+          return purchase;
+        } else {
+          //console.log("h", purchase);
+          return null;
+        }
+      })
+    );
 
-      if (time.days && time.days < 0) {
-        console.log(time);
-        pastPurchases.push(item);
-      } else if (time.hours && time.hours < 0) {
-        console.log(time);
-        pastPurchases.push(item);
-      } else if (time.minutes && time.minutes < 0) {
-        console.log(time);
-        pastPurchases.push(item);
-      } else if (time.milliseconds && time.milliseconds < 0) {
-        console.log(time);
-        pastPurchases.push(item);
-      }
-    }
+    // filters out null values
+    const pastPurchaseArr = pastPurchases.filter(Boolean);
 
-    return pastPurchases;
+    //console.log(pastPurchaseArr);
+
+    return pastPurchaseArr;
   } catch (error) {
     console.log("Error with getting film by userId");
     throw error;
@@ -87,7 +87,7 @@ async function getPastPurchasesByUserId(userId) {
 /*
 async function testGetPastPurchasesByUserId() {
   console.log("testing getPastPurchasesByUserId...");
-  const response = await getPastPurchasesByUserId(1);
+  const response = await getPastPurchasesByUserId(7);
   console.log("retrieved purchase:", response);
 }
 testGetPastPurchasesByUserId();
@@ -96,29 +96,27 @@ testGetPastPurchasesByUserId();
 async function getCurrentPurchasesByUserId(userId) {
   try {
     const userPurchases = await getAllPurchasesByUserId(userId);
-    let currentPurchases = [];
 
-    for (item of userPurchases) {
-      let filmid = item.filmId;
+    const currentPurchases = await Promise.all(
+      userPurchases.map(async (purchase) => {
+        const filmid = purchase.filmId;
+        const time = await getTimeLeft(userId, filmid);
 
-      let time = await getTimeLeft(userId, filmid);
+        if (time.days && time.days > 0) {
+          //console.log(purchase);
+          return purchase;
+        } else {
+          //console.log("h", purchase);
+          return null;
+        }
+      })
+    );
+    // filters out null values
+    const currentPurchaseArr = currentPurchases.filter(Boolean);
 
-      if (time.days && time.days > 0) {
-        console.log(time);
-        currentPurchases.push(item);
-      } else if (time.hours && time.hours > 0) {
-        console.log(time);
-        currentPurchases.push(item);
-      } else if (time.minutes && time.minutes > 0) {
-        console.log(time);
-        currentPurchases.push(item);
-      } else if (time.milliseconds && time.milliseconds > 0) {
-        console.log(time);
-        currentPurchases.push(item);
-      }
-    }
+    //console.log(currentPurchaseArr);
 
-    return currentPurchases;
+    return currentPurchaseArr;
   } catch (error) {
     console.log("Error with getting film by userId");
     throw error;
@@ -129,7 +127,7 @@ async function getCurrentPurchasesByUserId(userId) {
 /*
 async function testGetCurrentPurchasesByUserId() {
   console.log("testing getCurrentPurchasesByUserId...");
-  const response = await getCurrentPurchasesByUserId(1);
+  const response = await getCurrentPurchasesByUserId(7);
   console.log("retrieved purchase:", response);
 }
 testGetCurrentPurchasesByUserId();
