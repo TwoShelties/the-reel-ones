@@ -108,6 +108,7 @@ const FilmEditor = ({
           event.preventDefault();
           editHandler();
         }}
+        className="add-review-btn"
       >
         Make Edit
       </button>

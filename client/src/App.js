@@ -21,6 +21,7 @@ const App = () => {
   const [admin, setAdmin] = useState(false);
   const [films, setFilms] = useState([]);
   const [guest, setGuest] = useState(true);
+  const [guestData, setGuestData] = useState({});
   const [guestEmail, setGuestEmail] = useState("");
   // below here will be cart-related stuff:
   const [cartArray, setCartArray] = useState([]);
@@ -53,10 +54,29 @@ const App = () => {
     console.log(data);
   };
 
+  // fetch user data if token exists, otherwise post guest account:
   const fetchUser = async () => {
     const response = localStorage.getItem("token");
     // console.log(response);
-    setToken(response);
+
+    if (!response) {
+      const guestResponse = await fetch(`/api/guests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await guestResponse.json();
+      console.log(data);
+
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        setGuestData(data.user);
+        setToken(data.token);
+      }
+    } else {
+      setToken(response);
+    }
   };
 
   const fetchUserData = async () => {
@@ -74,8 +94,18 @@ const App = () => {
     const data = await response.json();
     console.log(data);
 
-    if (data.id && data.username) {
+    if (data.isGuest === true) {
+      console.log("user is a guest");
+      setGuestData(data);
       setUserData(data);
+      return;
+    }
+
+    if (data.isGuest === false) {
+      console.log("user is not a guest");
+      setUserData(data);
+      setGuestData({});
+      return;
     }
 
     const checkAdminResponse = await fetch(`/api/users/${data.id}/checkAdmin`);
@@ -103,6 +133,7 @@ const App = () => {
         token={token}
         setToken={setToken}
         admin={admin}
+        guestData={guestData}
       />
 
       <Routes>
@@ -114,6 +145,8 @@ const App = () => {
               setToken={setToken}
               setGuestEmail={setGuestEmail}
               guestEmail={guestEmail}
+              guestData={guestData}
+              setGuestData={setGuestData}
             />
           }
         />
@@ -125,6 +158,8 @@ const App = () => {
               setToken={setToken}
               setUserData={setUserData}
               token={token}
+              guestData={guestData}
+              setGuestData={setGuestData}
             />
           }
         />
@@ -136,6 +171,8 @@ const App = () => {
               setUserData={setUserData}
               token={token}
               guestEmail={guestEmail}
+              guestData={guestData}
+              setGuestData={setGuestData}
             />
           }
         />
@@ -160,6 +197,7 @@ const App = () => {
               token={token}
               cartArray={cartArray}
               setCartArray={setCartArray}
+              guestData={guestData}
             />
           }
         />

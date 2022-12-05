@@ -4,7 +4,7 @@ import "./Home.css";
 import ImageSlider from "./ImageSlider";
 import Profile from "./Profile";
 
-const Home = ({ token, setToken, setGuestEmail, guestEmail }) => {
+const Home = ({ token, setToken, setGuestEmail, guestEmail, guestData }) => {
   const navigate = useNavigate();
   const slides = [
     {
@@ -84,7 +84,7 @@ const Home = ({ token, setToken, setGuestEmail, guestEmail }) => {
     navigate("/login");
   };
 
-  if (token) {
+  if (!guestData) {
     navigate("/profile");
   }
 
@@ -119,6 +119,7 @@ const Home = ({ token, setToken, setGuestEmail, guestEmail }) => {
             slides={slides}
             setGuestEmail={setGuestEmail}
             guestEmail={guestEmail}
+            guestData={guestData}
           />
         </div>
       </div>

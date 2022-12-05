@@ -136,30 +136,23 @@ const ImageSlider = ({
       {/* <div className="slide-cover"> */}
       <div className="navbar">
         <Link to="/">
-          {/* <h1 id="site-title">The Reel Ones</h1> */}
-          {/* <img src={siteLogo} id="site-logo" /> */}
-          {/* <img type="image/svg" src={troText} className="logo-svg" /> */}
           <img type="image/svg" src={troText2} className="logo-svg" />
-          {/* <h6 id="site-title">TRO</h6> */}
         </Link>
         <div className="site-nav-links">
-          {/* <Link to="/films">Films</Link> */}
-          {/* {token ? <Link to="/profile">Profile</Link> : <></>} */}
-          {/* <Link to="/cart">Cart</Link> */}
-          {!token ? (
+          {/* {!token ? (
             <Link to="/login" className="landing-page-nav-link">
               Sign In
             </Link>
           ) : (
             <></>
-          )}
-          <Link
+          )} */}
+          {/* <Link
             to="/api/docs"
             className="landing-page-nav-link"
             id="api-docs-link"
           >
             API Docs
-          </Link>
+          </Link> */}
           {token ? <Link onClick={logoutHandler}>Logout</Link> : <></>}
         </div>
       </div>

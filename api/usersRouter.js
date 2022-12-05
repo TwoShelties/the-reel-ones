@@ -16,7 +16,7 @@ const { JWT_SECRET } = process.env;
 
 usersRouter.get("/", async (req, res, next) => {
   const users = await getAllUsers();
-  console.log(users);
+  // console.log(users);
 
   res.send({ success: true, users });
 });
@@ -154,8 +154,8 @@ usersRouter.get("/:userId/checkAdmin", async (req, res, next) => {
       res.send({ isAdmin: true });
     }
   } catch (error) {
-    res.status(500).next({ message: "user is not an admin" });
-    return;
+    res.status(500);
+    next({ message: "user is not an admin" });
   }
 });
 

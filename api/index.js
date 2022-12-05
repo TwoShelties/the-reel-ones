@@ -69,6 +69,10 @@ apiRouter.use("/usersFilms", userFilmsRouter);
 const reviewsRouter = require("./reviewsRouter");
 apiRouter.use("/reviews", reviewsRouter);
 
+// ROUTER: /api/guests
+const guestsRouter = require("./guestsRouter");
+apiRouter.use("/guests", guestsRouter);
+
 apiRouter.get("/", (req, res, next) => {
   res.send("api router working");
 });

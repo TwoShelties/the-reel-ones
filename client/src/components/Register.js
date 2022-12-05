@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import troText2 from "./media/troText2.png";
 
-const Register = ({ setToken, setUserData, guestEmail, token }) => {
+const Register = ({
+  setToken,
+  setUserData,
+  guestEmail,
+  token,
+  guestData,
+  setGuestData,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -35,6 +42,12 @@ const Register = ({ setToken, setUserData, guestEmail, token }) => {
     const info = await response.json();
     console.log(info);
     if (info.user) {
+      if (guestData) {
+        // console.log(guestData);
+        localStorage.removeItem("token");
+        setGuestData({});
+      }
+
       localStorage.setItem("token", info.token);
       setToken(info.token);
       setUserData(info.user);
@@ -54,7 +67,7 @@ const Register = ({ setToken, setUserData, guestEmail, token }) => {
     setGuestCreds();
   }, [guestEmail]);
 
-  if (token) {
+  if (!guestData.id) {
     navigate("/profile");
   }
 

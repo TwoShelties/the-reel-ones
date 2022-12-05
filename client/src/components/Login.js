@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 import troText2 from "./media/troText2.png";
 
-const Login = ({ setToken, setUserData, token }) => {
+const Login = ({ setToken, setUserData, token, guestData, setGuestData }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [securityMessage, setSecurityMessage] = useState(false);
@@ -37,6 +37,12 @@ const Login = ({ setToken, setUserData, token }) => {
     const info = await response.json();
     console.log(info);
     if (info.user) {
+      if (guestData) {
+        // console.log(guestData);
+        localStorage.removeItem("token");
+        setGuestData({});
+      }
+
       localStorage.setItem("token", info.token);
       setToken(info.token);
       setUserData(info.user);
@@ -49,9 +55,10 @@ const Login = ({ setToken, setUserData, token }) => {
     }
   };
 
-  // if (token) {
-  //   navigate("/profile");
-  // }
+  if (!guestData.id) {
+    console.log("fdsdfsdf");
+    navigate("/profile");
+  }
 
   return (
     <div

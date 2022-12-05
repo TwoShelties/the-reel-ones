@@ -96,8 +96,16 @@ NAVBAR
   font-size: 5rem;
 }
 
-.site-nav-links * {
+.site-nav-links {
   margin-left: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.site-nav-links * {
+  width: fit-content;
+  text-decoration: none;
 }
 
 .nav-header {

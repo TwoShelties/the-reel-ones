@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import Reviewing from "./Reviewing";
 import Reviews from "./Reviews";
 
-const Film = ({ films, userData, token }) => {
+const Film = ({ films, userData, token, guestData }) => {
   const params = useParams();
   const navigate = useNavigate();
 
@@ -342,6 +342,10 @@ const Film = ({ films, userData, token }) => {
                     className="add-review-btn"
                     onClick={(event) => {
                       event.preventDefault();
+                      if (guestData.id) {
+                        alert("You must login or register to review films!");
+                        return;
+                      }
                       setReviewing(!reviewing);
                     }}
                   >

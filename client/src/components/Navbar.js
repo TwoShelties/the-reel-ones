@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import siteLogo from "./media/siteLogo.png";
 import troText from "./media/troText.svg";
 
-const Navbar = ({ userData, token, setToken, admin }) => {
+const Navbar = ({ userData, token, setToken, admin, guestData }) => {
   const navigate = useNavigate();
 
   const logoutHandler = (event) => {
@@ -23,34 +23,56 @@ const Navbar = ({ userData, token, setToken, admin }) => {
   return (
     <div className="nav-header">
       {!token ? (
-        // <div className="nav-banner">
-        //   <p className="banner-tagline">
-        //     <span className="new-span">NEW!</span> Films now start at{" "}
-        //     <span className="price-span">$0.99</span>.{" "}
-        //     <span className="learn-more-span">Learn More &#x27A4;</span>
-        //   </p>
-        // </div>
         <></>
       ) : (
         <div className="site-nav-links">
           {/* <Link to="/">
             <h6 style={h6Style}>TRO</h6>
           </Link> */}
-          <Link to="/films">Films</Link>
-          <Link to="/profile">Profile</Link>
-          <Link to="/cart">Cart</Link>
-          <Link to="/api/docs">API Docs</Link>
-          {admin ? <Link to="/admin">Admin</Link> : <></>}
-          {!token ? <Link to="/login">Login/Register</Link> : <></>}
-          {token ? <Link onClick={logoutHandler}>Logout</Link> : <></>}
+          <Link to="/films" className="add-review-btn">
+            Films
+          </Link>
+          <Link to="/profile" className="add-review-btn">
+            Profile
+          </Link>
+          <Link to="/cart" className="add-review-btn">
+            Cart
+          </Link>
+          {/* <Link to="/api/docs" className="add-review-btn">
+            API Docs
+          </Link> */}
+          {admin ? (
+            <Link to="/admin" className="add-review-btn">
+              Admin
+            </Link>
+          ) : (
+            <></>
+          )}
+          {/* {!token || guestData.id ? (
+            <Link to="/login" className="add-review-btn">
+              Login/Register
+            </Link>
+          ) : (
+            <></>
+          )}
+          {token && !guestData.id ? (
+            <Link onClick={logoutHandler} className="add-review-btn">
+              Logout
+            </Link>
+          ) : (
+            <></>
+          )} */}
+          {guestData.id ? (
+            <Link to="/login" className="add-review-btn">
+              Login/Register
+            </Link>
+          ) : (
+            <Link onClick={logoutHandler} className="add-review-btn">
+              Logout
+            </Link>
+          )}
         </div>
       )}
-
-      <div className="navbar-token">
-        <div className="site-nav-links">
-          {/* {!token ? <Link to="/login">Login/Register</Link> : <></>} */}
-        </div>
-      </div>
     </div>
   );
 };

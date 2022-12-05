@@ -115,11 +115,15 @@ const Films = ({ films, token, cartArray, setCartArray, userData }) => {
   return (
     <div className="films-container">
       <div className="opaque-cover"></div>
-      <img src={troText2} />
+      <img
+        src={troText2}
+        onClick={() => navigate("/")}
+        style={{ cursor: "pointer" }}
+      />
       {/* {token ? <h1>Films</h1> : <h1>Your choice of the greatest ever made</h1>} */}
       {!token ? (
         <div>
-          <p>Like what you see?</p>
+          <p style={{ color: "#fff" }}>Like what you see?</p>
           <Link to="/register">Sign Up Today</Link>
         </div>
       ) : (
