@@ -19,8 +19,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node db/buildSeed.js && node index.js"
+    "seed": "node db/buildSeed.js",
+    "start": "node index.js",
+    "build": "cd ./client && npm i && npm run build && npm run start"
   },
   "repository": {
     "type": "git",
