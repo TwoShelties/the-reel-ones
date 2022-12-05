@@ -27,7 +27,6 @@ async function dropTables() {
       DROP TABLE IF EXISTS reviews;
       DROP TABLE IF EXISTS films;
       DROP TABLE IF EXISTS users;
-      DROP TABLE IF EXISTS guests;
     `);
     console.log("Finished dropping tables!");
   } catch (error) {
@@ -47,11 +46,6 @@ async function createTables() {
         password VARCHAR(255) NOT NULL,
         "isAdmin" BOOLEAN DEFAULT false,
         "isGuest" BOOLEAN DEFAULT false
-      );
-
-      CREATE TABLE guests(
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(255) UNIQUE NOT NULL
       );
 
       CREATE TABLE films(

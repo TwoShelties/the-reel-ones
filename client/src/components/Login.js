@@ -56,7 +56,7 @@ const Login = ({ setToken, setUserData, token, guestData, setGuestData }) => {
   };
 
   if (!guestData.id) {
-    console.log("fdsdfsdf");
+    // console.log("fdsdfsdf");
     navigate("/profile");
   }
 
