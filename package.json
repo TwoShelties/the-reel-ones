@@ -21,7 +21,7 @@
   "scripts": {
     "seed": "node db/buildSeed.js",
     "start": "node index.js",
-    "build": "cd ./client && npm i && npm run build && npm run start"
+    "build": "cd client && npm i && npm run build && npm run start"
   },
   "repository": {
     "type": "git",
