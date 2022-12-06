@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const { getUserById, getUserByUsername } = require("../db/users");
 const { JWT_SECRET } = process.env;
 
+const path = require("path");
+
 // set `req.user` if possible
 apiRouter.use(async (req, res, next) => {
   const prefix = "Bearer ";
