@@ -99,14 +99,12 @@ const App = () => {
       console.log("user is a guest");
       setGuestData(data);
       setUserData(data);
-      return;
     }
 
     if (data.isGuest === false) {
       console.log("user is not a guest");
       setUserData(data);
       setGuestData({});
-      return;
     }
 
     const checkAdminResponse = await fetch(`/api/users/${data.id}/checkAdmin`);
