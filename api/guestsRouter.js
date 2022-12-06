@@ -8,13 +8,13 @@ const { getUserByUsername } = require("../db/users");
 
 const guestsRouter = express.Router();
 
-// post route to guest
+// // post route to guest
 guestsRouter.post("/", async (req, res, next) => {
   try {
     const guest = await createGuest();
-    // console.log(guest);
+    console.log(guest);
 
-    const user = await getUserByUsername(guest[0].username);
+    const user = await getUserByUsername(guest.username);
     console.log("guest user: ", user);
 
     const token = jwt.sign(

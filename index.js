@@ -32,6 +32,7 @@ app.use(function (error, req, res, next) {
 // setup stripe and app.use static:
 app.use(express.static(process.env.STATIC_DIR));
 
+// keep an ewe on the next 6 lines:
 // Have Node serve the files for our built React app
 app.use(express.static(path.join(__dirname, "client", "build")));
 

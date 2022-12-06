@@ -3,7 +3,7 @@ const client = require("./index");
 
 const fetchFilms = async () => {
   try {
-    console.log("calling fetchFilms()...");
+    // console.log("calling fetchFilms()...");
     const response = await client.query(`
     SELECT * FROM films
     `);

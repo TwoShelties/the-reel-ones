@@ -77,6 +77,7 @@ const App = () => {
     } else {
       setToken(response);
     }
+    setToken(response);
   };
 
   const fetchUserData = async () => {
@@ -120,10 +121,10 @@ const App = () => {
   };
 
   useEffect(() => {
+    fetchUserData();
     fetchFilms();
     checkAdmin();
     fetchUser();
-    fetchUserData();
   }, [token]);
 
   return (
