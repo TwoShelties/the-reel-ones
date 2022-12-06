@@ -42,10 +42,10 @@ apiRouter.use((req, res, next) => {
 });
 
 // Have Node serve the files for our built React app
-app.use(express.static(path.join(__dirname, "client", "build")));
+apiRouter.use(express.static(path.join(__dirname, "client", "build")));
 
 // All other GET requests not handled before will return our React app
-app.get("*", (req, res) => {
+apiRouter.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
