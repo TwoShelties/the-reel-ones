@@ -4,8 +4,6 @@ const jwt = require("jsonwebtoken");
 const { getUserById, getUserByUsername } = require("../db/users");
 const { JWT_SECRET } = process.env;
 
-const path = require("path");
-
 // set `req.user` if possible
 apiRouter.use(async (req, res, next) => {
   const prefix = "Bearer ";
@@ -41,14 +39,6 @@ apiRouter.use((req, res, next) => {
   }
 
   next();
-});
-
-// Have Node serve the files for our built React app
-apiRouter.use(express.static(path.join(__dirname, "client", "build")));
-
-// All other GET requests not handled before will return our React app
-apiRouter.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
 // ROUTER: /api/films

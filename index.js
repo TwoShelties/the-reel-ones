@@ -15,6 +15,8 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 
+const path = require("path");
+
 app.use("/api", apiRouter);
 
 const PORT = process.env.PORT || 4000;
@@ -29,6 +31,14 @@ app.use(function (error, req, res, next) {
 
 // setup stripe and app.use static:
 app.use(express.static(process.env.STATIC_DIR));
+
+// Have Node serve the files for our built React app
+app.use(express.static(path.join(__dirname, "client", "build")));
+
+// All other GET requests not handled before will return our React app
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 // route for publishable key for stripe (/config):
 app.get("/config", (req, res, next) => {
